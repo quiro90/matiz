@@ -37,6 +37,7 @@ public sealed partial class MainViewModel
         IsSettingsOpen = false;
         IsLibraryOpen = false;
         IsImageMode = true;
+        _ = ExtractColorsCoreAsync();
     }
 
     [RelayCommand]
@@ -54,7 +55,9 @@ public sealed partial class MainViewModel
     private void PickImageColor(Argb color) => Session.Commit(color, ColorChangeSource.Image);
 
     [RelayCommand]
-    private async Task ExtractColors()
+    private async Task ExtractColors() => await ExtractColorsCoreAsync();
+
+    private async Task ExtractColorsCoreAsync()
     {
         if (ImageSource is not { } src || IsExtracting) return;
         IsExtracting = true;

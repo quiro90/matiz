@@ -231,6 +231,7 @@
                             </StackPanel>
                             <TextBlock Grid.Column="1" Text="{Binding ImageInfo}" Style="{StaticResource Muted}" Margin="12,0" TextTrimming="CharacterEllipsis"/>
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <TextBlock Text="{loc:Loc image.extractCount.label}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                 <c:NumericBox Value="{Binding ExtractCount}" Minimum="3" Maximum="10" Width="44" ToolTip="{loc:Loc image.extractCount.tooltip}" AutomationProperties.Name="{loc:Loc image.extractCount.automation}"/>
                                 <Button Command="{Binding ExtractColorsCommand}" Content="{loc:Loc image.extract}" Margin="6,0,0,0" ToolTip="{loc:Loc image.extract.tooltip}"/>
                             </StackPanel>

@@ -146,6 +146,9 @@
   <data name="image.extractCount.automation" xml:space="preserve">
     <value>Número de colores a extraer</value>
   </data>
+  <data name="image.extractCount.label" xml:space="preserve">
+    <value>Cantidad de colores:</value>
+  </data>
   <data name="image.extract" xml:space="preserve">
     <value>Extraer colores</value>
   </data>

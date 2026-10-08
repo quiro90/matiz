@@ -24,7 +24,15 @@ Al mover el cursor sobre la imagen el sistema SHALL mostrar una lupa con cuadrí
 - **THEN** el color actual es el valor del píxel correspondiente de la imagen original sin interpolación
 
 ### Requirement: Extraer colores principales
-El sistema SHALL ofrecer "Extraer colores" que detecte entre 3 y 10 colores predominantes (por defecto 6) y los presente como paleta generada con las mismas acciones que el resto de tarjetas. El resultado SHALL ser determinista para una misma imagen y número de colores, y SHALL completarse sin bloquear la UI.
+El sistema SHALL ofrecer "Extraer colores" que detecte entre 3 y 10 colores predominantes (por defecto 6) y los presente como paleta generada con las mismas acciones que el resto de tarjetas. El campo de cantidad SHALL etiquetarse "Cantidad de colores:" a la izquierda del control numérico. Al cargar una imagen (diálogo "Abrir imagen", arrastrar y soltar, o portapapeles), el sistema SHALL ejecutar la extracción una vez de forma automática con la cantidad vigente, sin bloquear la UI, y la extracción manual SHALL seguir disponible para re-ejecutarla (por ejemplo tras cambiar la cantidad). El resultado SHALL ser determinista para una misma imagen y número de colores, y SHALL completarse sin bloquear la UI.
+
+#### Scenario: Extracción automática al cargar
+- **WHEN** el usuario pega una captura de pantalla con `Ctrl+V` con la cantidad en su valor por defecto (6)
+- **THEN** la pestaña "Extraídas" queda activa con la paleta extraída y el aviso confirma la cantidad, sin que el usuario haya pulsado "Extraer colores"
+
+#### Scenario: La cantidad ajustada se respeta
+- **WHEN** el usuario ajusta la cantidad a 9 y carga otra imagen por drag&drop
+- **THEN** la extracción automática produce 9 colores
 
 #### Scenario: Determinismo
 - **WHEN** el usuario ejecuta "Extraer colores" dos veces sobre la misma imagen con 6 colores

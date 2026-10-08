@@ -36,7 +36,14 @@ public sealed partial class MainViewModel
     /// <summary>Desfases personalizados de los puntos de armonía (Δhue°/Δsat del canónico), por índice generado; null = armonía canónica.</summary>
     private (double HueDelta, double SatDelta)[]? _harmonyOffsets;
 
-    private void ClearHarmonyOffsets() => _harmonyOffsets = null;
+    /// <summary>Indica si hay desfases personalizados activos: solo entonces se muestra el botón "Restaurar armonía".</summary>
+    [ObservableProperty] public partial bool HasHarmonyOffsets { get; private set; }
+
+    private void ClearHarmonyOffsets()
+    {
+        _harmonyOffsets = null;
+        HasHarmonyOffsets = false;
+    }
 
     public ObservableCollection<SwatchItem> GeneratedColors { get; } = [];
 
@@ -149,6 +156,7 @@ public sealed partial class MainViewModel
         _harmonyOffsets[swatch] = (
             ColorMath.NormalizeHue(hue - ColorMath.NormalizeHue(st.Hue + angles[swatch])),
             sat - st.Saturation);
+        HasHarmonyOffsets = _harmonyOffsets.Any(o => o != default);
         RefreshGenerated();
     }
 
@@ -162,6 +170,16 @@ public sealed partial class MainViewModel
         if (swatch >= angles.Count || angles[swatch] == 0) return;
         if (_harmonyOffsets[swatch] == default) return;
         _harmonyOffsets[swatch] = default;
+        if (_harmonyOffsets.All(o => o == default)) ClearHarmonyOffsets();
+        RefreshGenerated();
+    }
+
+    /// <summary>Botón "Restaurar armonía": restablece todos los puntos a la armonía canónica (no es deshacible).</summary>
+    [RelayCommand]
+    private void ResetHarmonyOffsets()
+    {
+        if (!HasHarmonyOffsets) return;
+        ClearHarmonyOffsets();
         RefreshGenerated();
     }
 

@@ -670,6 +670,12 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   <data name="harmony.colorFallback" xml:space="preserve">
     <value>Color {0}</value>
   </data>
+  <data name="harmony.reset" xml:space="preserve">
+    <value>Restaurar armonía</value>
+  </data>
+  <data name="harmony.reset.tooltip" xml:space="preserve">
+    <value>Restaura los ángulos de la armonía elegida; lo mismo que hacer doble click sobre un punto desplazado. No se puede deshacer.</value>
+  </data>
 
   <!-- palette defaults -->
   <data name="palette.untitled" xml:space="preserve">

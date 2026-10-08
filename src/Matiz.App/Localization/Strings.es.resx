@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- common -->
+  <data name="common.close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="common.close.esc" xml:space="preserve">
+    <value>Cerrar (Esc)</value>
+  </data>
+  <data name="common.minimize" xml:space="preserve">
+    <value>Minimizar</value>
+  </data>
+  <data name="common.copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="common.undo" xml:space="preserve">
+    <value>Deshacer</value>
+  </data>
+  <data name="common.delete" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="common.color" xml:space="preserve">
+    <value>color</value>
+  </data>
+  <data name="common.colors" xml:space="preserve">
+    <value>colores</value>
+  </data>
+
+  <!-- top bar -->
+  <data name="ui.capture" xml:space="preserve">
+    <value>Capturar</value>
+  </data>
+  <data name="ui.capture.automation" xml:space="preserve">
+    <value>Capturar color de la pantalla</value>
+  </data>
+  <data name="ui.capture.tooltip" xml:space="preserve">
+    <value>Captura cualquier píxel visible del escritorio (cualquier monitor). Click confirma, Esc cancela, flechas mueven 1 px.</value>
+  </data>
+  <data name="ui.image" xml:space="preserve">
+    <value>Imagen</value>
+  </data>
+  <data name="ui.image.tooltip" xml:space="preserve">
+    <value>Tomar colores de una imagen (Ctrl+O, arrastrar o pegar)</value>
+  </data>
+  <data name="ui.undo.tooltip" xml:space="preserve">
+    <value>Deshacer color (Ctrl+Z)</value>
+  </data>
+  <data name="ui.redo" xml:space="preserve">
+    <value>Rehacer</value>
+  </data>
+  <data name="ui.redo.tooltip" xml:space="preserve">
+    <value>Rehacer color (Ctrl+Y)</value>
+  </data>
+  <data name="ui.alwaysOnTop" xml:space="preserve">
+    <value>Siempre visible</value>
+  </data>
+  <data name="ui.cycleTheme" xml:space="preserve">
+    <value>Cambiar tema</value>
+  </data>
+  <data name="ui.cycleTheme.tooltip" xml:space="preserve">
+    <value>Cambiar tema claro/oscuro</value>
+  </data>
+  <data name="ui.settings" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+
+  <!-- picker -->
+  <data name="picker.wheel.tooltip" xml:space="preserve">
+    <value>Ángulo = tono · distancia al centro = saturación. Shift para ajuste fino; flechas con la rueda enfocada.</value>
+  </data>
+  <data name="picker.brightness.tooltip" xml:space="preserve">
+    <value>Brillo: del color a 100% (arriba) hasta negro</value>
+  </data>
+  <data name="picker.focus" xml:space="preserve">
+    <value>ENFOQUE</value>
+  </data>
+  <data name="picker.vivid" xml:space="preserve">
+    <value>Vivo</value>
+  </data>
+  <data name="picker.pastel" xml:space="preserve">
+    <value>Pastel</value>
+  </data>
+  <data name="picker.focus.automation" xml:space="preserve">
+    <value>Enfoque de la rueda: vivo a pastel</value>
+  </data>
+  <data name="picker.focus.tooltip" xml:space="preserve">
+    <value>Distribución de la saturación en la rueda: más espacio para colores vivos (izquierda) o pastel (derecha). No cambia el color.</value>
+  </data>
+  <data name="picker.focus.reset.tooltip" xml:space="preserve">
+    <value>Distribución lineal</value>
+  </data>
+  <data name="picker.focus.reset.automation" xml:space="preserve">
+    <value>Restablecer enfoque</value>
+  </data>
+  <data name="picker.hue.automation" xml:space="preserve">
+    <value>Tono en grados</value>
+  </data>
+  <data name="picker.sat.automation" xml:space="preserve">
+    <value>Saturación en porcentaje</value>
+  </data>
+  <data name="picker.bri.automation" xml:space="preserve">
+    <value>Brillo en porcentaje</value>
+  </data>
+  <data name="picker.grayEquivalent" xml:space="preserve">
+    <value>Gris equivalente</value>
+  </data>
+  <data name="picker.grayEquivalent.tooltip" xml:space="preserve">
+    <value>Convierte el color al gris de igual luminosidad perceptual (OKLab L)</value>
+  </data>
+  <data name="picker.grays" xml:space="preserve">
+    <value>GRISES</value>
+  </data>
+  <data name="picker.gray.tooltip" xml:space="preserve">
+    <value>Luminosidad: 100 = blanco, 0 = negro</value>
+  </data>
+
+  <!-- image -->
+  <data name="image.back" xml:space="preserve">
+    <value>Selector</value>
+  </data>
+  <data name="image.back.tooltip" xml:space="preserve">
+    <value>Volver al selector (Esc)</value>
+  </data>
+  <data name="image.open" xml:space="preserve">
+    <value>Abrir…</value>
+  </data>
+  <data name="image.open.tooltip" xml:space="preserve">
+    <value>Abrir imagen (Ctrl+O)</value>
+  </data>
+  <data name="image.extractCount.tooltip" xml:space="preserve">
+    <value>Número de colores (3–10)</value>
+  </data>
+  <data name="image.extractCount.automation" xml:space="preserve">
+    <value>Número de colores a extraer</value>
+  </data>
+  <data name="image.extract" xml:space="preserve">
+    <value>Extraer colores</value>
+  </data>
+  <data name="image.extract.tooltip" xml:space="preserve">
+    <value>Detecta los colores predominantes de la imagen</value>
+  </data>
+  <data name="image.canvas.tooltip" xml:space="preserve">
+    <value>Click: tomar color · Arrastrar: mover · Rueda: zoom</value>
+  </data>
+  <data name="image.pastedName" xml:space="preserve">
+    <value>Imagen pegada</value>
+  </data>
+  <data name="image.noFrames" xml:space="preserve">
+    <value>La imagen no contiene fotogramas.</value>
+  </data>
+
+  <!-- current color -->
+  <data name="color.previous" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="color.previous.tooltip" xml:space="preserve">
+    <value>Color anterior: click para volver a él</value>
+  </data>
+  <data name="color.previous.automation" xml:space="preserve">
+    <value>Volver al color anterior</value>
+  </data>
+  <data name="color.current" xml:space="preserve">
+    <value>Actual</value>
+  </data>
+  <data name="color.hex.tooltip" xml:space="preserve">
+    <value>Escribe o pega un color en cualquier formato y pulsa Enter</value>
+  </data>
+  <data name="color.hex.automation" xml:space="preserve">
+    <value>Color en HEX u otro formato</value>
+  </data>
+  <data name="color.r.automation" xml:space="preserve">
+    <value>Rojo</value>
+  </data>
+  <data name="color.g.automation" xml:space="preserve">
+    <value>Verde</value>
+  </data>
+  <data name="color.b.automation" xml:space="preserve">
+    <value>Azul</value>
+  </data>
+  <data name="color.moreFormats" xml:space="preserve">
+    <value>Más formatos</value>
+  </data>
+  <data name="color.copyAll" xml:space="preserve">
+    <value>Copiar todo</value>
+  </data>
+  <data name="color.copyAll.tooltip" xml:space="preserve">
+    <value>HEX, RGB, HSL, HSV y CMYK en un bloque</value>
+  </data>
+  <data name="color.copyAs" xml:space="preserve">
+    <value>Copiar como</value>
+  </data>
+  <data name="color.copyAs.tooltip" xml:space="preserve">
+    <value>Copiar como fragmento de código</value>
+  </data>
+  <data name="color.addToPalette" xml:space="preserve">
+    <value>+ Paleta</value>
+  </data>
+  <data name="color.addToPalette.tooltip" xml:space="preserve">
+    <value>Agregar a la paleta activa (Ctrl+S)</value>
+  </data>
+
+  <!-- recents -->
+  <data name="history.title" xml:space="preserve">
+    <value>RECIENTES</value>
+  </data>
+  <data name="history.empty" xml:space="preserve">
+    <value>Los colores capturados, introducidos o copiados aparecerán aquí</value>
+  </data>
+  <data name="history.clear" xml:space="preserve">
+    <value>Vaciar recientes</value>
+  </data>
+
+  <!-- swatches -->
+  <data name="swatch.useAsCurrent" xml:space="preserve">
+    <value>Usar como color actual</value>
+  </data>
+  <data name="swatch.copyHex" xml:space="preserve">
+    <value>Copiar HEX</value>
+  </data>
+  <data name="swatch.copyRgb" xml:space="preserve">
+    <value>Copiar RGB</value>
+  </data>
+  <data name="swatch.copyDefault" xml:space="preserve">
+    <value>Copiar (formato principal)</value>
+  </data>
+  <data name="swatch.addToPalette" xml:space="preserve">
+    <value>Agregar a la paleta activa</value>
+  </data>
+  <data name="swatch.colorBase.tooltip" xml:space="preserve">
+    <value>Color base</value>
+  </data>
+
+  <!-- generated palettes -->
+  <data name="gen.tab.scale" xml:space="preserve">
+    <value>Escala 50–950</value>
+  </data>
+  <data name="gen.tab.harmony" xml:space="preserve">
+    <value>Armonías</value>
+  </data>
+  <data name="gen.tab.neutrals" xml:space="preserve">
+    <value>Neutros</value>
+  </data>
+  <data name="gen.tab.extracted" xml:space="preserve">
+    <value>De la imagen</value>
+  </data>
+  <data name="gen.autoAnchor" xml:space="preserve">
+    <value>Ancla auto</value>
+  </data>
+  <data name="gen.autoAnchor.tooltip" xml:space="preserve">
+    <value>Desactivado: el color base es siempre el 500. Activado: el base ocupa el paso de luminosidad más cercano.</value>
+  </data>
+  <data name="gen.prefix.placeholder" xml:space="preserve">
+    <value>Prefijo</value>
+  </data>
+  <data name="gen.prefix.tooltip" xml:space="preserve">
+    <value>Prefijo de nombres al agregar o copiar (p. ej. Primary → Primary 500)</value>
+  </data>
+  <data name="gen.prefix.automation" xml:space="preserve">
+    <value>Prefijo de nombres</value>
+  </data>
+  <data name="gen.addAll" xml:space="preserve">
+    <value>+ Agregar todo</value>
+  </data>
+  <data name="gen.addAll.tooltip" xml:space="preserve">
+    <value>Agregar todos a la paleta activa</value>
+  </data>
+  <data name="gen.copy.tooltip" xml:space="preserve">
+    <value>Copiar como CSS, JSON, Dart, C#, Tailwind…</value>
+  </data>
+  <data name="gen.balance" xml:space="preserve">
+    <value>Luminosidad equilibrada</value>
+  </data>
+  <data name="gen.balance.tooltip" xml:space="preserve">
+    <value>Activado: cada color de la armonía ajusta su brillo para tener la misma luminosidad percibida que el base (la posición en la rueda no cambia). Desactivado: todos con el mismo brillo HSV.</value>
+  </data>
+  <data name="gen.exportTitle.tints" xml:space="preserve">
+    <value>Tints y Shades</value>
+  </data>
+  <data name="gen.exportTitle.neutrals" xml:space="preserve">
+    <value>Neutral</value>
+  </data>
+  <data name="gen.exportTitle.imageColors" xml:space="preserve">
+    <value>Colores de imagen</value>
+  </data>
+  <data name="gen.imageColorName" xml:space="preserve">
+    <value>Imagen {0}</value>
+  </data>
+
+  <!-- palette bar -->
+  <data name="palette.activeTitle" xml:space="preserve">
+    <value>PALETA ACTIVA</value>
+  </data>
+  <data name="palette.library.tooltip" xml:space="preserve">
+    <value>Biblioteca de paletas</value>
+  </data>
+  <data name="palette.library.automation" xml:space="preserve">
+    <value>Biblioteca de paletas</value>
+  </data>
+  <data name="palette.item.tooltip" xml:space="preserve">
+    <value>Click: usar · Arrastrar: reordenar · Click derecho: más acciones</value>
+  </data>
+  <data name="palette.color.placeholder" xml:space="preserve">
+    <value>Sin nombre</value>
+  </data>
+  <data name="palette.color.automation" xml:space="preserve">
+    <value>Nombre del color</value>
+  </data>
+  <data name="palette.color.tooltip" xml:space="preserve">
+    <value>Nombre (se usa al exportar)</value>
+  </data>
+  <data name="palette.replaceWithCurrent" xml:space="preserve">
+    <value>Reemplazar con el color actual</value>
+  </data>
+  <data name="palette.moveLeft" xml:space="preserve">
+    <value>Mover a la izquierda</value>
+  </data>
+  <data name="palette.moveRight" xml:space="preserve">
+    <value>Mover a la derecha</value>
+  </data>
+  <data name="palette.empty" xml:space="preserve">
+    <value>Paleta vacía: agrega el color actual con + o Ctrl+S, o usa «Agregar todo» en una escala.</value>
+  </data>
+  <data name="palette.addCurrent.tooltip" xml:space="preserve">
+    <value>Agregar color actual (Ctrl+S)</value>
+  </data>
+  <data name="palette.addCurrent.automation" xml:space="preserve">
+    <value>Agregar color actual a la paleta</value>
+  </data>
+  <data name="palette.copy.tooltip" xml:space="preserve">
+    <value>Copiar la paleta como CSS, JSON, Dart, C#, Tailwind…</value>
+  </data>
+  <data name="palette.export.tooltip" xml:space="preserve">
+    <value>Exportar como imagen PNG (Ctrl+E)</value>
+  </data>
+  <data name="palette.none" xml:space="preserve">
+    <value>Sin paleta</value>
+  </data>
+  <data name="palette.summaryOne" xml:space="preserve">
+    <value>{0} color · {1}</value>
+  </data>
+  <data name="palette.summaryMany" xml:space="preserve">
+    <value>{0} colores · {1}</value>
+  </data>
+
+  <!-- library -->
+  <data name="library.title" xml:space="preserve">
+    <value>Paletas</value>
+  </data>
+  <data name="library.saved.automation" xml:space="preserve">
+    <value>Paletas guardadas</value>
+  </data>
+  <data name="library.new" xml:space="preserve">
+    <value>Nueva</value>
+  </data>
+  <data name="library.new.tooltip" xml:space="preserve">
+    <value>Nueva paleta (Ctrl+N)</value>
+  </data>
+  <data name="library.duplicate" xml:space="preserve">
+    <value>Duplicar</value>
+  </data>
+  <data name="library.name" xml:space="preserve">
+    <value>NOMBRE</value>
+  </data>
+  <data name="library.name.automation" xml:space="preserve">
+    <value>Nombre de la paleta</value>
+  </data>
+  <data name="library.description" xml:space="preserve">
+    <value>DESCRIPCIÓN</value>
+  </data>
+  <data name="library.description.automation" xml:space="preserve">
+    <value>Descripción de la paleta</value>
+  </data>
+  <data name="library.description.placeholder" xml:space="preserve">
+    <value>Opcional</value>
+  </data>
+
+  <!-- settings -->
+  <data name="settings.title" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="settings.section.appearance" xml:space="preserve">
+    <value>APARIENCIA</value>
+  </data>
+  <data name="theme.system" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="theme.light" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="theme.dark" xml:space="preserve">
+    <value>Oscuro</value>
+  </data>
+  <data name="settings.alwaysOnTop" xml:space="preserve">
+    <value>Siempre visible (encima de otras ventanas)</value>
+  </data>
+  <data name="settings.windowButtons" xml:space="preserve">
+    <value>Botones de ventana (minimizar y cerrar)</value>
+  </data>
+  <data name="settings.right" xml:space="preserve">
+    <value>Derecha</value>
+  </data>
+  <data name="settings.left" xml:space="preserve">
+    <value>Izquierda</value>
+  </data>
+  <data name="settings.section.language" xml:space="preserve">
+    <value>IDIOMA</value>
+  </data>
+  <data name="settings.section.capture" xml:space="preserve">
+    <value>CAPTURA DE PANTALLA</value>
+  </data>
+  <data name="settings.hotkey" xml:space="preserve">
+    <value>Atajo global</value>
+  </data>
+  <data name="settings.hotkey.placeholder" xml:space="preserve">
+    <value>Pulsa la combinación</value>
+  </data>
+  <data name="settings.hotkey.tooltip" xml:space="preserve">
+    <value>Haz click y pulsa la nueva combinación (necesita Ctrl, Alt, Shift o Win)</value>
+  </data>
+  <data name="settings.hotkey.automation" xml:space="preserve">
+    <value>Atajo global de captura</value>
+  </data>
+  <data name="settings.copyOnCapture" xml:space="preserve">
+    <value>Copiar al capturar (en el formato principal)</value>
+  </data>
+  <data name="settings.showAfter" xml:space="preserve">
+    <value>Mostrar Matiz tras capturar</value>
+  </data>
+  <data name="settings.captureHelp" xml:space="preserve">
+    <value>En el modo captura: click o Enter confirma, Esc o click derecho cancela, flechas mueven 1 px (Shift: 10 px), rueda del ratón cambia el aumento.
+Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido protegido (DRM) el valor capturado puede no coincidir con el original.</value>
+  </data>
+  <data name="settings.section.copy" xml:space="preserve">
+    <value>COPIADO</value>
+  </data>
+  <data name="settings.mainFormat" xml:space="preserve">
+    <value>Formato principal (Ctrl+C, captura y click en muestras)</value>
+  </data>
+  <data name="settings.mainFormat.automation" xml:space="preserve">
+    <value>Formato principal</value>
+  </data>
+  <data name="settings.hexUpper" xml:space="preserve">
+    <value>HEX en mayúsculas</value>
+  </data>
+  <data name="settings.hexHash" xml:space="preserve">
+    <value>Incluir # en el HEX</value>
+  </data>
+  <data name="settings.autoAnchor" xml:space="preserve">
+    <value>Anclaje automático (en lugar de base en 500)</value>
+  </data>
+  <data name="settings.section.shortcuts" xml:space="preserve">
+    <value>ATAJOS</value>
+  </data>
+  <data name="settings.section.data" xml:space="preserve">
+    <value>DATOS</value>
+  </data>
+  <data name="settings.openData" xml:space="preserve">
+    <value>Abrir carpeta de datos</value>
+  </data>
+  <data name="settings.hotkeyInvalid" xml:space="preserve">
+    <value>«{0}» no es válido: usa al menos un modificador (Ctrl, Alt, Shift, Win) y una tecla.</value>
+  </data>
+  <data name="settings.hotkeyActive" xml:space="preserve">
+    <value>Atajo global activo: {0}</value>
+  </data>
+  <data name="settings.hotkeyRegisterFailed" xml:space="preserve">
+    <value>No se pudo registrar {0}: probablemente lo usa otra aplicación. Prueba Ctrl+Alt+C o Win+Shift+C.</value>
+  </data>
+
+  <!-- export window -->
+  <data name="export.windowTitle" xml:space="preserve">
+    <value>Exportar paleta como imagen</value>
+  </data>
+  <data name="export.preview.automation" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="export.orientation" xml:space="preserve">
+    <value>ORIENTACIÓN</value>
+  </data>
+  <data name="export.size" xml:space="preserve">
+    <value>TAMAÑO</value>
+  </data>
+  <data name="export.background" xml:space="preserve">
+    <value>FONDO</value>
+  </data>
+  <data name="export.light" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="export.dark" xml:space="preserve">
+    <value>Oscuro</value>
+  </data>
+  <data name="export.info" xml:space="preserve">
+    <value>INFORMACIÓN</value>
+  </data>
+  <data name="export.infoHint" xml:space="preserve">
+    <value>Nombre, HEX y RGB siempre</value>
+  </data>
+  <data name="export.cmyk" xml:space="preserve">
+    <value>CMYK (aprox.)</value>
+  </data>
+  <data name="export.savePng" xml:space="preserve">
+    <value>Guardar PNG…</value>
+  </data>
+  <data name="export.copyImage" xml:space="preserve">
+    <value>Copiar imagen</value>
+  </data>
+  <data name="export.saveDialog" xml:space="preserve">
+    <value>Guardar paleta como PNG</value>
+  </data>
+  <data name="export.defaultFileName" xml:space="preserve">
+    <value>paleta</value>
+  </data>
+  <data name="export.pngFilter" xml:space="preserve">
+    <value>Imagen PNG|*.png</value>
+  </data>
+  <data name="export.saveError" xml:space="preserve">
+    <value>No se pudo guardar la imagen:&#10;{0}</value>
+  </data>
+  <data name="export.copyFailed" xml:space="preserve">
+    <value>No se pudo copiar: el portapapeles está ocupado.</value>
+  </data>
+
+  <!-- dialogs -->
+  <data name="dialogs.openImage.title" xml:space="preserve">
+    <value>Abrir imagen</value>
+  </data>
+  <data name="dialogs.imageFilter" xml:space="preserve">
+    <value>Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff;*.webp|Todos los archivos|*.*</value>
+  </data>
+
+  <!-- toasts and copy feedback -->
+  <data name="toasts.hotkeyModifier" xml:space="preserve">
+    <value>El atajo global necesita al menos un modificador (Ctrl, Alt, Shift o Win)</value>
+  </data>
+  <data name="toasts.copyFailed" xml:space="preserve">
+    <value>No se pudo copiar: el portapapeles está ocupado</value>
+  </data>
+  <data name="toasts.copied" xml:space="preserve">
+    <value>Copiado  {0}</value>
+  </data>
+  <data name="toasts.copiedWhat" xml:space="preserve">
+    <value>Copiado {0}</value>
+  </data>
+  <data name="toasts.captured" xml:space="preserve">
+    <value>Capturado  {0}</value>
+  </data>
+  <data name="toasts.pasted" xml:space="preserve">
+    <value>Color pegado  {0}</value>
+  </data>
+  <data name="toasts.clipboardEmpty" xml:space="preserve">
+    <value>El portapapeles no contiene un color ni una imagen</value>
+  </data>
+  <data name="toasts.openImageFailed" xml:space="preserve">
+    <value>No se pudo abrir la imagen</value>
+  </data>
+  <data name="toasts.openImageFailed.reason" xml:space="preserve">
+    <value>No se pudo abrir la imagen: {0}</value>
+  </data>
+  <data name="toasts.extracted" xml:space="preserve">
+    <value>{0} colores principales extraídos</value>
+  </data>
+  <data name="toasts.addedToPalette" xml:space="preserve">
+    <value>{0} agregado a «{1}»</value>
+  </data>
+  <data name="toasts.addedToPaletteSimple" xml:space="preserve">
+    <value>Agregado a «{0}»</value>
+  </data>
+  <data name="toasts.paletteDeleted" xml:space="preserve">
+    <value>Paleta «{0}» eliminada</value>
+  </data>
+  <data name="toasts.colorDeleted" xml:space="preserve">
+    <value>Color {0} eliminado</value>
+  </data>
+  <data name="toasts.noColors" xml:space="preserve">
+    <value>La paleta activa no tiene colores</value>
+  </data>
+  <data name="toasts.addedCount" xml:space="preserve">
+    <value>{0} colores agregados a «{1}»</value>
+  </data>
+  <data name="toasts.hotkeyBusy" xml:space="preserve">
+    <value>El atajo {0} está ocupado por otra aplicación. Cámbialo en Ajustes.</value>
+  </data>
+  <data name="toasts.recoveredFile" xml:space="preserve">
+    <value>Se encontró un archivo de datos dañado; se guardó como {0}</value>
+  </data>
+  <data name="toasts.asFormat" xml:space="preserve">
+    <value>como {0}</value>
+  </data>
+  <data name="toasts.paletteAsFormat" xml:space="preserve">
+    <value>«{0}» como {1}</value>
+  </data>
+  <data name="toasts.allFormats" xml:space="preserve">
+    <value>todos los formatos</value>
+  </data>
+
+  <!-- app -->
+  <data name="app.error" xml:space="preserve">
+    <value>Se produjo un error inesperado. Se ha guardado el detalle en error.log.&#10;&#10;{0}</value>
+  </data>
+
+  <!-- formatter display names (only the ones that are language-dependent) -->
+  <data name="fmt.cmyk" xml:space="preserve">
+    <value>CMYK (aprox.)</value>
+  </data>
+  <data name="fmt.argbInt" xml:space="preserve">
+    <value>Entero 0xAARRGGBB</value>
+  </data>
+  <data name="fmt.all" xml:space="preserve">
+    <value>Todo (HEX, RGB, HSL, HSV, CMYK)</value>
+  </data>
+  <data name="fmt.hexList" xml:space="preserve">
+    <value>Lista HEX</value>
+  </data>
+
+  <!-- format rows -->
+  <data name="format.cmyk.tooltip" xml:space="preserve">
+    <value>CMYK aproximado, sin perfil ICC: no apto para impresión profesional.</value>
+  </data>
+  <data name="format.oklch.tooltip" xml:space="preserve">
+    <value>Oklab LCh (L C h).</value>
+  </data>
+  <data name="format.argb.tooltip" xml:space="preserve">
+    <value>#AARRGGBB (convención XAML/Windows/Flutter).</value>
+  </data>
+  <data name="row.copyAutomation" xml:space="preserve">
+    <value>Copiar {0}</value>
+  </data>
+
+  <!-- harmony labels -->
+  <data name="harmony.complementary" xml:space="preserve">
+    <value>Complementaria</value>
+  </data>
+  <data name="harmony.analogous" xml:space="preserve">
+    <value>Análoga</value>
+  </data>
+  <data name="harmony.split" xml:space="preserve">
+    <value>Complementaria dividida</value>
+  </data>
+  <data name="harmony.triadic" xml:space="preserve">
+    <value>Triádica</value>
+  </data>
+  <data name="harmony.tetradic" xml:space="preserve">
+    <value>Tetrádica</value>
+  </data>
+  <data name="harmony.monochromatic" xml:space="preserve">
+    <value>Monocromática</value>
+  </data>
+  <data name="harmony.tint" xml:space="preserve">
+    <value>Tinte {0}%</value>
+  </data>
+  <data name="harmony.shade" xml:space="preserve">
+    <value>Sombra {0}%</value>
+  </data>
+  <data name="harmony.base" xml:space="preserve">
+    <value>Base</value>
+  </data>
+  <data name="harmony.colorFallback" xml:space="preserve">
+    <value>Color {0}</value>
+  </data>
+
+  <!-- palette defaults -->
+  <data name="palette.untitled" xml:space="preserve">
+    <value>Paleta sin título</value>
+  </data>
+  <data name="palette.copySuffix" xml:space="preserve">
+    <value>(copia)</value>
+  </data>
+
+  <!-- shortcuts -->
+  <data name="shortcuts.capture" xml:space="preserve">
+    <value>Capturar (global, desde cualquier aplicación)</value>
+  </data>
+  <data name="shortcuts.copyDefault" xml:space="preserve">
+    <value>Copiar el color en el formato principal</value>
+  </data>
+  <data name="shortcuts.paste" xml:space="preserve">
+    <value>Pegar un color o una imagen</value>
+  </data>
+  <data name="shortcuts.undo" xml:space="preserve">
+    <value>Deshacer cambio de color</value>
+  </data>
+  <data name="shortcuts.redo" xml:space="preserve">
+    <value>Rehacer cambio de color</value>
+  </data>
+  <data name="shortcuts.addPalette" xml:space="preserve">
+    <value>Agregar el color actual a la paleta activa</value>
+  </data>
+  <data name="shortcuts.newPalette" xml:space="preserve">
+    <value>Nueva paleta</value>
+  </data>
+  <data name="shortcuts.openImage" xml:space="preserve">
+    <value>Abrir imagen</value>
+  </data>
+  <data name="shortcuts.export" xml:space="preserve">
+    <value>Exportar la paleta activa como PNG</value>
+  </data>
+  <data name="shortcuts.escape" xml:space="preserve">
+    <value>Cerrar panel / volver al selector</value>
+  </data>
+
+  <!-- controls -->
+  <data name="controls.wheel" xml:space="preserve">
+    <value>Rueda de color: tono y saturación</value>
+  </data>
+  <data name="controls.brightness" xml:space="preserve">
+    <value>Brillo</value>
+  </data>
+  <data name="controls.gray" xml:space="preserve">
+    <value>Escala de grises</value>
+  </data>
+  <data name="controls.image" xml:space="preserve">
+    <value>Imagen para seleccionar colores</value>
+  </data>
+  <data name="library.saved" xml:space="preserve">
+    <value>Paletas guardadas</value>
+  </data>
+  <data name="palette.active.title" xml:space="preserve">
+    <value>PALETA ACTIVA</value>
+  </data>
+  <data name="palette.colorName.automation" xml:space="preserve">
+    <value>Nombre del color</value>
+  </data>
+  <data name="palette.colorName.tooltip" xml:space="preserve">
+    <value>Nombre (se usa al exportar)</value>
+  </data>
+  <data name="palette.namePlaceholder" xml:space="preserve">
+    <value>Sin nombre</value>
+  </data>
+  <data name="settings.hexUppercase" xml:space="preserve">
+    <value>HEX en mayúsculas</value>
+  </data>
+  <data name="settings.openDataFolder" xml:space="preserve">
+    <value>Abrir carpeta de datos</value>
+  </data>
+  <data name="settings.showAfterCapture" xml:space="preserve">
+    <value>Mostrar Matiz tras capturar</value>
+  </data>
+  <data name="settings.windowButtons.left" xml:space="preserve">
+    <value>Izquierda</value>
+  </data>
+  <data name="settings.windowButtons.right" xml:space="preserve">
+    <value>Derecha</value>
+  </data>
+  <data name="library.descriptionPlaceholder" xml:space="preserve">
+    <value>Opcional</value>
+  </data>
+</root>

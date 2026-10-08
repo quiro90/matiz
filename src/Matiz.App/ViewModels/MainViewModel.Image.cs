@@ -2,6 +2,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 using Matiz.Core.Generation;
 using Matiz.Core.Session;
@@ -26,13 +27,13 @@ public sealed partial class MainViewModel
     {
         if (Shell is null) return;
         if (Shell.LoadImage(path, out var error) is { } img) ShowImage(img, System.IO.Path.GetFileName(path));
-        else ShowToast(error ?? "No se pudo abrir la imagen", seconds: 5);
+        else ShowToast(error ?? Loc.T("toasts.openImageFailed"), seconds: 5);
     }
 
     public void ShowImage(BitmapSource image, string? name = null)
     {
         ImageSource = image;
-        ImageInfo = $"{name ?? "Imagen pegada"} · {image.PixelWidth}×{image.PixelHeight}";
+        ImageInfo = $"{name ?? Loc.T("image.pastedName")} · {image.PixelWidth}×{image.PixelHeight}";
         IsSettingsOpen = false;
         IsLibraryOpen = false;
         IsImageMode = true;
@@ -70,7 +71,7 @@ public sealed partial class MainViewModel
             HasExtracted = _extracted.Count > 0;
             GeneratedTab = GeneratedTab.Extracted;
             RefreshGenerated();
-            ShowToast($"{_extracted.Count} colores principales extraídos");
+            ShowToast(Loc.F("toasts.extracted", _extracted.Count));
         }
         finally
         {

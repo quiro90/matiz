@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Matiz.App.Localization;
 using Matiz.App.Services;
 using Matiz.Core.Formatting;
 using Matiz.Core.Generation;
@@ -12,6 +13,7 @@ public sealed partial class MainViewModel
 {
     [ObservableProperty] public partial bool IsSettingsOpen { get; set; }
     [ObservableProperty] public partial ThemePreference ThemePreference { get; set; }
+    [ObservableProperty] public partial AppLanguage Language { get; set; }
     [ObservableProperty] public partial bool AlwaysOnTop { get; set; }
     [ObservableProperty] public partial bool WindowButtonsOnLeft { get; set; }
     [ObservableProperty] public partial string CaptureHotkey { get; set; } = "Alt+C";
@@ -41,6 +43,7 @@ public sealed partial class MainViewModel
     {
         _loadingSettings = true;
         ThemePreference = _settings.Theme;
+        Language = _settings.Language;
         AlwaysOnTop = _settings.AlwaysOnTop;
         WindowButtonsOnLeft = _settings.WindowButtonsOnLeft;
         CaptureHotkey = _settings.CaptureHotkey;
@@ -68,6 +71,24 @@ public sealed partial class MainViewModel
     {
         Changed(s => s.Theme = value);
         if (!_loadingSettings) _theme.Apply(value);
+    }
+
+    partial void OnLanguageChanged(AppLanguage value)
+    {
+        Changed(s => s.Language = value);
+        if (_loadingSettings) return;
+        LocalizationService.Instance.SetLanguage(value);
+        RefreshForLanguage();
+    }
+
+    /// <summary>Actualiza los textos generados en código (tooltips de formatos, nombres de armonías y resúmenes).</summary>
+    private void RefreshForLanguage()
+    {
+        foreach (var row in FormatRows.Concat(ExtraFormatRows)) row.RefreshTexts();
+        HarmonyKinds = Enum.GetValues<HarmonyKind>().Select(k => new Option<HarmonyKind>(k, PaletteGenerator.HarmonyName(k))).ToList();
+        RefreshGenerated();
+        SyncPalettes();
+        SyncHistory();
     }
 
     partial void OnAlwaysOnTopChanged(bool value) => Changed(s => s.AlwaysOnTop = value);
@@ -120,17 +141,17 @@ public sealed partial class MainViewModel
         if (!HotkeyGesture.TryParse(gesture, out _, out _))
         {
             HotkeyFailed = true;
-            HotkeyStatus = $"«{gesture}» no es válido: usa al menos un modificador (Ctrl, Alt, Shift, Win) y una tecla.";
+            HotkeyStatus = Loc.F("settings.hotkeyInvalid", gesture);
             return;
         }
         var ok = _hotkeys.Register(gesture);
         HotkeyFailed = !ok;
         CaptureHotkey = ok ? _hotkeys.Current! : gesture;
         HotkeyStatus = ok
-            ? $"Atajo global activo: {CaptureHotkey}"
-            : $"No se pudo registrar {gesture}: probablemente lo usa otra aplicación. Prueba Ctrl+Alt+C o Win+Shift+C.";
+            ? Loc.F("settings.hotkeyActive", CaptureHotkey)
+            : Loc.F("settings.hotkeyRegisterFailed", gesture);
         if (ok && save) Changed(s => s.CaptureHotkey = CaptureHotkey);
-        if (!ok && !save) ShowToast($"El atajo {gesture} está ocupado por otra aplicación. Cámbialo en Ajustes.", seconds: 6);
+        if (!ok && !save) ShowToast(Loc.F("toasts.hotkeyBusy", gesture), seconds: 6);
     }
 
     [RelayCommand]
@@ -151,6 +172,6 @@ public sealed partial class MainViewModel
     {
         var list = files.OfType<string>().ToList();
         if (list.Count > 0)
-            ShowToast($"Se encontró un archivo de datos dañado; se guardó como {System.IO.Path.GetFileName(list[0])}", seconds: 8);
+            ShowToast(Loc.F("toasts.recoveredFile", System.IO.Path.GetFileName(list[0])), seconds: 8);
     }
 }

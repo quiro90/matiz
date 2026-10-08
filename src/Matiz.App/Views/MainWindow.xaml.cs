@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using Matiz.App.Interop;
+using Matiz.App.Localization;
 using Matiz.App.ScreenCapture;
 using Matiz.App.Services;
 using Matiz.App.ViewModels;
@@ -43,6 +44,7 @@ public partial class MainWindow : Window, IShell
         {
             if (e.PropertyName == nameof(MainViewModel.CaptureHotkey)) ShortcutList.Text = Shortcuts.Describe(vm.CaptureHotkey);
         };
+        LocalizationService.Instance.LanguageChanged += (_, _) => ShortcutList.Text = Shortcuts.Describe(_vm.CaptureHotkey);
 
         SourceInitialized += (_, _) =>
         {
@@ -82,7 +84,7 @@ public partial class MainWindow : Window, IShell
 
     public string? PickImageFile()
     {
-        var dlg = new OpenFileDialog { Filter = ImageLoader.DialogFilter, Title = "Abrir imagen" };
+        var dlg = new OpenFileDialog { Filter = ImageLoader.DialogFilter, Title = Loc.T("dialogs.openImage.title") };
         return dlg.ShowDialog(this) == true ? dlg.FileName : null;
     }
 
@@ -148,7 +150,7 @@ public partial class MainWindow : Window, IShell
         if (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)) mods |= ModifierKeys.Windows;
         if (mods == ModifierKeys.None)
         {
-            _vm.ShowToast("El atajo global necesita al menos un modificador (Ctrl, Alt, Shift o Win)");
+            _vm.ShowToast(Loc.T("toasts.hotkeyModifier"));
             return;
         }
         _vm.SetHotkeyCommand.Execute(HotkeyGesture.Format(mods, key));

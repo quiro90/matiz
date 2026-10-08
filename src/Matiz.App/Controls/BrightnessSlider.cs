@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Input;
 using System.Windows.Media;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 
 namespace Matiz.App.Controls;
@@ -94,7 +95,11 @@ public sealed class BrightnessSlider : DragValueControl
     public static readonly DependencyProperty SaturationProperty = DependencyProperty.Register(nameof(Saturation), typeof(double), typeof(BrightnessSlider),
         new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public BrightnessSlider() => AutomationProperties.SetName(this, "Brillo");
+    public BrightnessSlider()
+    {
+        AutomationProperties.SetName(this, Loc.T("controls.brightness"));
+        LocalizationService.Instance.LanguageChanged += (_, _) => AutomationProperties.SetName(this, Loc.T("controls.brightness"));
+    }
 
     public double Hue { get => (double)GetValue(HueProperty); set => SetValue(HueProperty, value); }
     public double Saturation { get => (double)GetValue(SaturationProperty); set => SetValue(SaturationProperty, value); }
@@ -135,7 +140,8 @@ public sealed class GrayStrip : DragValueControl
 
     public GrayStrip()
     {
-        AutomationProperties.SetName(this, "Escala de grises");
+        AutomationProperties.SetName(this, Loc.T("controls.gray"));
+        LocalizationService.Instance.LanguageChanged += (_, _) => AutomationProperties.SetName(this, Loc.T("controls.gray"));
         Height = 42;
     }
 

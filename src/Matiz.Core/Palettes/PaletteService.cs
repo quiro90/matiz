@@ -1,4 +1,5 @@
 using Matiz.Core.Colors;
+using Matiz.Core.Localization;
 
 namespace Matiz.Core.Palettes;
 
@@ -8,7 +9,7 @@ namespace Matiz.Core.Palettes;
 /// </summary>
 public sealed class PaletteService
 {
-    public const string DefaultName = "Paleta sin título";
+    public static string DefaultName => Texts.Current.UntitledPalette;
 
     private readonly Func<DateTimeOffset> _clock;
 
@@ -75,7 +76,7 @@ public sealed class PaletteService
         var now = _clock();
         var copy = new Palette
         {
-            Name = UniqueName($"{src.Name} (copia)"),
+            Name = UniqueName($"{src.Name} {Texts.Current.CopySuffix}"),
             Description = src.Description,
             CreatedAt = now,
             ModifiedAt = now,

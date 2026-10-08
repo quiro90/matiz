@@ -10,12 +10,20 @@ public enum ThemePreference
     Dark,
 }
 
+/// <summary>Idioma de la interfaz. English es el valor por defecto (independiente del SO).</summary>
+public enum AppLanguage
+{
+    English,
+    Spanish,
+}
+
 /// <summary>Contenido de settings.json.</summary>
 public sealed class AppSettings
 {
     public int SchemaVersion { get; set; } = 1;
 
     public ThemePreference Theme { get; set; } = ThemePreference.System;
+    public AppLanguage Language { get; set; } = AppLanguage.English;
     public bool AlwaysOnTop { get; set; }
     /// <summary>Botones Minimizar/Cerrar a la izquierda de la barra superior (por defecto, a la derecha).</summary>
     public bool WindowButtonsOnLeft { get; set; }

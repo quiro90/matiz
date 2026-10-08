@@ -1,7 +1,8 @@
 <Window x:Class="Matiz.App.Views.ExportImageWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Exportar paleta como imagen" Icon="/Matiz;component/Assets/matiz.ico" Width="920" Height="640" MinWidth="640" MinHeight="420"
+        xmlns:loc="clr-namespace:Matiz.App.Localization"
+        Title="{loc:Loc export.windowTitle}" Icon="/Matiz;component/Assets/matiz.ico" Width="920" Height="640" MinWidth="640" MinHeight="420"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
         Background="{DynamicResource BgBrush}" Foreground="{DynamicResource TextBrush}"
         FontFamily="{StaticResource UiFont}" FontSize="13" UseLayoutRounding="True">
@@ -14,40 +15,40 @@
 
         <Border Style="{StaticResource Card}" Padding="8">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Image x:Name="Preview" Stretch="Uniform" StretchDirection="DownOnly" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="Vista previa"/>
+                <Image x:Name="Preview" Stretch="Uniform" StretchDirection="DownOnly" RenderOptions.BitmapScalingMode="HighQuality" AutomationProperties.Name="{loc:Loc export.preview.automation}"/>
             </ScrollViewer>
         </Border>
 
         <StackPanel Grid.Column="2">
-            <TextBlock Text="ORIENTACIÓN" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
+            <TextBlock Text="{loc:Loc export.orientation}" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
             <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="Horizontal" Style="{StaticResource Segment}" Content="Horizontal" GroupName="o" IsChecked="True" Checked="OnOptionChanged"/>
                 <RadioButton Style="{StaticResource Segment}" Content="Vertical" GroupName="o" Checked="OnOptionChanged"/>
             </StackPanel>
 
-            <TextBlock Text="TAMAÑO" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>
+            <TextBlock Text="{loc:Loc export.size}" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>
             <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="Scale1" Style="{StaticResource Segment}" Content="1×" GroupName="s" Checked="OnOptionChanged"/>
                 <RadioButton x:Name="Scale2" Style="{StaticResource Segment}" Content="2×" GroupName="s" IsChecked="True" Checked="OnOptionChanged"/>
                 <RadioButton x:Name="Scale3" Style="{StaticResource Segment}" Content="3×" GroupName="s" Checked="OnOptionChanged"/>
             </StackPanel>
 
-            <TextBlock Text="FONDO" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>
+            <TextBlock Text="{loc:Loc export.background}" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>
             <StackPanel Orientation="Horizontal">
-                <RadioButton x:Name="LightBg" Style="{StaticResource Segment}" Content="Claro" GroupName="b" IsChecked="True" Checked="OnOptionChanged"/>
-                <RadioButton Style="{StaticResource Segment}" Content="Oscuro" GroupName="b" Checked="OnOptionChanged"/>
+                <RadioButton x:Name="LightBg" Style="{StaticResource Segment}" Content="{loc:Loc export.light}" GroupName="b" IsChecked="True" Checked="OnOptionChanged"/>
+                <RadioButton Style="{StaticResource Segment}" Content="{loc:Loc export.dark}" GroupName="b" Checked="OnOptionChanged"/>
             </StackPanel>
 
-            <TextBlock Text="INFORMACIÓN" Style="{StaticResource SectionTitle}" Margin="0,16,0,2"/>
-            <TextBlock Text="Nombre, HEX y RGB siempre" Style="{StaticResource Muted}" FontSize="11.5"/>
+            <TextBlock Text="{loc:Loc export.info}" Style="{StaticResource SectionTitle}" Margin="0,16,0,2"/>
+            <TextBlock Text="{loc:Loc export.infoHint}" Style="{StaticResource Muted}" FontSize="11.5"/>
             <CheckBox x:Name="ShowHsl" Style="{StaticResource Switch}" Content="HSL" Checked="OnOptionChanged" Unchecked="OnOptionChanged"/>
-            <CheckBox x:Name="ShowCmyk" Style="{StaticResource Switch}" Content="CMYK (aprox.)" Checked="OnOptionChanged" Unchecked="OnOptionChanged"/>
+            <CheckBox x:Name="ShowCmyk" Style="{StaticResource Switch}" Content="{loc:Loc export.cmyk}" Checked="OnOptionChanged" Unchecked="OnOptionChanged"/>
 
             <TextBlock x:Name="SizeText" Style="{StaticResource Muted}" FontSize="11.5" Margin="0,16,0,0"/>
 
-            <Button Style="{StaticResource PrimaryButton}" Content="Guardar PNG…" Click="Save_Click" Margin="0,18,0,0" Padding="12,8" IsDefault="True"/>
-            <Button Content="Copiar imagen" Click="CopyImage_Click" Margin="0,8,0,0" Padding="12,6"/>
-            <Button Content="Cerrar" Click="Close_Click" Margin="0,8,0,0" Padding="12,6" IsCancel="True"/>
+            <Button Style="{StaticResource PrimaryButton}" Content="{loc:Loc export.savePng}" Click="Save_Click" Margin="0,18,0,0" Padding="12,8" IsDefault="True"/>
+            <Button Content="{loc:Loc export.copyImage}" Click="CopyImage_Click" Margin="0,8,0,0" Padding="12,6"/>
+            <Button Content="{loc:Loc common.close}" Click="Close_Click" Margin="0,8,0,0" Padding="12,6" IsCancel="True"/>
         </StackPanel>
     </Grid>
 </Window>

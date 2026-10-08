@@ -1,4 +1,5 @@
 using Matiz.Core.Colors;
+using Matiz.Core.Localization;
 
 namespace Matiz.Core.Generation;
 
@@ -28,16 +29,7 @@ public sealed record GeneratedColor(string Label, Argb Color, bool IsBase = fals
 
 public static class PaletteGenerator
 {
-    public static string HarmonyName(HarmonyKind kind) => kind switch
-    {
-        HarmonyKind.Complementary => "Complementaria",
-        HarmonyKind.Analogous => "Análoga",
-        HarmonyKind.SplitComplementary => "Complementaria dividida",
-        HarmonyKind.Triadic => "Triádica",
-        HarmonyKind.Tetradic => "Tetrádica",
-        HarmonyKind.Monochromatic => "Monocromática",
-        _ => kind.ToString(),
-    };
+    public static string HarmonyName(HarmonyKind kind) => Texts.Current.HarmonyName(kind);
 
     public static IReadOnlyList<int> HarmonyOffsets(HarmonyKind kind) => kind switch
     {
@@ -71,7 +63,7 @@ public static class PaletteGenerator
         var targetL = LightnessOf(baseState.Hue, baseState.Saturation, baseState.Value);
         return HarmonyOffsets(kind).Select(d =>
         {
-            if (d == 0) return new GeneratedColor("Base", baseColor, true, baseState.Hue, baseState.Saturation);
+            if (d == 0) return new GeneratedColor(Texts.Current.Base, baseColor, true, baseState.Hue, baseState.Saturation);
             var h = ColorMath.NormalizeHue(baseState.Hue + d);
             var v = balanceLightness ? ValueForLightness(h, baseState.Saturation, targetL) : baseState.Value;
             var c = ColorMath.FromHsv(h, baseState.Saturation, v, baseState.Alpha);
@@ -126,18 +118,19 @@ public static class PaletteGenerator
     /// <summary>Tints 50…10%, base, Shades 10…50%.</summary>
     public static IReadOnlyList<GeneratedColor> TintsAndShades(Argb c)
     {
+        var t = Texts.Current;
         var list = new List<GeneratedColor>();
-        for (var p = 50; p >= 10; p -= 10) list.Add(new($"Tint {p}%", Tint(c, p / 100.0)));
-        list.Add(new("Base", c, true));
-        for (var p = 10; p <= 50; p += 10) list.Add(new($"Shade {p}%", Shade(c, p / 100.0)));
+        for (var p = 50; p >= 10; p -= 10) list.Add(new(t.Tint(p), Tint(c, p / 100.0)));
+        list.Add(new(t.Base, c, true));
+        for (var p = 10; p <= 50; p += 10) list.Add(new(t.Shade(p), Shade(c, p / 100.0)));
         return list;
     }
 
     public static IReadOnlyList<GeneratedColor> Tints(Argb c) =>
-        [new("Base", c, true), .. Enumerable.Range(1, 5).Select(i => new GeneratedColor($"Tint {i * 10}%", Tint(c, i / 10.0)))];
+        [new(Texts.Current.Base, c, true), .. Enumerable.Range(1, 5).Select(i => new GeneratedColor(Texts.Current.Tint(i * 10), Tint(c, i / 10.0)))];
 
     public static IReadOnlyList<GeneratedColor> Shades(Argb c) =>
-        [new("Base", c, true), .. Enumerable.Range(1, 5).Select(i => new GeneratedColor($"Shade {i * 10}%", Shade(c, i / 10.0)))];
+        [new(Texts.Current.Base, c, true), .. Enumerable.Range(1, 5).Select(i => new GeneratedColor(Texts.Current.Shade(i * 10), Shade(c, i / 10.0)))];
 
     /// <summary>
     /// Neutros: mismas luminosidades que la Design Scale, hue del color base y croma muy baja (≤ 0.015 antes de redondeo).

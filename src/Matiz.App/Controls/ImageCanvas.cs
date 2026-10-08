@@ -3,6 +3,7 @@ using System.Windows.Automation;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 
 namespace Matiz.App.Controls;
@@ -33,7 +34,8 @@ public sealed class ImageCanvas : FrameworkElement
         ClipToBounds = true;
         Focusable = true;
         Cursor = Cursors.Cross;
-        AutomationProperties.SetName(this, "Imagen para seleccionar colores");
+        AutomationProperties.SetName(this, Loc.T("controls.image"));
+        LocalizationService.Instance.LanguageChanged += (_, _) => AutomationProperties.SetName(this, Loc.T("controls.image"));
     }
 
     public BitmapSource? Source { get => (BitmapSource?)GetValue(SourceProperty); set => SetValue(SourceProperty, value); }

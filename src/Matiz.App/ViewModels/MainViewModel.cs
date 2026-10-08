@@ -2,6 +2,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Matiz.App.Localization;
 using Matiz.App.Services;
 using Matiz.Core.Colors;
 using Matiz.Core.Formatting;
@@ -153,13 +154,13 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (!_clipboard.TrySetText(text))
         {
-            ShowToast("No se pudo copiar: el portapapeles está ocupado");
+            ShowToast(Loc.T("toasts.copyFailed"));
             return;
         }
         if (color is { } c) _history.Add(c);
         var preview = text.Replace("\r", "").Split('\n')[0];
         if (preview.Length > 48) preview = preview[..48] + "…";
-        ShowToast(what is null ? $"Copiado  {preview}" : $"Copiado {what}");
+        ShowToast(what is null ? Loc.F("toasts.copied", preview) : Loc.F("toasts.copiedWhat", what));
     }
 
     private void CopyDefault(Argb c) => Copy(ColorFormatters.Get(_settings.DefaultFormatId).Format(c, FormatOptions), c);
@@ -209,7 +210,7 @@ public sealed partial class MainViewModel : ObservableObject
             Session.Commit(c, ColorChangeSource.ScreenCapture);
             if (_settings.ShowAfterCapture) Shell?.ShowAndActivate();
             if (_settings.CopyOnCapture) CopyDefault(c);
-            else ShowToast($"Capturado  {c}");
+            else ShowToast(Loc.F("toasts.captured", c));
         });
     }
 
@@ -220,7 +221,7 @@ public sealed partial class MainViewModel : ObservableObject
         if (text is not null && ColorParser.TryParse(text, out var c))
         {
             Session.Commit(c, ColorChangeSource.ManualInput);
-            ShowToast($"Color pegado  {c}");
+            ShowToast(Loc.F("toasts.pasted", c));
             return;
         }
         if (_clipboard.TryGetImage() is { } img)
@@ -228,7 +229,7 @@ public sealed partial class MainViewModel : ObservableObject
             ShowImage(img);
             return;
         }
-        ShowToast("El portapapeles no contiene un color ni una imagen");
+        ShowToast(Loc.T("toasts.clipboardEmpty"));
     }
 
     [RelayCommand]

@@ -2,10 +2,12 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Matiz.App.Controls;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 using Matiz.Core.Export;
 using Matiz.Core.Formatting;
 using Matiz.Core.Generation;
+using Matiz.Core.Localization;
 using Matiz.Core.Session;
 
 namespace Matiz.App.ViewModels;
@@ -33,7 +35,7 @@ public sealed partial class MainViewModel
 
     public ObservableCollection<SwatchItem> GeneratedColors { get; } = [];
 
-    public IReadOnlyList<Option<HarmonyKind>> HarmonyKinds { get; } =
+    [ObservableProperty] public partial IReadOnlyList<Option<HarmonyKind>> HarmonyKinds { get; private set; } =
         Enum.GetValues<HarmonyKind>().Select(k => new Option<HarmonyKind>(k, PaletteGenerator.HarmonyName(k))).ToList();
 
     public IReadOnlyList<IPaletteFormatter> PaletteFormats => PaletteFormatters.All;
@@ -121,7 +123,7 @@ public sealed partial class MainViewModel
         RefreshWheelMarkers();
         var s = GeneratedColors[_selectedHarmonyIndex];
         var text = ColorFormatters.Get(_settings.DefaultFormatId).Format(s.Color, FormatOptions);
-        ShowToast($"{PaletteGenerator.HarmonyName(HarmonyKind)} {s.Label}  ·  {text}", "Copiar", () => Copy(text, s.Color), seconds: 6);
+        ShowToast($"{PaletteGenerator.HarmonyName(HarmonyKind)} {s.Label}  ·  {text}", Loc.T("common.copy"), () => Copy(text, s.Color), seconds: 6);
     }
 
     /// <summary>Doble click en un punto de la rueda: pasa a ser el color actual.</summary>
@@ -141,8 +143,8 @@ public sealed partial class MainViewModel
         return GeneratedTab switch
         {
             GeneratedTab.Neutrals => $"Neutral {s.Label}",
-            GeneratedTab.Extracted => $"Imagen {index + 1}",
-            _ when s.Label == "Base" => prefix,
+            GeneratedTab.Extracted => Loc.F("gen.imageColorName", index + 1),
+            _ when s.Label == Texts.Current.Base => prefix,
             _ => $"{prefix} {s.Label}",
         };
     }
@@ -153,9 +155,9 @@ public sealed partial class MainViewModel
         {
             GeneratedTab.Scale => ScalePrefix,
             GeneratedTab.Harmony => PaletteGenerator.HarmonyName(HarmonyKind),
-            GeneratedTab.TintsShades => "Tints y Shades",
+            GeneratedTab.TintsShades => Loc.T("gen.exportTitle.tints"),
             GeneratedTab.Neutrals => "Neutral",
-            _ => "Colores de imagen",
+            _ => Loc.T("gen.exportTitle.imageColors"),
         };
         return new PaletteExportModel(title, GeneratedColors.Select((s, i) => new PaletteExportColor(GeneratedName(s, i), s.Color)).ToList());
     }
@@ -193,7 +195,7 @@ public sealed partial class MainViewModel
         var p = _palettes.EnsureActive();
         var index = GeneratedColors.IndexOf(s);
         _palettes.AddColor(p.Id, s.Color, index >= 0 ? GeneratedName(s, index) : null);
-        ShowToast($"Agregado a «{p.Name}»");
+        ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
 
     [RelayCommand]
@@ -202,7 +204,7 @@ public sealed partial class MainViewModel
         if (GeneratedColors.Count == 0) return;
         var p = _palettes.EnsureActive();
         _palettes.AddColors(p.Id, GeneratedColors.Select((s, i) => (s.Color, (string?)GeneratedName(s, i))).ToList());
-        ShowToast($"{GeneratedColors.Count} colores agregados a «{p.Name}»");
+        ShowToast(Loc.F("toasts.addedCount", GeneratedColors.Count, p.Name));
     }
 
     [RelayCommand]
@@ -210,6 +212,6 @@ public sealed partial class MainViewModel
     {
         if (GeneratedColors.Count == 0) return;
         var f = PaletteFormatters.Get(formatId ?? "css");
-        Copy(f.Format(GeneratedExportModel(), FormatOptions), what: $"como {f.DisplayName}");
+        Copy(f.Format(GeneratedExportModel(), FormatOptions), what: Loc.F("toasts.asFormat", f.DisplayName));
     }
 }

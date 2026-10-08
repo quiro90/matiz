@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using Matiz.App.Imaging;
+using Matiz.App.Localization;
 using Matiz.App.Services;
 using Matiz.Core.Export;
 using Microsoft.Win32;
@@ -47,9 +48,9 @@ public partial class ExportImageWindow : Window
         var name = string.Concat(_palette.Name.Split(Path.GetInvalidFileNameChars()));
         var dlg = new SaveFileDialog
         {
-            Filter = "Imagen PNG|*.png",
-            FileName = string.IsNullOrWhiteSpace(name) ? "paleta.png" : $"{name}.png",
-            Title = "Guardar paleta como PNG",
+            Filter = Loc.T("export.pngFilter"),
+            FileName = string.IsNullOrWhiteSpace(name) ? Loc.T("export.defaultFileName") + ".png" : $"{name}.png",
+            Title = Loc.T("export.saveDialog"),
         };
         if (dlg.ShowDialog(this) != true) return;
         try
@@ -59,7 +60,7 @@ public partial class ExportImageWindow : Window
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            MessageBox.Show(this, $"No se pudo guardar la imagen:\n{ex.Message}", "Matiz", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(this, Loc.F("export.saveError", ex.Message), "Matiz", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 
@@ -72,7 +73,7 @@ public partial class ExportImageWindow : Window
         }
         catch (System.Runtime.InteropServices.ExternalException)
         {
-            MessageBox.Show(this, "No se pudo copiar: el portapapeles está ocupado.", "Matiz");
+            MessageBox.Show(this, Loc.T("export.copyFailed"), "Matiz");
         }
     }
 

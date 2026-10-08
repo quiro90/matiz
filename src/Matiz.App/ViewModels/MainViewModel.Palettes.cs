@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Matiz.App.Localization;
 using Matiz.Core.Export;
 using Matiz.Core.Formatting;
 using Matiz.Core.Session;
@@ -46,7 +47,7 @@ public sealed partial class MainViewModel
 
             var active = _palettes.Active;
             SelectedPalette = active is null ? null : Palettes.FirstOrDefault(p => p.Id == active.Id);
-            ActivePaletteName = active?.Name ?? "Sin paleta";
+            ActivePaletteName = active?.Name ?? Loc.T("palette.none");
 
             ActivePaletteColors.Clear();
             if (active is not null)
@@ -95,7 +96,7 @@ public sealed partial class MainViewModel
     {
         var p = _palettes.EnsureActive();
         _palettes.AddColor(p.Id, Session.Current.Argb);
-        ShowToast($"{Session.Current.Argb} agregado a «{p.Name}»");
+        ShowToast(Loc.F("toasts.addedToPalette", Session.Current.Argb, p.Name));
     }
 
     [RelayCommand]
@@ -117,7 +118,7 @@ public sealed partial class MainViewModel
     {
         var id = item?.Id ?? _palettes.Active?.Id;
         if (id is not { } v || _palettes.Delete(v) is not { } removed) return;
-        ShowToast($"Paleta «{removed.Palette.Name}» eliminada", "Deshacer", () => _palettes.Restore(removed.Palette, removed.Index));
+        ShowToast(Loc.F("toasts.paletteDeleted", removed.Palette.Name), Loc.T("common.undo"), () => _palettes.Restore(removed.Palette, removed.Index));
     }
 
     [RelayCommand]
@@ -151,7 +152,7 @@ public sealed partial class MainViewModel
         var index = p.Colors.FindIndex(c => c.Id == item.Id);
         var model = p.Colors[index];
         _palettes.RemoveColor(p.Id, item.Id);
-        ShowToast($"Color {item.Hex} eliminado", "Deshacer", () =>
+        ShowToast(Loc.F("toasts.colorDeleted", item.Hex), Loc.T("common.undo"), () =>
         {
             if (_palettes.Find(p.Id) is not { } target) return;
             var added = _palettes.AddColor(target.Id, model.Color, model.Name);
@@ -179,11 +180,11 @@ public sealed partial class MainViewModel
     {
         if (_palettes.Active is not { } p || p.Colors.Count == 0)
         {
-            ShowToast("La paleta activa no tiene colores");
+            ShowToast(Loc.T("toasts.noColors"));
             return;
         }
         var f = PaletteFormatters.Get(formatId ?? "css");
-        Copy(f.Format(PaletteExportModel.From(p), FormatOptions), what: $"«{p.Name}» como {f.DisplayName}");
+        Copy(f.Format(PaletteExportModel.From(p), FormatOptions), what: Loc.F("toasts.paletteAsFormat", p.Name, f.DisplayName));
     }
 
     [RelayCommand(CanExecute = nameof(HasActiveColors))]

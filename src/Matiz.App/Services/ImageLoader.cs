@@ -1,13 +1,14 @@
 using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Matiz.App.Localization;
 
 namespace Matiz.App.Services;
 
 /// <summary>Carga de imágenes vía WIC (PNG, JPEG, BMP, GIF primer fotograma, TIFF, WebP si el códec está instalado).</summary>
 public static class ImageLoader
 {
-    public const string DialogFilter = "Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff;*.webp|Todos los archivos|*.*";
+    public static string DialogFilter => Loc.T("dialogs.imageFilter");
 
     public static BitmapSource? TryLoad(string path, out string? error)
     {
@@ -18,7 +19,7 @@ public static class ImageLoader
             var decoder = BitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat | BitmapCreateOptions.IgnoreColorProfile, BitmapCacheOption.OnLoad);
             if (decoder.Frames.Count == 0)
             {
-                error = "La imagen no contiene fotogramas.";
+                error = Loc.T("image.noFrames");
                 return null;
             }
             BitmapSource frame = decoder.Frames[0];
@@ -28,7 +29,7 @@ public static class ImageLoader
         }
         catch (Exception ex) when (ex is NotSupportedException or FileFormatException or IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
         {
-            error = $"No se pudo abrir la imagen: {ex.Message}";
+            error = Loc.F("toasts.openImageFailed.reason", ex.Message);
             return null;
         }
     }

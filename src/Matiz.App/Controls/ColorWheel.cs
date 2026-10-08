@@ -3,6 +3,7 @@ using System.Windows.Automation;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 
 namespace Matiz.App.Controls;
@@ -51,7 +52,8 @@ public sealed class ColorWheel : FrameworkElement
         Focusable = true;
         FocusVisualStyle = null;
         Cursor = Cursors.Cross;
-        AutomationProperties.SetName(this, "Rueda de color: tono y saturación");
+        AutomationProperties.SetName(this, Loc.T("controls.wheel"));
+        LocalizationService.Instance.LanguageChanged += (_, _) => AutomationProperties.SetName(this, Loc.T("controls.wheel"));
     }
 
     public double Hue { get => (double)GetValue(HueProperty); set => SetValue(HueProperty, value); }

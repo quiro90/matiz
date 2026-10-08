@@ -90,8 +90,8 @@ public class PaletteServiceTests
         var s = NewService();
         var a = s.Create();
         var b = s.Create();
-        Assert.Equal("Paleta sin título", a.Name);
-        Assert.Equal("Paleta sin título 2", b.Name);
+        Assert.Equal("Untitled palette", a.Name);
+        Assert.Equal("Untitled palette 2", b.Name);
         Assert.Equal(a.CreatedAt, a.ModifiedAt);
         Assert.Empty(a.Colors);
         Assert.Equal(b.Id, s.Active!.Id);
@@ -122,7 +122,7 @@ public class PaletteServiceTests
         Assert.Equal(["C", "A", "B"], p.Colors.Select(c => c.Name!));
 
         var copy = s.Duplicate(p.Id)!;
-        Assert.Equal("PuchiApp (copia)", copy.Name);
+        Assert.Equal("PuchiApp (copy)", copy.Name);
         Assert.NotEqual(p.Colors[0].Id, copy.Colors[0].Id);
 
         var removed = s.Delete(p.Id)!.Value;

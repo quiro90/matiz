@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using Matiz.Core.Colors;
 using Matiz.Core.Formatting;
+using Matiz.Core.Localization;
 using Matiz.Core.Palettes;
 
 namespace Matiz.Core.Export;
@@ -120,13 +121,14 @@ public static class IdentifierNaming
     /// </summary>
     public static string[] Unique(IReadOnlyList<PaletteExportColor> colors, Func<string, string> transform, string suffixSeparator)
     {
+        var fallback = Texts.Current;
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var result = new string[colors.Count];
         for (var i = 0; i < colors.Count; i++)
         {
-            var raw = string.IsNullOrWhiteSpace(colors[i].Name) ? $"Color {i + 1}" : colors[i].Name!.Trim();
+            var raw = string.IsNullOrWhiteSpace(colors[i].Name) ? fallback.ColorNumberFallback(i + 1) : colors[i].Name!.Trim();
             var name = transform(raw);
-            if (string.IsNullOrEmpty(name)) name = transform($"Color {i + 1}");
+            if (string.IsNullOrEmpty(name)) name = transform(fallback.ColorNumberFallback(i + 1));
             var candidate = name;
             for (var n = 2; !used.Add(candidate); n++) candidate = name + suffixSeparator + n;
             result[i] = candidate;

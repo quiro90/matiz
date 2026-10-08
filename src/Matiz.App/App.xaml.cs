@@ -1,7 +1,9 @@
 using System.Windows;
+using Matiz.App.Localization;
 using Matiz.App.Services;
 using Matiz.App.ViewModels;
 using Matiz.App.Views;
+using Matiz.Core.Localization;
 using Matiz.Core.Palettes;
 using Matiz.Core.Persistence;
 
@@ -42,7 +44,7 @@ public partial class App : Application
         DispatcherUnhandledException += (_, ex) =>
         {
             LogError(paths, ex.Exception);
-            MessageBox.Show($"Se produjo un error inesperado. Se ha guardado el detalle en error.log.\n\n{ex.Exception.Message}", "Matiz",
+            MessageBox.Show(Loc.F("app.error", ex.Exception.Message), "Matiz",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             ex.Handled = true;
         };
@@ -54,6 +56,9 @@ public partial class App : Application
         var settings = settingsStore.Load();
         var library = paletteStore.Load();
         var history = historyStore.Load();
+
+        LocalizationService.Initialize(settings.Value.Language);
+        Texts.Current = LocalizationTexts.Instance;
 
         var theme = new ThemeService();
         theme.Apply(settings.Value.Theme);

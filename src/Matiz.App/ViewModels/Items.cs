@@ -1,5 +1,6 @@
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 using Matiz.Core.Formatting;
 using Matiz.Core.Palettes;
@@ -61,13 +62,19 @@ public sealed partial class SwatchItem : ObservableObject
 }
 
 /// <summary>Fila del panel de formatos del color actual.</summary>
-public sealed partial class FormatRow(string id, string label, string? tooltip = null) : ObservableObject
+public sealed partial class FormatRow(string id, string label, string? tooltipKey = null) : ObservableObject
 {
     public string Id { get; } = id;
     public string Label { get; } = label;
-    public string? Tooltip { get; } = tooltip;
-
+    public string? Tooltip => tooltipKey is null ? null : Loc.T(tooltipKey);
+    public string CopyAutomation => Loc.F("row.copyAutomation", Label);
     [ObservableProperty] public partial string Value { get; set; } = "";
+
+    public void RefreshTexts()
+    {
+        OnPropertyChanged(nameof(Tooltip));
+        OnPropertyChanged(nameof(CopyAutomation));
+    }
 }
 
 /// <summary>Color de la paleta activa. Renombrar escribe directamente en el servicio.</summary>
@@ -153,7 +160,7 @@ public sealed partial class PaletteItem : ObservableObject
     {
         Preview = Model.Colors.Take(12).Select(c => BrushCache.Of(c.Color)).ToList();
         var count = Model.Colors.Count;
-        Summary = $"{count} {(count == 1 ? "color" : "colores")} · {Model.ModifiedAt.ToLocalTime():d MMM yyyy HH:mm}";
+        Summary = Loc.F(count == 1 ? "palette.summaryOne" : "palette.summaryMany", count, Model.ModifiedAt.ToLocalTime().ToString("d MMM yyyy HH:mm"));
         OnPropertyChanged(nameof(Name));
         OnPropertyChanged(nameof(Description));
     }

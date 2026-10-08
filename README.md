@@ -41,6 +41,19 @@ Open `Matiz.sln` in Visual Studio, or use the script:
 
 User data lives in `%APPDATA%\Matiz\` (palettes, history, settings).
 
+## Publish to Microsoft Store
+
+The MSIX packaging does not use Visual Studio or `.wapproj`: `.\build.ps1 msix` runs a self-contained `win-x64` `dotnet publish`, assembles the layout and builds the package with the Windows SDK's `makeappx` (needs a **Windows 10/11 SDK** installed).
+
+1. **Reserve the app**: in [Partner Center](https://partner.microsoft.com/dashboard) → *Windows apps* → reserve the name (already reserved: `JuanQuiroga.Matiz`).
+2. **Package identity**: on the app's *Product identity* page, copy **Package identity name** and **Publisher** into `packaging/Matiz.Package/Package.appxmanifest` (`Identity Name` / `Identity Publisher`; already set to `JuanQuiroga.Matiz` / `CN=C7BB1DDD-DF8A-49EF-8538-8D09EF4F231B`).
+3. **Version bump** (if needed): raise it in both **`Directory.Build.props` → `<Version>`** and the manifest → `<Identity Version>` **in the same commit** (`1.0.2` → `1.0.2.0`); the build fails if they drift apart. The Store version must only ever go up.
+4. **Assets**: if missing, regenerate the PNGs with `packaging/Matiz.Package/Generate-Assets.ps1`.
+5. **Local side-load test**, optional: `.\build.ps1 msix -Cert` creates a test certificate and installs the signed MSIX (UAC prompt to trust the cert); double-click the generated `.msix`.
+6. **Build the package**: `.\build.ps1 msix` → `publish/msix-store/JuanQuiroga.Matiz_<version>_x64.msixupload`.
+7. **Complete the submission** in Partner Center: short/long description, screenshots, 300x300 listing icon, privacy policy URL (link to the repo README), age rating, pricing, and upload the `.msixupload`.
+8. **Once the Store release is approved**: create the GitHub release with `publish/win-x64-native/Matiz.exe` (noting which Store version it matches).
+
 ## Project
 
 - `src/Matiz.Core` — color model, conversions, palette generation, export, persistence (no UI, cross-platform).

@@ -39,6 +39,19 @@ Abre `Matiz.sln` en Visual Studio o usa el script:
 
 Los datos de usuario se guardan en `%APPDATA%\Matiz\` (paletas, historial, ajustes).
 
+## Publicar en Microsoft Store
+
+El empaquetado MSIX no usa Visual Studio ni `.wapproj`: `.\build.ps1 msix` hace `dotnet publish` self-contained `win-x64`, arma el layout y genera el paquete con `makeappx` del Windows SDK (necesita un **Windows 10/11 SDK** instalado).
+
+1. **Reservar la app**: en [Partner Center](https://partner.microsoft.com/dashboard) → *Aplicaciones de Windows* → reserva el nombre (ya reservado: `JuanQuiroga.Matiz`).
+2. **Identidad del paquete**: en la página *Product identity* de la app, copiá **Package identity name** y **Publisher** y pegalos en `packaging/Matiz.Package/Package.appxmanifest` (`Identity Name` / `Identity Publisher`; ya cargados con `JuanQuiroga.Matiz` / `CN=C7BB1DDD-DF8A-49EF-8538-8D09EF4F231B`).
+3. **Bump de versión** (si aplica): subila en **`Directory.Build.props` → `<Version>`** y en el manifiesto → `<Identity Version>` **en el mismo commit** (`1.0.2` → `1.0.2.0`); el build falla si quedan destonadas. La versión de Store debe ir sumando (jamás bajar o repetir una ya enviada).
+4. **Activos**: si faltan, regenerá los PNG con `packaging/Matiz.Package/Generate-Assets.ps1`.
+5. **Prueba local (sideload)**, opcional: `.\build.ps1 msix -Cert` crea un cert de prueba e instala el MSIX firmado (pide UAC para confiar en el cert); doble click en el `.msix` generado.
+6. **Generar el paquete**: `.\build.ps1 msix` → `publish/msix-store/JuanQuiroga.Matiz_<versión>_x64.msixupload`.
+7. **Completar el envío** en Partner Center: descripción corta/larga, screenshots, ícono 300x300 del listado, URL de política de privacidad (link al README del repo), clasificación de edad, precios, y subí el `.msixupload`.
+8. **Al aprobar la Store**: creá el release de GitHub con `publish/win-x64-native/Matiz.exe` (nota qué versión corresponde a la Store).
+
 ## Proyecto
 
 - `src/Matiz.Core` — modelo de color, conversiones, generación de paletas, exportación, persistencia (sin UI, multiplataforma).

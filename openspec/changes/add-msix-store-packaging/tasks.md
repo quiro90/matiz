@@ -1,0 +1,25 @@
+## 1. Identidad en Partner Center (pasos del usuario, 1 a 1)
+
+- [x] 1.1 Reservar la app en https://partner.microsoft.com/dashboard → "Aplicaciones de Windows" → verificado: quedó reservado `JuanQuiroga.Matiz` (cuenta individual ya existente).
+- [x] 1.2 De la página Product identity: copiados y pegados en la conversación: **Package identity name** `JuanQuiroga.Matiz` y **Publisher** `CN=C7BB1DDD-DF8A-49EF-8538-8D09EF4F231B`.
+- [x] 1.3 Guardar los valores en `Package.appxmanifest` (adaptación durante apply: al no haber PR inicial, el manifiesto los guarda como única fuente recordatoria del envío): verificado con `Select-String` los dos strings presentes en `packaging/Matiz.Package/Package.appxmanifest`.
+
+## 2. Empaquetado (enfoque definido en apply: `dotnet publish` + MakeAppx/Signtool, sin `.wapproj`)
+
+- [x] 2.1 Crear `packaging/Matiz.Package/Package.appxmanifest` con la identidad real de Partner Center (`Name="JuanQuiroga.Matiz"`, `Publisher="CN=C7BB1DDD-DF8A-49EF-8538-8D09EF4F231B"`, `PublisherDisplayName` Juan Quiroga), versión `1.0.1.0`, `TargetDeviceFamily` `Windows.Desktop` mínimo `10.0.0.0`, `runFullTrust` + `EntryPoint="windows.fullTrustApplication"`, ejecutable `Matiz.exe`, DisplayName `Matiz` y declaración de visual assets (Square44x31, Square150x150, Wide310x150, Square310x310, StoreLogo); verificación: el XML está bien formado y se valida al empaquetar.
+- [x] 2.2 Crear `packaging/Matiz.Package/Generate-Assets.ps1` que genere desde la imagen 256px (`src/Matiz.App/Assets/matiz.png`) los PNG: `Square44x44Logo` base + `targetsize` (16,20,24,30,32,36,48,60,64,72,80,96,256) y variantes `_altform-unplated` para la barra de tareas, `Square150x150Logo`, `Wide310x150Logo`, `Square310x310Logo` y `StoreLogo` 50x50, con fondo transparente; verificación: los PNG declarados por el manifiesto existen todos en `Assets/`.
+- [x] 2.3 Agregar a `build.ps1` la tarea `msix` (+ parámetro `-Cert` opcional para prueba local de sideload): localiza `makeappx`/`signtool` del Windows 10 SDK, valida identidad (Publisher/Name sin `TODO`), valida versión del manifiesto contra `Directory.Build.props` (`1.0.1` → `1.0.1.0`), valida activos, `publish` self-contained `win-x64`, layout con `AppxManifest.xml`, `makeappx pack` y `.msixupload` sin firma; verificación: `.\build.ps1 msix` produce `publish\msix-store\<...>.msixupload` con `TreatWarningsAsErrors` intacto y cero warnings de la app; `Matiz.sln` y `Matiz.slnx` no cambian.
+- [x] 2.4 Probar las guardas con casos de error del spec: (a) Publisher con `TODO` → falla con instrucciones; (b) versión manifiesto `1.0.0.1` vs proyecto `1.0.1` → falla mostrando ambos valores; (c) PNG eliminado → falla nombrando el activo faltante; verificación: cada error muestra mensaje claro y correcto, y al corregir todo vuelve a generar el `.msixupload`
+
+## 3. Verificación del paquete instalado
+
+- [x] 3.1 Certificado de prueba local y sideload: `.\build.ps1 msix -Cert` instala y confía el cert de prueba; verificación: Windows confía en el cert y el paquete se instala con doble click sin errores de firma
+- [ ] 3.2 Smoke test del app empaquetada: abrir Matiz desde Inicio (con icono correcto), Alt+C captura un color, exportar PNG con Ctrl+E, reabrir y verificar settings/paletas, click en el link de Instagram de Ajustes; verificación: todos funcionan sin diferencias con la versión portable
+- [x] 3.3 Verificar que el payload es self-contained: abrir el paquete instalado en una máquina o VM sin .NET 10 Desktop Runtime → arranca y funciona; verificación: escenarios del spec "Instalación sin .NET" cumplidos (si no hay VM, confirmar inspectando el contenido del MSIX: incluye `Matiz.exe`, runtime .NET y DLLs del framework)
+- [x] 3.4 Confirmar que distribuciones directas quedaron intactas: `.\build.ps1 publish` genera `publish\win-x64\Matiz.exe` (framework) y `.\build.ps1 native` genera `publish\win-x64-native\Matiz.exe` (single-file); verificación: ambos ejecutables arrancan, y los tests de `.\build.ps1 test` siguen en verde
+
+## 4. Documentación y envío a Store
+
+- [x] 4.1 README: apartado "Publicar en Microsoft Store" con los pasos 1 a 1 de Partner Center (reservar nombre, identidad, completar envío), más el bump de versión (`Directory.Build.props` + manifiesto, un commit) y cómo correr `msix`/`native` para un release; verificación: leyendo el apartado es posible seguir el flujo sin pedir ayuda
+- [ ] 4.2 (el usuario, en Partner Center) Completar el envío: descripción corta/larga, screenshots, ícono 300x300 de listado, URL de privacidad (link al README del repo), clasificación de edad, precios, subir el `.msixupload`; verificación: envío queda "En revisión" en Partner Center
+- [ ] 4.3 Al aprobar la Store: crear release de GitHub con `publish\win-x64-native\Matiz.exe` (y opcionalmente el zip del framework-dependent con instrucciones de runtime); verificación: release publica y descargable, con nota sobre qué versión corresponde a la Store

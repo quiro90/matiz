@@ -336,12 +336,6 @@
   <data name="palette.empty" xml:space="preserve">
     <value>Paleta vacía: agrega el color actual con + o Ctrl+S, o usa «Agregar todo» en una escala.</value>
   </data>
-  <data name="palette.addCurrent.tooltip" xml:space="preserve">
-    <value>Agregar color actual (Ctrl+S)</value>
-  </data>
-  <data name="palette.addCurrent.automation" xml:space="preserve">
-    <value>Agregar color actual a la paleta</value>
-  </data>
   <data name="palette.copy.tooltip" xml:space="preserve">
     <value>Copiar la paleta como CSS, JSON, Dart, C#, Tailwind…</value>
   </data>

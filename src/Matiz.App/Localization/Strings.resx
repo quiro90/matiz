@@ -336,12 +336,6 @@
   <data name="palette.empty" xml:space="preserve">
     <value>Empty palette: add the current color with + or Ctrl+S, or use "Add all" on a scale.</value>
   </data>
-  <data name="palette.addCurrent.tooltip" xml:space="preserve">
-    <value>Add current color (Ctrl+S)</value>
-  </data>
-  <data name="palette.addCurrent.automation" xml:space="preserve">
-    <value>Add current color to the palette</value>
-  </data>
   <data name="palette.copy.tooltip" xml:space="preserve">
     <value>Copy the palette as CSS, JSON, Dart, C#, Tailwind…</value>
   </data>

@@ -486,14 +486,14 @@
                                                      Visibility="{Binding IsBase, Converter={StaticResource BoolToVis}}" ToolTip="{loc:Loc swatch.colorBase.tooltip}"/>
                                         </Grid>
                                     </Button>
-                                    <Button Style="{StaticResource SmallIconButton}" Content="&#xE735;" Foreground="{Binding Foreground}" Width="18" Height="18" FontSize="10"
+                                    <Button Style="{StaticResource SmallIconButton}" Content="&#xE890;" Foreground="{Binding Foreground}" Width="18" Height="18" FontSize="10"
                                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2" Panel.ZIndex="1"
+                                            Visibility="{Binding IsMouseOver, ElementName=CardRoot, Converter={StaticResource BoolToVis}}"
                                             Command="{Binding DataContext.UseSwatchCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
                                             ToolTip="{loc:Loc swatch.useAsCurrent}" AutomationProperties.Name="{loc:Loc swatch.useAsCurrent}"/>
                                     <Border CornerRadius="7" BorderThickness="2" BorderBrush="{DynamicResource TextBrush}" Margin="-3" IsHitTestVisible="False"
                                             Visibility="{Binding IsSelected, Converter={StaticResource BoolToVis}}"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,0,0,3"
-                                                Visibility="{Binding IsMouseOver, ElementName=CardRoot, Converter={StaticResource BoolToVis}}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,0,0,3">
                                         <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding Foreground}" Width="22" Height="22"
                                                 Command="{Binding DataContext.CopySwatchHexCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" ToolTip="{loc:Loc swatch.copyHex}"/>
                                         <Button Style="{StaticResource SmallIconButton}" Content="&#xE710;" Foreground="{Binding Foreground}" Width="22" Height="22"
@@ -553,11 +553,18 @@
                                                 <MenuItem Header="{loc:Loc common.delete}" Command="{Binding PlacementTarget.Tag.RemovePaletteColorCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding}"/>
                                             </ContextMenu>
                                         </StackPanel.ContextMenu>
-                                        <Border Height="38" CornerRadius="6" Background="{Binding Brush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Cursor="Hand"
-                                                PreviewMouseLeftButtonDown="PaletteSwatch_MouseDown" PreviewMouseMove="PaletteSwatch_MouseMove" MouseLeftButtonUp="PaletteSwatch_MouseUp"
-                                                ToolTip="{loc:Loc palette.color.tooltip}">
-                                            <TextBlock Text="{Binding Hex}" Foreground="{Binding Foreground}" FontFamily="{StaticResource MonoFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
+                                        <Grid x:Name="SwatchRoot">
+                                            <Border Height="38" CornerRadius="6" Background="{Binding Brush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Cursor="Hand"
+                                                    PreviewMouseLeftButtonDown="PaletteSwatch_MouseDown" PreviewMouseMove="PaletteSwatch_MouseMove" MouseLeftButtonUp="PaletteSwatch_MouseUp"
+                                                    ToolTip="{loc:Loc palette.color.tooltip}">
+                                                <TextBlock Text="{Binding Hex}" Foreground="{Binding Foreground}" FontFamily="{StaticResource MonoFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <Button Style="{StaticResource SmallIconButton}" Content="&#xE711;" Width="16" Height="16" FontSize="9"
+                                                    Foreground="{Binding Foreground}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
+                                                    Command="{Binding DataContext.RemovePaletteColorCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                                    ToolTip="{loc:Loc common.delete}" AutomationProperties.Name="{loc:Loc common.delete}"
+                                                    Visibility="{Binding IsMouseOver, ElementName=SwatchRoot, Converter={StaticResource BoolToVis}}"/>
+                                        </Grid>
                                         <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" Style="{StaticResource InlineEdit}" Tag="{loc:Loc palette.namePlaceholder}" Margin="0,3,0,0"
                                                  c:Behaviors.EnterUpdatesSource="True" AutomationProperties.Name="{loc:Loc palette.colorName.automation}" ToolTip="{loc:Loc palette.colorName.tooltip}"/>
                                     </StackPanel>
@@ -569,7 +576,6 @@
                                Visibility="{Binding HasActiveColors, Converter={StaticResource InvBoolToVis}}"/>
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Style="{StaticResource IconButton}" Content="&#xE710;" Command="{Binding AddCurrentToPaletteCommand}" ToolTip="{loc:Loc palette.addCurrent.tooltip}" AutomationProperties.Name="{loc:Loc palette.addCurrent.automation}"/>
                         <Button Click="OpenMenu_Click" ContextMenu="{StaticResource CopyPaletteMenu}" Margin="4,0" ToolTip="{loc:Loc palette.copy.tooltip}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{loc:Loc common.copy}" VerticalAlignment="Center"/>

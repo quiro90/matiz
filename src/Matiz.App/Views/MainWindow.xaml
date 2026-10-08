@@ -155,7 +155,8 @@
                             </Grid.ColumnDefinitions>
                             <c:ColorWheel x:Name="Wheel" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Gamma="{Binding WheelGamma}"
                                           CommitCommand="{Binding CommitPickerCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                          Markers="{Binding WheelMarkers}" MarkerClickCommand="{Binding SelectWheelMarkerCommand}" MarkerActivateCommand="{Binding ActivateWheelMarkerCommand}"
+                                          Markers="{Binding WheelMarkers}" MarkerClickCommand="{Binding SelectWheelMarkerCommand}"
+                                          MarkerDragCommand="{Binding SetWheelMarkerOffsetCommand}" MarkerResetCommand="{Binding ResetWheelMarkerOffsetCommand}"
                                           ToolTip="{loc:Loc picker.wheel.tooltip}"/>
                             <c:BrightnessSlider Grid.Column="1" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Value="{Binding Brightness}"
                                                 CommitCommand="{Binding CommitPickerCommand}" Margin="6,6,0,6" ToolTip="{loc:Loc picker.brightness.tooltip}"/>
@@ -477,17 +478,21 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Button Style="{StaticResource SwatchButton}" Background="{Binding Brush}"
-                                            Command="{Binding DataContext.UseSwatchCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
-                                            ToolTip="{loc:Loc swatch.useAsCurrent}" AutomationProperties.Name="{Binding Hex}">
+                                            Command="{Binding DataContext.CopySwatchDefaultCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                            ToolTip="{loc:Loc swatch.copyDefault.tooltip}" AutomationProperties.Name="{Binding Hex}">
                                         <Grid>
                                             <TextBlock Text="{Binding Label}" Foreground="{Binding Foreground}" FontSize="11" FontWeight="SemiBold" Margin="7,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                             <Ellipse Width="6" Height="6" Fill="{Binding Foreground}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0"
                                                      Visibility="{Binding IsBase, Converter={StaticResource BoolToVis}}" ToolTip="{loc:Loc swatch.colorBase.tooltip}"/>
                                         </Grid>
                                     </Button>
+                                    <Button Style="{StaticResource SmallIconButton}" Content="&#xE735;" Foreground="{Binding Foreground}" Width="18" Height="18" FontSize="10"
+                                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2" Panel.ZIndex="1"
+                                            Command="{Binding DataContext.UseSwatchCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
+                                            ToolTip="{loc:Loc swatch.useAsCurrent}" AutomationProperties.Name="{loc:Loc swatch.useAsCurrent}"/>
                                     <Border CornerRadius="7" BorderThickness="2" BorderBrush="{DynamicResource TextBrush}" Margin="-3" IsHitTestVisible="False"
                                             Visibility="{Binding IsSelected, Converter={StaticResource BoolToVis}}"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3"
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,0,0,3"
                                                 Visibility="{Binding IsMouseOver, ElementName=CardRoot, Converter={StaticResource BoolToVis}}">
                                         <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding Foreground}" Width="22" Height="22"
                                                 Command="{Binding DataContext.CopySwatchHexCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" ToolTip="{loc:Loc swatch.copyHex}"/>

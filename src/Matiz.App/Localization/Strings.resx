@@ -225,7 +225,7 @@
 
   <!-- swatches -->
   <data name="swatch.useAsCurrent" xml:space="preserve">
-    <value>Use as current color</value>
+    <value>Use as principal color</value>
   </data>
   <data name="swatch.copyHex" xml:space="preserve">
     <value>Copy HEX</value>
@@ -235,6 +235,9 @@
   </data>
   <data name="swatch.copyDefault" xml:space="preserve">
     <value>Copy (default format)</value>
+  </data>
+  <data name="swatch.copyDefault.tooltip" xml:space="preserve">
+    <value>Copy in the main format</value>
   </data>
   <data name="swatch.addToPalette" xml:space="preserve">
     <value>Add to the active palette</value>

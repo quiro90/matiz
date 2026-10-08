@@ -33,6 +33,11 @@ public sealed partial class MainViewModel
     /// <summary>Índice en <see cref="GeneratedColors"/> del color de armonía seleccionado en la rueda (-1 ninguno).</summary>
     private int _selectedHarmonyIndex = -1;
 
+    /// <summary>Desfases personalizados de los puntos de armonía (Δhue°/Δsat del canónico), por índice generado; null = armonía canónica.</summary>
+    private (double HueDelta, double SatDelta)[]? _harmonyOffsets;
+
+    private void ClearHarmonyOffsets() => _harmonyOffsets = null;
+
     public ObservableCollection<SwatchItem> GeneratedColors { get; } = [];
 
     [ObservableProperty] public partial IReadOnlyList<Option<HarmonyKind>> HarmonyKinds { get; private set; } =
@@ -51,6 +56,7 @@ public sealed partial class MainViewModel
     partial void OnHarmonyKindChanged(HarmonyKind value)
     {
         _selectedHarmonyIndex = -1;
+        ClearHarmonyOffsets();
         RefreshGenerated();
     }
 
@@ -61,7 +67,7 @@ public sealed partial class MainViewModel
         IReadOnlyList<GeneratedColor> list = GeneratedTab switch
         {
             GeneratedTab.Scale => DesignScale.Generate(c, anchor),
-            GeneratedTab.Harmony => PaletteGenerator.Harmony(Session.Current, HarmonyKind, anchor, HarmonyBalanceLightness),
+            GeneratedTab.Harmony => PaletteGenerator.Harmony(Session.Current, HarmonyKind, anchor, HarmonyBalanceLightness, _harmonyOffsets),
             GeneratedTab.TintsShades => PaletteGenerator.TintsAndShades(c),
             GeneratedTab.Neutrals => PaletteGenerator.Neutrals(c),
             GeneratedTab.Extracted => _extracted,
@@ -126,14 +132,37 @@ public sealed partial class MainViewModel
         ShowToast($"{PaletteGenerator.HarmonyName(HarmonyKind)} {s.Label}  ·  {text}", Loc.T("common.copy"), () => Copy(text, s.Color), seconds: 6);
     }
 
-    /// <summary>Doble click en un punto de la rueda: pasa a ser el color actual.</summary>
+    /// <summary>Arrastre de un punto secundario en la rueda: fija su desfase personalizado (hue/sat de la rueda) sin tocar el color actual.</summary>
     [RelayCommand]
-    private void ActivateWheelMarker(int markerIndex)
+    private void SetWheelMarkerOffset(WheelMarkerDrag? drag)
     {
-        if (markerIndex < 0 || markerIndex >= _markerToSwatch.Count) return;
-        var color = GeneratedColors[_markerToSwatch[markerIndex]].Color;
-        _selectedHarmonyIndex = -1;
-        Session.Commit(color, ColorChangeSource.Generated);
+        if (drag is null || HarmonyKind == HarmonyKind.Monochromatic) return;
+        if (drag.MarkerIndex < 0 || drag.MarkerIndex >= _markerToSwatch.Count) return;
+        var angles = PaletteGenerator.HarmonyOffsets(HarmonyKind);
+        var swatch = _markerToSwatch[drag.MarkerIndex];
+        if (swatch >= angles.Count || angles[swatch] == 0) return;
+        if (double.IsNaN(drag.Hue)) return;
+        var hue = ColorMath.NormalizeHue(drag.Hue);
+        var sat = Math.Clamp(drag.Saturation, 0, 1);
+        var st = Session.Current;
+        _harmonyOffsets ??= new (double HueDelta, double SatDelta)[angles.Count];
+        _harmonyOffsets[swatch] = (
+            ColorMath.NormalizeHue(hue - ColorMath.NormalizeHue(st.Hue + angles[swatch])),
+            sat - st.Saturation);
+        RefreshGenerated();
+    }
+
+    /// <summary>Doble click en un punto de la rueda: reinicia ese punto a su desfase canónico sin cambiar el color actual.</summary>
+    [RelayCommand]
+    private void ResetWheelMarkerOffset(int markerIndex)
+    {
+        if (_harmonyOffsets is null || markerIndex < 0 || markerIndex >= _markerToSwatch.Count) return;
+        var angles = PaletteGenerator.HarmonyOffsets(HarmonyKind);
+        var swatch = _markerToSwatch[markerIndex];
+        if (swatch >= angles.Count || angles[swatch] == 0) return;
+        if (_harmonyOffsets[swatch] == default) return;
+        _harmonyOffsets[swatch] = default;
+        RefreshGenerated();
     }
 
     /// <summary>Nombres de los colores generados al agregarlos a una paleta o exportarlos.</summary>

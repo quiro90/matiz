@@ -53,21 +53,28 @@ public static class PaletteGenerator
     /// en la rueda depende solo de H y S, así que la geometría se conserva. Se calcula desde las coordenadas continuas
     /// del selector, no desde el HEX redondeado (estable en colores muy oscuros).
     /// Monocromática toma 5 pasos de la Design Scale.
+    /// <paramref name="colorOffsets"/> aplica desfases personalizados por índice generado (alineado con
+    /// <see cref="HarmonyOffsets"/>, el base lo ignora): suma hue (grados) y saturación (clamped 0–1) del color
+    /// canónico de esa posición. Nulo o vacío = armonía canónica bit a bit.
     /// </summary>
     public static IReadOnlyList<GeneratedColor> Harmony(ColorState baseState, HarmonyKind kind,
-        ScaleAnchorMode anchor = ScaleAnchorMode.Fixed500, bool balanceLightness = true)
+        ScaleAnchorMode anchor = ScaleAnchorMode.Fixed500, bool balanceLightness = true,
+        IReadOnlyList<(double HueDelta, double SatDelta)>? colorOffsets = null)
     {
         var baseColor = baseState.Argb;
         if (kind == HarmonyKind.Monochromatic) return Monochromatic(baseColor, anchor);
 
         var targetL = LightnessOf(baseState.Hue, baseState.Saturation, baseState.Value);
-        return HarmonyOffsets(kind).Select(d =>
+        return HarmonyOffsets(kind).Select((d, i) =>
         {
             if (d == 0) return new GeneratedColor(Texts.Current.Base, baseColor, true, baseState.Hue, baseState.Saturation);
-            var h = ColorMath.NormalizeHue(baseState.Hue + d);
-            var v = balanceLightness ? ValueForLightness(h, baseState.Saturation, targetL) : baseState.Value;
-            var c = ColorMath.FromHsv(h, baseState.Saturation, v, baseState.Alpha);
-            return new GeneratedColor(d > 0 ? $"+{d}°" : $"{d}°", c, false, h, baseState.Saturation);
+            (double HueDelta, double SatDelta) o = default;
+            if (colorOffsets is { Count: > 0 } && i < colorOffsets.Count) o = colorOffsets[i];
+            var s = Math.Clamp(baseState.Saturation + o.SatDelta, 0, 1);
+            var h = ColorMath.NormalizeHue(baseState.Hue + d + o.HueDelta);
+            var v = balanceLightness ? ValueForLightness(h, s, targetL) : baseState.Value;
+            var c = ColorMath.FromHsv(h, s, v, baseState.Alpha);
+            return new GeneratedColor(d > 0 ? $"+{d}°" : $"{d}°", c, false, h, s);
         }).ToList();
     }
 

@@ -21,8 +21,11 @@ public sealed class ColorWheel : FrameworkElement
     /// <summary>Click en un punto secundario (parámetro: índice del marcador).</summary>
     public static readonly DependencyProperty MarkerClickCommandProperty = DependencyProperty.Register(nameof(MarkerClickCommand), typeof(ICommand), typeof(ColorWheel));
 
-    /// <summary>Doble click en un punto secundario (parámetro: índice del marcador).</summary>
-    public static readonly DependencyProperty MarkerActivateCommandProperty = DependencyProperty.Register(nameof(MarkerActivateCommand), typeof(ICommand), typeof(ColorWheel));
+    /// <summary>Arrastre de un punto secundario (parámetro: <see cref="WheelMarkerDrag"/>).</summary>
+    public static readonly DependencyProperty MarkerDragCommandProperty = DependencyProperty.Register(nameof(MarkerDragCommand), typeof(ICommand), typeof(ColorWheel));
+
+    /// <summary>Doble click en un punto secundario: reinicia su desfase (parámetro: índice del marcador).</summary>
+    public static readonly DependencyProperty MarkerResetCommandProperty = DependencyProperty.Register(nameof(MarkerResetCommand), typeof(ICommand), typeof(ColorWheel));
 
     public static readonly DependencyProperty HueProperty = DependencyProperty.Register(nameof(Hue), typeof(double), typeof(ColorWheel),
         new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsRender));
@@ -43,6 +46,10 @@ public sealed class ColorWheel : FrameworkElement
     private Point _virtual;
     private Point _last;
     private bool _dragging;
+    private int _markerCapture = -1;
+    private Point _markerDown;
+    private bool _markerMoved;
+    private int _markerDownClicks;
 
     /// <summary>Número de regeneraciones del bitmap (diagnóstico de rendimiento).</summary>
     public int RenderCount { get; private set; }
@@ -62,10 +69,12 @@ public sealed class ColorWheel : FrameworkElement
     public ICommand? CommitCommand { get => (ICommand?)GetValue(CommitCommandProperty); set => SetValue(CommitCommandProperty, value); }
     public IReadOnlyList<WheelMarker>? Markers { get => (IReadOnlyList<WheelMarker>?)GetValue(MarkersProperty); set => SetValue(MarkersProperty, value); }
     public ICommand? MarkerClickCommand { get => (ICommand?)GetValue(MarkerClickCommandProperty); set => SetValue(MarkerClickCommandProperty, value); }
-    public ICommand? MarkerActivateCommand { get => (ICommand?)GetValue(MarkerActivateCommandProperty); set => SetValue(MarkerActivateCommandProperty, value); }
+    public ICommand? MarkerDragCommand { get => (ICommand?)GetValue(MarkerDragCommandProperty); set => SetValue(MarkerDragCommandProperty, value); }
+    public ICommand? MarkerResetCommand { get => (ICommand?)GetValue(MarkerResetCommandProperty); set => SetValue(MarkerResetCommandProperty, value); }
 
     private const double MarkerHitRadius = 9;
     private const double MainHitRadius = 11;
+    private const double MarkerDragThreshold = 4;
 
     private Point PositionOf(double hue, double saturation)
     {
@@ -177,8 +186,21 @@ public sealed class ColorWheel : FrameworkElement
         var hit = HitMarker(e.GetPosition(this));
         if (hit >= 0)
         {
-            var cmd = e.ClickCount >= 2 ? MarkerActivateCommand : MarkerClickCommand;
-            if (cmd?.CanExecute(hit) == true) cmd.Execute(hit);
+            if (e.ClickCount >= 2)
+            {
+                // Doble click en un punto: reinicia ese punto a su desfase canónico (no cambia el principal).
+                var reset = MarkerResetCommand;
+                if (reset?.CanExecute(hit) == true) reset.Execute(hit);
+                e.Handled = true;
+                return;
+            }
+            // Candidato de arrastre: click en up solo si no se movió; drag con umbral.
+            CaptureMouse();
+            _markerCapture = hit;
+            _markerDown = e.GetPosition(this);
+            _markerMoved = false;
+            _markerDownClicks = e.ClickCount;
+            Cursor = Cursors.Hand;
             e.Handled = true;
             return;
         }
@@ -192,25 +214,48 @@ public sealed class ColorWheel : FrameworkElement
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        if (!_dragging)
+        if (_dragging)
         {
-            Cursor = HitMarker(e.GetPosition(this)) >= 0 ? Cursors.Hand : Cursors.Cross;
+            var p = e.GetPosition(this);
+            var delta = p - _last;
+            _last = p;
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) delta *= FineFactor;
+            _virtual += delta;
+            // Mantiene el punto virtual dentro de la rueda para que el ajuste fino no acumule fuera del borde.
+            var c = Center;
+            var v = _virtual - c;
+            if (v.Length > Radius && v.Length > 0) _virtual = c + v * (Radius / v.Length);
+            ApplyPoint(_virtual);
             return;
         }
-        var p = e.GetPosition(this);
-        var delta = p - _last;
-        _last = p;
-        if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)) delta *= FineFactor;
-        _virtual += delta;
-        // Mantiene el punto virtual dentro de la rueda para que el ajuste fino no acumule fuera del borde.
-        var c = Center;
-        var v = _virtual - c;
-        if (v.Length > Radius && v.Length > 0) _virtual = c + v * (Radius / v.Length);
-        ApplyPoint(_virtual);
+        if (_markerCapture >= 0)
+        {
+            var p = e.GetPosition(this);
+            if (!_markerMoved && (p - _markerDown).Length > MarkerDragThreshold) _markerMoved = true;
+            if (_markerMoved) ExecuteMarkerDrag(p);
+            return;
+        }
+        Cursor = HitMarker(e.GetPosition(this)) >= 0 ? Cursors.Hand : Cursors.Cross;
     }
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
     {
+        if (_markerCapture >= 0)
+        {
+            var hit = _markerCapture;
+            var clicked = !_markerMoved && _markerDownClicks < 2;
+            _markerCapture = -1;
+            _markerMoved = false;
+            ReleaseMouseCapture();
+            Cursor = Cursors.Cross;
+            if (clicked)
+            {
+                var cmd = MarkerClickCommand;
+                if (cmd?.CanExecute(hit) == true) cmd.Execute(hit);
+            }
+            e.Handled = true;
+            return;
+        }
         if (!_dragging) return;
         _dragging = false;
         ReleaseMouseCapture();
@@ -219,11 +264,31 @@ public sealed class ColorWheel : FrameworkElement
 
     protected override void OnLostMouseCapture(MouseEventArgs e)
     {
+        if (_markerCapture >= 0)
+        {
+            _markerCapture = -1;
+            _markerMoved = false;
+            Cursor = Cursors.Cross;
+            return;
+        }
         if (_dragging)
         {
             _dragging = false;
             Commit();
         }
+    }
+
+    /// <summary>Arrastre de un punto secundario: proyecta el cursor en la rueda (clamp al disco) y ejecuta el comando.</summary>
+    private void ExecuteMarkerDrag(Point p)
+    {
+        var c = Center;
+        var v = p - c;
+        if (v.Length > Radius && v.Length > 0) p = c + v * (Radius / v.Length);
+        var (hue, sat) = WheelMapping.FromPoint(p.X - c.X, p.Y - c.Y, Radius, Gamma);
+        if (double.IsNaN(hue)) return;
+        var arg = new WheelMarkerDrag(_markerCapture, hue, sat);
+        var cmd = MarkerDragCommand;
+        if (cmd?.CanExecute(arg) == true) cmd.Execute(arg);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -260,3 +325,6 @@ public sealed class ColorWheel : FrameworkElement
 
 /// <summary>Punto secundario en la rueda (p. ej. un color de la armonía).</summary>
 public sealed record WheelMarker(double Hue, double Saturation, Argb Color, bool IsSelected);
+
+/// <summary>Arrastre de un punto secundario: índice del marcador y coordenadas de rueda (hue/sat) del cursor.</summary>
+public sealed record WheelMarkerDrag(int MarkerIndex, double Hue, double Saturation);

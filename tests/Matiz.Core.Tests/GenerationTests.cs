@@ -72,6 +72,71 @@ public class GenerationTests
     }
 
     [Fact]
+    public void Harmony_offsets_shift_angle_and_saturation()
+    {
+        var state = new ColorState(246.1, 0.63, 0.74);
+        (double HueDelta, double SatDelta)[] offsets = [default, (10, 0.05), default];
+        var list = PaletteGenerator.Harmony(state, HarmonyKind.Triadic, colorOffsets: offsets);
+        // índice de la armonía a +120° se desplaza +10° de hue y +0.05 de saturación
+        Assert.Equal((246.1 + 120 + 10) % 360, list[1].WheelHue!.Value, 6);
+        Assert.Equal(0.68, list[1].WheelSaturation!.Value, 9);
+        // el resto conserva la geometría canónica (+240° con base 246.1° → 126.1°)
+        Assert.Equal(126.1, list[2].WheelHue!.Value, 6);
+        Assert.Equal(0.63, list[2].WheelSaturation!.Value, 9);
+    }
+
+    [Fact]
+    public void Harmony_offsets_ignore_the_base()
+    {
+        var state = new ColorState(246.1, 0.63, 0.74);
+        var canonical = PaletteGenerator.Harmony(state, HarmonyKind.Triadic);
+        (double, double)[] offsets = [(15, 0.1), default, default];
+        var shifted = PaletteGenerator.Harmony(state, HarmonyKind.Triadic, colorOffsets: offsets);
+        Assert.Equal(canonical[0], shifted[0]);
+        Assert.Equal(canonical[1], shifted[1]);
+        Assert.Equal(canonical[2], shifted[2]);
+    }
+
+    [Fact]
+    public void Harmony_without_or_zero_offsets_matches_canonical()
+    {
+        var state = new ColorState(246.1, 0.63, 0.74);
+        foreach (var kind in Rotations)
+        {
+            var canonical = PaletteGenerator.Harmony(state, kind);
+            var withNull = PaletteGenerator.Harmony(state, kind, colorOffsets: null);
+            var withZeros = PaletteGenerator.Harmony(state, kind,
+                colorOffsets: Enumerable.Repeat(((double, double))default, canonical.Count).ToList());
+            for (var i = 0; i < canonical.Count; i++)
+            {
+                Assert.Equal(canonical[i], withNull[i]);
+                Assert.Equal(canonical[i], withZeros[i]);
+            }
+        }
+    }
+
+    [Fact]
+    public void Harmony_offsets_follow_base_rotation()
+    {
+        (double HueDelta, double SatDelta)[] offsets = [default, (10, 0.05), default];
+        var a = PaletteGenerator.Harmony(new ColorState(246.1, 0.63, 0.74), HarmonyKind.Triadic, colorOffsets: offsets);
+        var b = PaletteGenerator.Harmony(new ColorState(251.1, 0.63, 0.74), HarmonyKind.Triadic, colorOffsets: offsets);
+        // el punto personalizado sigue rígidamente al base (251.1 + 120 + 10 = 381.1 → 21.1°)
+        Assert.Equal(21.1, b[1].WheelHue!.Value, 6);
+        Assert.Equal(a[1].WheelSaturation!.Value, b[1].WheelSaturation!.Value, 9);
+    }
+
+    [Fact]
+    public void Harmony_offsets_clamp_saturation_to_gamut()
+    {
+        var state = new ColorState(246.1, 0.9, 0.74);
+        (double HueDelta, double SatDelta)[] offsets = [default, (0, 0.5), (0, -2)];
+        var list = PaletteGenerator.Harmony(state, HarmonyKind.Triadic, colorOffsets: offsets);
+        Assert.Equal(1, list[1].WheelSaturation!.Value, 9);
+        Assert.Equal(0, list[2].WheelSaturation!.Value, 9);
+    }
+
+    [Fact]
     public void Lowering_brightness_keeps_hue_and_saturation()
     {
         foreach (var kind in Rotations)

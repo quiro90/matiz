@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Matiz.App/Matiz.App.csproj" />
+    <Project Path="src/Matiz.Core/Matiz.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Matiz.App.Tests/Matiz.App.Tests.csproj" />
+    <Project Path="tests/Matiz.Core.Tests/Matiz.Core.Tests.csproj" />
+  </Folder>
+</Solution>

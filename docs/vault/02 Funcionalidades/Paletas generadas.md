@@ -9,6 +9,6 @@ Panel con pestañas, recalculado **en vivo** con el color actual:
 - **Neutros**: 11 grises teñidos del hue actual (croma ≤ 0.015).
 - **De la imagen**: colores extraídos ([[Image picker]]).
 
-Tarjetas: click = usar · hover = copiar HEX / agregar · click derecho = más acciones.
+Tarjetas: click = copiar en el formato principal (queda en el [[Historial]]) · abajo-izquierda: copiar HEX y agregar (siempre visibles) · abajo-derecha al hover: botón **ojo** = usar como color principal · click derecho = más acciones.
 **Prefijo** (p. ej. `Primary`) nombra los colores al agregarlos o copiarlos → `Primary 500`.
 **Agregar todo** → paleta activa ([[Paletas guardadas]]). **Copiar ▾** → [[Exportación de código]].

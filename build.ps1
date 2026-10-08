@@ -168,7 +168,12 @@ function Msix {
         Export-PfxCertificate -Cert $cert -FilePath $pfx -Password $certPwd | Out-Null
         & $tools.Signtool sign /fd SHA256 /a /f $pfx /p 'Matiz-test' $msix
         if ($LASTEXITCODE -ne 0) { throw "signtool falló (código $LASTEXITCODE)" }
-        # Confiar el cert exige elevación (Root y Trusted People).
+        # Confiar el cert exige elevación (Root y Trusted People), pero solo si aún no se confía.
+        $trusted = Get-ChildItem Cert:\LocalMachine\TrustedPeople, Cert:\LocalMachine\Root -ErrorAction SilentlyContinue | Where-Object Thumbprint -eq $cert.Thumbprint
+        if (($trusted | Measure-Object).Count -ge 2) {
+            Write-Host 'El cert de prueba ya es de confianza; omito la elevación.'
+        }
+        else {
         $importScript = "Import-PfxCertificate -FilePath '$pfx' -CertStoreLocation Cert:\LocalMachine\Root -Password (ConvertTo-SecureString 'Matiz-test' -AsPlainText -Force); Import-PfxCertificate -FilePath '$pfx' -CertStoreLocation Cert:\LocalMachine\TrustedPeople -Password (ConvertTo-SecureString 'Matiz-test' -AsPlainText -Force)"
         try {
             $elevated = Start-Process powershell -ArgumentList '-NoProfile', '-Command', $importScript -Verb RunAs -Wait -PassThru -ErrorAction Stop
@@ -176,6 +181,7 @@ function Msix {
         }
         catch {
             Write-Host 'Se canceló la elevación: para instalar el paquete, importá Matiz-test.pfx manualmente (Root y TrustedPeople).' -ForegroundColor Yellow
+        }
         }
     }
 

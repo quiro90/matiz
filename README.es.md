@@ -7,6 +7,7 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 **Alt+C → click en cualquier píxel → copiado → escala / armonías → copiar como código → seguir trabajando.**
 
 ![Matiz](docs/capture.png)
+![Matiz](docs/capture2.png)
 
 ## Funcionalidades
 

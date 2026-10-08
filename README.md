@@ -7,6 +7,7 @@ A small, fast Windows color tool for developers and designers: pick any pixel on
 **Alt+C → click any pixel → copied → scale / harmonies → copy as code → back to work.**
 
 ![Matiz](docs/capture.png)
+![Matiz](docs/capture2.png)
 
 ## Features
 

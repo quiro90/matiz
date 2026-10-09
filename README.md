@@ -68,3 +68,9 @@ Windows only for now (WPF). A path to Linux/macOS via Avalonia is documented in 
 ## License
 
 Apache 2.0 with the [Commons Clause](https://commonsclause.com/): free to copy, modify, build and distribute; selling the software itself is reserved to the author. See [LICENSE](LICENSE).
+
+## Support the project
+
+If Matiz is useful to you, you can invite me a coffee on Cafecito or donate via PayPal — it all goes to keeping the project alive:
+
+<a href="https://cafecito.app/juanquiroga"><img src="https://cdn.cafecito.app/imgs/buttons/button_2.png" alt="Invitame un café en cafecito.app"></a> <a href="https://www.paypal.com/ncp/payment/PJXDUSBHSE8DE"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="Donate with PayPal"></a>

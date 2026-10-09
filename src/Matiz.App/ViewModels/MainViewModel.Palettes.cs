@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Matiz.App.Localization;
@@ -6,7 +7,9 @@ using Matiz.Core.Colors;
 using Matiz.Core.Export;
 using Matiz.Core.Formatting;
 using Matiz.Core.Generation;
+using Matiz.Core.Palettes;
 using Matiz.Core.Session;
+using Microsoft.Win32;
 
 namespace Matiz.App.ViewModels;
 
@@ -57,6 +60,7 @@ public sealed partial class MainViewModel
             HasActiveColors = ActivePaletteColors.Count > 0;
             ExportActivePaletteImageCommand.NotifyCanExecuteChanged();
             ExportActivePaletteOverlayCommand.NotifyCanExecuteChanged();
+            ExportPaletteCommand.NotifyCanExecuteChanged();
             ReloadPaletteToFreeCommand.NotifyCanExecuteChanged();
         }
         finally
@@ -158,6 +162,57 @@ public sealed partial class MainViewModel
         if (id is not { } v || _palettes.Delete(v) is not { } removed) return;
         ShowToast(Loc.F("toasts.paletteDeleted", removed.Palette.Name), Loc.T("common.undo"), () => _palettes.Restore(removed.Palette, removed.Index));
     }
+
+    /// <summary>Exporta la paleta marcada a un archivo .mpalette (JSON). Deshabilitado sin colores.</summary>
+    [RelayCommand(CanExecute = nameof(HasActiveColors))]
+    private void ExportPalette()
+    {
+        if (_palettes.Active is not { Colors.Count: > 0 } p) return;
+        var name = string.Concat(p.Name.Split(Path.GetInvalidFileNameChars())).Trim();
+        var dlg = new SaveFileDialog
+        {
+            Filter = Loc.T("dialogs.paletteFilter"),
+            FileName = (string.IsNullOrWhiteSpace(name) ? Loc.T("library.export.defaultFileName") : name) + ".mpalette",
+            Title = Loc.T("dialogs.exportPalette.title"),
+        };
+        if (dlg.ShowDialog() == true)
+        {
+            try
+            {
+                PaletteFile.From(p).Write(dlg.FileName);
+                ShowToast(Loc.F("toasts.paletteExported", p.Name));
+            }
+            catch (Exception ex)
+            {
+                ShowFileError(ex.Message);
+            }
+        }
+    }
+
+    /// <summary>Importa un archivo .mpalette como paleta nueva (UniqueName resuelve el nombre repetido).</summary>
+    [RelayCommand]
+    private void ImportPalette()
+    {
+        var dlg = new OpenFileDialog { Filter = Loc.T("dialogs.paletteFilter"), Title = Loc.T("dialogs.importPalette.title") };
+        if (dlg.ShowDialog() == true) ImportPaletteFile(dlg.FileName);
+    }
+
+    /// <summary>Importa un archivo .mpalette siempre como paleta nueva; errores (json roto, versión futura)
+    /// avisan con toast sin alterar la biblioteca. Usado también por la apertura por doble click del SO.</summary>
+    public void ImportPaletteFile(string path)
+    {
+        try
+        {
+            var imported = _palettes.Import(PaletteFile.Read(path));
+            ShowToast(Loc.F("toasts.paletteImported", imported.Name));
+        }
+        catch (Exception ex)
+        {
+            ShowFileError(ex.Message);
+        }
+    }
+
+    private void ShowFileError(string message) => ShowToast(Loc.F("toasts.paletteFileError", message));
 
     [RelayCommand]
     private void UsePaletteColor(PaletteColorItem? item)

@@ -111,6 +111,27 @@ public sealed class PaletteService
     /// <summary>Límite de colores por paleta (regla global, v1.0.7).</summary>
     public const int MaxColors = 64;
 
+    /// <summary>Importación desde archivo .mpalette: SIEMPRE crea una paleta nueva (nunca pisa una
+    /// existente; el sufijo automático resuelve colisiones de nombre). Conserva nombre, descripción,
+    /// fechas y colores completos del archivo (sin límite: los externos se conservan intactos), con
+    /// ids nuevos; queda como paleta activa/marcada. Fechas por defecto (o incoherentes) → ahora.</summary>
+    public Palette Import(PaletteFile file)
+    {
+        var now = _clock();
+        var createdAt = file.CreatedAt == default ? now : file.CreatedAt;
+        var modifiedAt = file.ModifiedAt == default || file.ModifiedAt < createdAt ? createdAt : file.ModifiedAt;
+        var p = file.ToPalette();
+        p.Name = UniqueName(string.IsNullOrWhiteSpace(file.Name) ? DefaultName : file.Name.Trim());
+        p.Description = Normalize(file.Description);
+        p.CreatedAt = createdAt;
+        p.ModifiedAt = modifiedAt;
+        foreach (var c in p.Colors) c.Name = Normalize(c.Name);
+        Library.Palettes.Add(p);
+        Library.ActivePaletteId = p.Id;
+        Changed?.Invoke(this, EventArgs.Empty);
+        return p;
+    }
+
     public PaletteColor? AddColor(Guid paletteId, Argb color, string? name = null)
     {
         if (Find(paletteId) is not { } p || p.Colors.Count >= MaxColors) return null;

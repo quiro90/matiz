@@ -716,6 +716,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid>
                     <TextBlock Text="{loc:Loc library.title}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center"/>
@@ -737,7 +738,7 @@
                                 <ItemsControl ItemsSource="{Binding Preview}" Margin="0,5,0,0" Focusable="False">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
+                                            <WrapPanel Orientation="Horizontal"/>
                                         </ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
@@ -756,6 +757,13 @@
                     <TextBlock Text="{loc:Loc library.description}" Style="{StaticResource SectionTitle}" Margin="0,10,0,4"/>
                     <TextBox Text="{Binding SelectedPalette.Description, UpdateSourceTrigger=LostFocus}" AcceptsReturn="True" TextWrapping="Wrap" Height="64"
                              VerticalContentAlignment="Top" Tag="{loc:Loc library.descriptionPlaceholder}" AutomationProperties.Name="{loc:Loc library.description.automation}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="{loc:Loc library.export}" Command="{Binding ExportPaletteCommand}" Margin="0,0,6,0"
+                            Visibility="{Binding SelectedPalette, Converter={StaticResource NotEmptyToVis}}"
+                            ToolTip="{loc:Loc library.export.tooltip}" AutomationProperties.Name="{loc:Loc library.export.automation}"/>
+                    <Button Content="{loc:Loc library.import}" Command="{Binding ImportPaletteCommand}"
+                            ToolTip="{loc:Loc library.import.tooltip}" AutomationProperties.Name="{loc:Loc library.import.automation}"/>
                 </StackPanel>
             </Grid>
         </Border>

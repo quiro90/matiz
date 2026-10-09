@@ -15,6 +15,7 @@ namespace Matiz.Core.Persistence;
     UseStringEnumConverter = true,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(PaletteLibrary))]
+[JsonSerializable(typeof(PaletteFile))]
 [JsonSerializable(typeof(HistoryData))]
 [JsonSerializable(typeof(AppSettings))]
 internal sealed partial class MatizJsonContext : JsonSerializerContext;

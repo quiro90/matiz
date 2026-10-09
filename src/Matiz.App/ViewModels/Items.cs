@@ -158,7 +158,7 @@ public sealed partial class PaletteItem : ObservableObject
 
     public void Refresh()
     {
-        Preview = Model.Colors.Take(12).Select(c => BrushCache.Of(c.Color)).ToList();
+        Preview = Model.Colors.Select(c => BrushCache.Of(c.Color)).ToList();
         var count = Model.Colors.Count;
         Summary = Loc.F(count == 1 ? "palette.summaryOne" : "palette.summaryMany", count, Model.ModifiedAt.ToLocalTime().ToString("d MMM yyyy HH:mm"));
         OnPropertyChanged(nameof(Name));

@@ -387,7 +387,7 @@
 
   <!-- library -->
   <data name="library.title" xml:space="preserve">
-    <value>Paletas</value>
+    <value>Paletas de Colores</value>
   </data>
   <data name="library.saved.automation" xml:space="preserve">
     <value>Paletas guardadas</value>
@@ -421,6 +421,27 @@
   </data>
   <data name="library.description.placeholder" xml:space="preserve">
     <value>Opcional</value>
+  </data>
+  <data name="library.export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="library.export.tooltip" xml:space="preserve">
+    <value>Guardar la paleta marcada en un archivo .mpalette</value>
+  </data>
+  <data name="library.export.automation" xml:space="preserve">
+    <value>Exportar paleta</value>
+  </data>
+  <data name="library.export.defaultFileName" xml:space="preserve">
+    <value>paleta</value>
+  </data>
+  <data name="library.import" xml:space="preserve">
+    <value>Importar</value>
+  </data>
+  <data name="library.import.tooltip" xml:space="preserve">
+    <value>Agregar un archivo .mpalette como paleta nueva</value>
+  </data>
+  <data name="library.import.automation" xml:space="preserve">
+    <value>Importar paleta</value>
   </data>
 
   <!-- settings -->
@@ -638,6 +659,15 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   <data name="dialogs.imageFilter" xml:space="preserve">
     <value>Imágenes|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff;*.webp|Todos los archivos|*.*</value>
   </data>
+  <data name="dialogs.exportPalette.title" xml:space="preserve">
+    <value>Guardar paleta</value>
+  </data>
+  <data name="dialogs.importPalette.title" xml:space="preserve">
+    <value>Abrir paleta</value>
+  </data>
+  <data name="dialogs.paletteFilter" xml:space="preserve">
+    <value>Paleta Matiz (*.mpalette)|*.mpalette|Todos los archivos|*.*</value>
+  </data>
 
   <!-- toasts and copy feedback -->
   <data name="toasts.hotkeyModifier" xml:space="preserve">
@@ -696,6 +726,15 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="toasts.paletteLoaded" xml:space="preserve">
     <value>Paleta «{0}» cargada en la rueda</value>
+  </data>
+  <data name="toasts.paletteExported" xml:space="preserve">
+    <value>Paleta «{0}» exportada</value>
+  </data>
+  <data name="toasts.paletteImported" xml:space="preserve">
+    <value>Paleta «{0}» importada</value>
+  </data>
+  <data name="toasts.paletteFileError" xml:space="preserve">
+    <value>No se pudo completar la operación: {0}</value>
   </data>
   <data name="toasts.customizeReplaceWarning" xml:space="preserve">
     <value>Esta acción reemplazará todos los colores cargados en Personalizado.</value>

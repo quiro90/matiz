@@ -13,6 +13,7 @@ namespace Matiz.App;
 public partial class App : Application
 {
     private static readonly string InstanceKey = $"Matiz.{Environment.UserName}";
+    private const string PendingImportFile = "import.mpalette.pending";
 
     private Mutex? _mutex;
     private EventWaitHandle? _activate;
@@ -27,7 +28,8 @@ public partial class App : Application
         _mutex = new Mutex(true, InstanceKey + ".Mutex", out var first);
         if (!first)
         {
-            // Ya hay una instancia: se le pide que se muestre y se sale.
+            // Ya hay una instancia: le delega las paletas abiertas por doble click y le pide que se muestre.
+            foreach (var path in e.Args.Where(IsPaletteFile)) EnqueuePendingImport(path);
             try
             {
                 EventWaitHandle.OpenExisting(InstanceKey + ".Activate").Set();
@@ -78,12 +80,54 @@ public partial class App : Application
         _vm.RegisterHotkey();
         _vm.ReportRecovered([settings.RecoveredCorruptFile, library.RecoveredCorruptFile, history.RecoveredCorruptFile]);
 
+        // Importa la paleta dejada pendiente (delegada antes de que el listener exista) y las de los args
+        // de arranque (doble click del OS sobre un .mpalette), ya con la UI lista.
+        foreach (var path in TryReadPendingImports().Concat(e.Args.Where(IsPaletteFile)).Distinct(StringComparer.OrdinalIgnoreCase))
+            Dispatcher.BeginInvoke(() => _vm?.ImportPaletteFile(path));
+
         var listener = new Thread(() =>
         {
             while (_activate.WaitOne())
-                Dispatcher.BeginInvoke(() => (MainWindow as IShell)?.ShowAndActivate());
+                Dispatcher.BeginInvoke(() =>
+                {
+                    foreach (var path in TryReadPendingImports()) _vm?.ImportPaletteFile(path);
+                    (MainWindow as IShell)?.ShowAndActivate();
+                });
         }) { IsBackground = true, Name = "Matiz.SingleInstance" };
         listener.Start();
+    }
+
+    private static bool IsPaletteFile(string arg) => arg.EndsWith(".mpalette", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>Deja anotado un .mpalette para que la instancia viva lo importe al recibir la señal.</summary>
+    private static void EnqueuePendingImport(string path)
+    {
+        try
+        {
+            var dir = DataPaths.Default().Directory;
+            System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.AppendAllText(System.IO.Path.Combine(dir, PendingImportFile), path + Environment.NewLine);
+        }
+        catch (System.IO.IOException)
+        {
+        }
+    }
+
+    /// <summary>Lee y borra las rutas pendientes; descarta líneas vacías o archivos inexistentes.</summary>
+    private static List<string> TryReadPendingImports()
+    {
+        var result = new List<string>();
+        try
+        {
+            var file = System.IO.Path.Combine(DataPaths.Default().Directory, PendingImportFile);
+            if (!System.IO.File.Exists(file)) return result;
+            result.AddRange(System.IO.File.ReadAllLines(file).Where(l => l.Length > 0));
+            System.IO.File.Delete(file);
+        }
+        catch (System.IO.IOException)
+        {
+        }
+        return result;
     }
 
     private static void LogError(DataPaths paths, Exception ex)

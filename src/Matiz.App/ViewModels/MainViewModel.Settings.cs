@@ -30,7 +30,7 @@ public sealed partial class MainViewModel
 
     public string DataFolder => System.IO.Path.GetDirectoryName(_settingsStore.FilePath)!;
 
-    /// <summary>Versión visible ("1.01"), tomada de InformationalVersion.</summary>
+    /// <summary>Versión visible ("1.0.2"), tomada de InformationalVersion.</summary>
     public static string Version { get; } =
         (System.Reflection.CustomAttributeExtensions.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(MainViewModel).Assembly)?.InformationalVersion ?? "")
         .Split('+')[0];

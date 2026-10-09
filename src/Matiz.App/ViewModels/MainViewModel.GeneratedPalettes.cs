@@ -161,7 +161,7 @@ public sealed partial class MainViewModel
         _freeOffsets.Clear();
         _freeOffsets.AddRange(offsets);
         GeneratedTab = GeneratedTab.Free;
-        AddFreePointCommand.NotifyCanExecuteChanged();
+        NotifyFreePointCommands();
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public sealed partial class MainViewModel
         else if (GeneratedTab != GeneratedTab.Free) return;
         if (_freeOffsets.Count < MaxFreePoints) _freeOffsets.Add(NextAddPointPosition());
         RefreshGenerated();
-        AddFreePointCommand.NotifyCanExecuteChanged();
+        NotifyFreePointCommands();
     }
 
     /// <summary>
@@ -239,7 +239,7 @@ public sealed partial class MainViewModel
             GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
         }
         else RefreshGenerated();
-        AddFreePointCommand.NotifyCanExecuteChanged();
+        NotifyFreePointCommands();
     }
 
     /// <summary>
@@ -268,7 +268,55 @@ public sealed partial class MainViewModel
             _freeOffsets.RemoveAt(idx - 1);
             RefreshGenerated();
         }
+        NotifyFreePointCommands();
+    }
+
+    /// <summary>
+    /// Doble click sobre un punto secundario en la rueda: elimina ese punto del conjunto. Con la pestaña
+    /// Armonías activa convierte la armonía a Libre (base + puntos canónicos) y elimina el punto indicado;
+    /// en Libre quita ese punto. No toca el color actual.
+    /// </summary>
+    [RelayCommand]
+    private void RemoveWheelMarker(int index)
+    {
+        if (index < 0) return;
+        if (GeneratedTab == GeneratedTab.Harmony)
+        {
+            var offsets = new List<(double HueDelta, double SatDelta)>();
+            if (HarmonyKind != HarmonyKind.Monochromatic)
+                offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0)));
+            if (index < offsets.Count) offsets.RemoveAt(index);
+            _freeOffsets.Clear();
+            _freeOffsets.AddRange(offsets);
+            GeneratedTab = GeneratedTab.Free;
+            NotifyFreePointCommands();
+            return;
+        }
+        if (GeneratedTab != GeneratedTab.Free || index >= _freeOffsets.Count) return;
+        _freeOffsets.RemoveAt(index);
+        RefreshGenerated();
+        NotifyFreePointCommands();
+    }
+
+    /// <summary>
+    /// Botón "Borrar" junto al "+" en Libre: quita de una vez todos los puntos secundarios conservando
+    /// únicamente el principal. No cambia el color actual ni es deshacible.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanClearFreePoints))]
+    private void ClearFreePoints()
+    {
+        if (_freeOffsets.Count == 0) return;
+        _freeOffsets.Clear();
+        RefreshGenerated();
+        NotifyFreePointCommands();
+    }
+
+    private bool CanClearFreePoints() => GeneratedTab == GeneratedTab.Free && _freeOffsets.Count > 0;
+
+    private void NotifyFreePointCommands()
+    {
         AddFreePointCommand.NotifyCanExecuteChanged();
+        ClearFreePointsCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>Nombres de los colores generados al agregarlos a una paleta o exportarlos.</summary>

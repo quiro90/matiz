@@ -21,6 +21,9 @@ public sealed class ColorWheel : FrameworkElement
     /// <summary>Click en un punto secundario (parámetro: índice del marcador).</summary>
     public static readonly DependencyProperty MarkerClickCommandProperty = DependencyProperty.Register(nameof(MarkerClickCommand), typeof(ICommand), typeof(ColorWheel));
 
+    /// <summary>Doble click en un punto secundario: lo elimina del conjunto (parámetro: índice del marcador).</summary>
+    public static readonly DependencyProperty MarkerDoubleClickCommandProperty = DependencyProperty.Register(nameof(MarkerDoubleClickCommand), typeof(ICommand), typeof(ColorWheel));
+
     /// <summary>Arrastre de un punto secundario (parámetro: <see cref="WheelMarkerDrag"/>).</summary>
     public static readonly DependencyProperty MarkerDragCommandProperty = DependencyProperty.Register(nameof(MarkerDragCommand), typeof(ICommand), typeof(ColorWheel));
 
@@ -69,6 +72,7 @@ public sealed class ColorWheel : FrameworkElement
     public ICommand? CommitCommand { get => (ICommand?)GetValue(CommitCommandProperty); set => SetValue(CommitCommandProperty, value); }
     public IReadOnlyList<WheelMarker>? Markers { get => (IReadOnlyList<WheelMarker>?)GetValue(MarkersProperty); set => SetValue(MarkersProperty, value); }
     public ICommand? MarkerClickCommand { get => (ICommand?)GetValue(MarkerClickCommandProperty); set => SetValue(MarkerClickCommandProperty, value); }
+    public ICommand? MarkerDoubleClickCommand { get => (ICommand?)GetValue(MarkerDoubleClickCommandProperty); set => SetValue(MarkerDoubleClickCommandProperty, value); }
     public ICommand? MarkerDragCommand { get => (ICommand?)GetValue(MarkerDragCommandProperty); set => SetValue(MarkerDragCommandProperty, value); }
     public ICommand? AddPointAtCommand { get => (ICommand?)GetValue(AddPointAtCommandProperty); set => SetValue(AddPointAtCommandProperty, value); }
 
@@ -186,7 +190,7 @@ public sealed class ColorWheel : FrameworkElement
         var hit = HitMarker(e.GetPosition(this));
         if (hit >= 0)
         {
-            // Candidato de arrastre: click en up solo si no se movió; drag con umbral. Doble click: no action adicional.
+            // Candidato de arrastre: click en up solo si no se movió; drag con umbral. Doble click sin mover: MarkerDoubleClickCommand (elimina).
             CaptureMouse();
             _markerCapture = hit;
             _markerDown = e.GetPosition(this);
@@ -236,6 +240,7 @@ public sealed class ColorWheel : FrameworkElement
         {
             var hit = _markerCapture;
             var clicked = !_markerMoved && _markerDownClicks < 2;
+            var doubleClicked = !_markerMoved && _markerDownClicks == 2;
             _markerCapture = -1;
             _markerMoved = false;
             ReleaseMouseCapture();
@@ -243,6 +248,11 @@ public sealed class ColorWheel : FrameworkElement
             if (clicked)
             {
                 var cmd = MarkerClickCommand;
+                if (cmd?.CanExecute(hit) == true) cmd.Execute(hit);
+            }
+            else if (doubleClicked)
+            {
+                var cmd = MarkerDoubleClickCommand;
                 if (cmd?.CanExecute(hit) == true) cmd.Execute(hit);
             }
             e.Handled = true;

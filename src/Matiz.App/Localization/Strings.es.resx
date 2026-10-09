@@ -298,6 +298,12 @@
   <data name="gen.addPoint.tooltip" xml:space="preserve">
     <value>Añade un punto secundario opuesto al color principal (pasa a la pestaña Libre)</value>
   </data>
+  <data name="gen.clearPoints" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="gen.clearPoints.tooltip" xml:space="preserve">
+    <value>Quita todos los puntos secundarios y conserva solo el principal</value>
+  </data>
   <data name="gen.exportTitle.tints" xml:space="preserve">
     <value>Tints y Shades</value>
   </data>

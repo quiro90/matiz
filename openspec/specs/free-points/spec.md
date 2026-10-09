@@ -71,7 +71,7 @@ Arrastrar un punto secundario con la pestaña Libre activa SHALL actualizar su p
 - **THEN** ese color pasa a ser el color actual como cambio confirmado, el punto 1 pasa a ser el principal y los demás puntos conservan sus ángulos relativos respecto de él
 
 ### Requirement: Quitar puntos en Libre
-Cada tarjeta de la pestaña Libre SHALL mostrar, al pasar el mouse, un botón "−" en su esquina inferior derecha que SHALL quitar ese color del conjunto. Quitar un secundario SHALL eliminarlo (tarjeta y punto en la rueda) sin cambiar el color actual ni la posición de los demás puntos. Quitar el color principal habiendo secundarios SHALL promover automáticamente al primer secundario (el siguiente en orden): su color SHALL pasar a ser el color actual como cambio confirmado, su tarjeta SHALL pasar a ser la base (con su indicador) y los demás puntos SHALL conservar sus posiciones absolutas en la rueda (recalculándose su posición relativa respecto del nuevo principal). Quitar puntos SHALL no ser deshacible (deshacer/rehacer cubren solo el color actual). Debe sobrevivir al menos un color: si el principal es el único color del conjunto, su tarjeta SHALL no mostrar "−".
+Cada tarjeta de la pestaña Libre SHALL mostrar, al pasar el mouse, un botón "−" en su esquina inferior derecha que SHALL quitar ese color del conjunto. El doble click sobre un punto secundario en la rueda SHALL eliminarlo igual que el "−" de su tarjeta; con la pestaña Armonías activa SHALL pasar a Libre (base y puntos canónicos) y SHALL eliminar el punto indicado, pues las armonías no se alteran y siempre se pasa a Libre. Un botón "Borrar" —chip discreto junto al "+", junto a "Luminosidad equilibrada", visible en Libre solo mientras haya secundarios— SHALL quitar de una vez todos los puntos secundarios conservando únicamente el principal y sin cambiar el color actual. Quitar un secundario SHALL eliminarlo (tarjeta y punto en la rueda) sin cambiar el color actual ni la posición de los demás puntos. Quitar el color principal habiendo secundarios SHALL promover automáticamente al primer secundario (el siguiente en orden): su color SHALL pasar a ser el color actual como cambio confirmado, su tarjeta SHALL pasar a ser la base (con su indicador) y los demás puntos SHALL conservar sus posiciones absolutas en la rueda (recalculándose su posición relativa respecto del nuevo principal). Quitar puntos SHALL no ser deshacible (deshacer/rehacer cubren solo el color actual). Debe sobrevivir al menos un color: si el principal es el único color del conjunto, su tarjeta SHALL no mostrar "−".
 
 #### Scenario: Quitar un secundario
 - **WHEN** Libre tiene principal + 3 secundarios y el usuario pasa el mouse sobre la tarjeta "2" y pulsa "−"
@@ -84,3 +84,15 @@ Cada tarjeta de la pestaña Libre SHALL mostrar, al pasar el mouse, un botón "�
 #### Scenario: El principal único no se puede quitar
 - **WHEN** Libre tiene solo el principal, sin secundarios
 - **THEN** su tarjeta no muestra el botón "−" y no existe forma de dejar el conjunto vacío
+
+#### Scenario: Borrar limpia los secundarios de una vez
+- **WHEN** Libre tiene principal + 5 secundarios y el usuario pulsa "Borrar" a la izquierda del "+"
+- **THEN** solo queda la tarjeta base con su indicador, sin puntos en la rueda, el botón "Borrar" desaparece y el color actual no cambia
+
+#### Scenario: Doble click en la rueda elimina el punto
+- **WHEN** Libre tiene principal + 3 secundarios y el usuario hace doble click sobre el punto 2 en la rueda
+- **THEN** el punto 2 desaparece de la rueda y de las tarjetas, el principal y los otros 2 puntos no cambian y el color actual no cambia
+
+#### Scenario: Doble click sobre un punto de armonía pasa a Libre sin él
+- **WHEN** en Armonías con "Triádica" y color `#5246BC` el usuario hace doble click sobre el marcador en +120°
+- **THEN** la pestaña pasa a Libre con el base y solo el punto en +240° (el marcador de +120° queda eliminado) y el color actual no cambia

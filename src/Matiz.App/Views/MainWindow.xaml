@@ -156,6 +156,7 @@
                             <c:ColorWheel x:Name="Wheel" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Gamma="{Binding WheelGamma}"
                                           CommitCommand="{Binding CommitPickerCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
                                           Markers="{Binding WheelMarkers}" MarkerClickCommand="{Binding SelectWheelMarkerCommand}"
+                                          MarkerDoubleClickCommand="{Binding RemoveWheelMarkerCommand}"
                                           MarkerDragCommand="{Binding SetWheelMarkerOffsetCommand}" AddPointAtCommand="{Binding AddFreePointAtCommand}"
                                           ToolTip="{loc:Loc picker.wheel.tooltip}"/>
                             <c:BrightnessSlider Grid.Column="1" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Value="{Binding Brightness}"
@@ -445,6 +446,9 @@
                             ToolTip="{loc:Loc gen.addPoint.tooltip}" AutomationProperties.Name="{loc:Loc gen.addPoint}">
                         <TextBlock Text="&#xE710;" FontFamily="{StaticResource IconFont}" FontSize="11"/>
                     </Button>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding ClearFreePointsCommand}" Margin="0,0,6,0"
+                            Content="{loc:Loc gen.clearPoints}" ToolTip="{loc:Loc gen.clearPoints.tooltip}" AutomationProperties.Name="{loc:Loc gen.clearPoints}"
+                            Visibility="{Binding CanRemoveFreePoints, Converter={StaticResource BoolToVis}}"/>
                     <ListBox ItemsSource="{Binding HarmonyKinds}" SelectedValue="{Binding HarmonyKind}" SelectedValuePath="Value" x:Name="HarmonyList">
                         <ListBox.Style>
                             <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">

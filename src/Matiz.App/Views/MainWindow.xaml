@@ -666,7 +666,8 @@
                     </TextBlock>
 
                     <!-- Apoyar el proyecto: Cafecito (imagen oficial del botón) y PayPal (estilo del vínculo de pago) -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                    <TextBlock Text="{loc:Loc settings.support.hint}" Style="{StaticResource Muted}" FontSize="11.5" Margin="0,8,0,3" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Style="{StaticResource GhostButton}" Padding="0"
                                 Click="ExternalLinkButton_Click" Tag="https://cafecito.app/juanquiroga"
                                 AutomationProperties.Name="{loc:Loc settings.support.cafecito}" ToolTip="{loc:Loc settings.support.cafecito}">

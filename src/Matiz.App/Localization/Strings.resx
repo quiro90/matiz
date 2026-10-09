@@ -394,6 +394,9 @@
   <data name="settings.support.donate" xml:space="preserve">
     <value>Donate</value>
   </data>
+  <data name="settings.support.hint" xml:space="preserve">
+    <value>Consider donating if you find it useful:</value>
+  </data>
   <data name="settings.section.appearance" xml:space="preserve">
     <value>APPEARANCE</value>
   </data>

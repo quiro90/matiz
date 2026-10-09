@@ -14,7 +14,7 @@
 ## 3. Verificación del paquete instalado
 
 - [x] 3.1 Certificado de prueba local y sideload: `.\build.ps1 msix -Cert` instala y confía el cert de prueba; verificación: Windows confía en el cert y el paquete se instala con doble click sin errores de firma
-- [ ] 3.2 Smoke test del app empaquetada: abrir Matiz desde Inicio (con icono correcto), Alt+C captura un color, exportar PNG con Ctrl+E, reabrir y verificar settings/paletas, click en el link de Instagram de Ajustes; verificación: todos funcionan sin diferencias con la versión portable
+- [x] 3.2 Smoke test del app empaquetada: abrir Matiz desde Inicio (con icono correcto), Alt+C captura un color, exportar PNG con Ctrl+E, reabrir y verificar settings/paletas, click en el link de Instagram de Ajustes; verificación: todos funcionan sin diferencias con la versión portable
 - [x] 3.3 Verificar que el payload es self-contained: abrir el paquete instalado en una máquina o VM sin .NET 10 Desktop Runtime → arranca y funciona; verificación: escenarios del spec "Instalación sin .NET" cumplidos (si no hay VM, confirmar inspectando el contenido del MSIX: incluye `Matiz.exe`, runtime .NET y DLLs del framework)
 - [x] 3.4 Confirmar que distribuciones directas quedaron intactas: `.\build.ps1 publish` genera `publish\win-x64\Matiz.exe` (framework) y `.\build.ps1 native` genera `publish\win-x64-native\Matiz.exe` (single-file); verificación: ambos ejecutables arrancan, y los tests de `.\build.ps1 test` siguen en verde
 

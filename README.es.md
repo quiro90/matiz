@@ -62,3 +62,7 @@ El empaquetado MSIX no usa Visual Studio ni `.wapproj`: `.\build.ps1 msix` hace 
 - `docs/vault/` — documentación completa como vault de Obsidian (empieza por `00 Inicio`).
 
 Por ahora solo Windows (WPF). La ruta a Linux/macOS con Avalonia está documentada en `docs/vault/01 Producto/Multiplataforma.md`.
+
+## Licencia
+
+Apache 2.0 con la [Commons Clause](https://commonsclause.com/): libre para copiar, modificar, compilar y distribuir; la venta del software queda reservada al autor. Ver [LICENSE](LICENSE).

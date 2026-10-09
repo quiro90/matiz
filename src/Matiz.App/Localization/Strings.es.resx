@@ -310,6 +310,12 @@
   <data name="gen.clearPoints.tooltip" xml:space="preserve">
     <value>Quita todos los puntos secundarios y conserva solo el principal</value>
   </data>
+  <data name="gen.customize" xml:space="preserve">
+    <value>Personalizar</value>
+  </data>
+  <data name="gen.customize.tooltip" xml:space="preserve">
+    <value>Carga los colores extraídos como puntos del conjunto Personalizado (reemplaza los colores actuales)</value>
+  </data>
   <data name="gen.exportTitle.tints" xml:space="preserve">
     <value>Tints y Shades</value>
   </data>
@@ -690,6 +696,12 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="toasts.paletteLoaded" xml:space="preserve">
     <value>Paleta «{0}» cargada en la rueda</value>
+  </data>
+  <data name="toasts.customizeReplaceWarning" xml:space="preserve">
+    <value>Esta acción reemplazará todos los colores cargados en Personalizado.</value>
+  </data>
+  <data name="toasts.customizeApplied" xml:space="preserve">
+    <value>Se cargaron {0} colores extraídos en Personalizado</value>
   </data>
   <data name="toasts.hotkeyBusy" xml:space="preserve">
     <value>El atajo {0} está ocupado por otra aplicación. Cámbialo en Ajustes.</value>

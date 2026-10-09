@@ -227,6 +227,39 @@ public sealed partial class MainViewModel
     }
 
     /// <summary>
+    /// Botón "Personalizar" (solo en De la imagen): pasa los colores extraídos al conjunto Personalizado
+    /// como puntos secundarios con su brillo propio, conservando el color actual como principal. Reemplaza
+    /// el conjunto previo; si ya hay 2 o más colores (principal + algún punto) advierte antes con un toast
+    /// con confirmación (estilo "Recargar"); si hay solo el principal, aplica directo.
+    /// </summary>
+    [RelayCommand]
+    private void CustomizeFromImage()
+    {
+        if (_extracted.Count == 0) return;
+        if (_freeOffsets.Count > 0) ShowToast(Loc.T("toasts.customizeReplaceWarning"), Loc.T("gen.customize"), ApplyCustomizeFromImage, seconds: 5);
+        else ApplyCustomizeFromImage();
+    }
+
+    private void ApplyCustomizeFromImage()
+    {
+        if (_extracted.Count == 0) return;
+        var st = Session.Current;
+        _freeOffsets.Clear();
+        foreach (var g in _extracted)
+        {
+            var hsv = ColorMath.ToHsv(g.Color);
+            _freeOffsets.Add((
+                ColorMath.NormalizeHue(hsv.H - st.Hue),
+                Math.Clamp(hsv.S, 0, 1) - st.Saturation,
+                hsv.V - st.Value));
+        }
+        if (GeneratedTab == GeneratedTab.Free) RefreshGenerated();
+        else GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
+        NotifyFreePointCommands();
+        ShowToast(Loc.F("toasts.customizeApplied", _extracted.Count));
+    }
+
+    /// <summary>
     /// Posición del punto que añade el botón "+": opuesto al principal si el conjunto no tiene aún
     /// secundarios; en caso contrario, al lado del último añadido (hue +30° por paso, conservando su
     /// saturación) hasta no solaparse con ningún punto existente ni con el principal.

@@ -310,6 +310,12 @@
   <data name="gen.clearPoints.tooltip" xml:space="preserve">
     <value>Removes all secondary points and keeps only the principal color</value>
   </data>
+  <data name="gen.customize" xml:space="preserve">
+    <value>Customize</value>
+  </data>
+  <data name="gen.customize.tooltip" xml:space="preserve">
+    <value>Loads the extracted colors as points of the Custom set (replaces the current colors)</value>
+  </data>
   <data name="gen.exportTitle.tints" xml:space="preserve">
     <value>Tints &amp; Shades</value>
   </data>
@@ -690,6 +696,12 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   </data>
   <data name="toasts.paletteLoaded" xml:space="preserve">
     <value>Palette "{0}" loaded into the wheel</value>
+  </data>
+  <data name="toasts.customizeReplaceWarning" xml:space="preserve">
+    <value>This action will replace all colors currently in the Custom set.</value>
+  </data>
+  <data name="toasts.customizeApplied" xml:space="preserve">
+    <value>{0} extracted colors loaded into Custom</value>
   </data>
   <data name="toasts.hotkeyBusy" xml:space="preserve">
     <value>The shortcut {0} is already in use by another application. Change it in Settings.</value>

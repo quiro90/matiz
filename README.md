@@ -17,7 +17,7 @@ A small, fast Windows color tool for developers and designers: pick any pixel on
 - **Design scale 50–950** generated in OKLCH, ready for design systems.
 - **Harmonies** (complementary, analogous, split, triadic, tetradic, monochromatic) drawn on the wheel, with balanced lightness.
 - **Free points**: up to 64 secondary colors added by right-clicking the wheel, right-clicking during capture or over the image (or the + button, visible on every tab at the same height); they follow the main color rigidly, and customizing a harmony converts it to **Custom** instead of breaking it.
-- **Tints / shades, neutrals** and **dominant colors from images** (open, drop or paste a screenshot).
+- **Tints / shades, neutrals** and **dominant colors from images** (open, drop or paste a screenshot); in "From image" the **"Customize"** button loads the extracted colors at once as points of the Custom set (warns before replacing an already-built palette).
 - **Saved palettes** (up to 64 colors per palette) with autosave, reordering (drag the cards too) and undo; **Reload** puts a saved palette back on the wheel (Custom mode) to edit it; export as **CSS variables, JSON, Dart, C#, Tailwind** or a **PNG** image.
 - Recent colors, undo/redo, light/dark theme, always-on-top, keyboard shortcuts.
 

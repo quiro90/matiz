@@ -472,6 +472,19 @@
                     <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding ClearFreePointsCommand}" Margin="0,0,6,0" VerticalAlignment="Top"
                             Content="{loc:Loc gen.clearPoints}" ToolTip="{loc:Loc gen.clearPoints.tooltip}" AutomationProperties.Name="{loc:Loc gen.clearPoints}"
                             Visibility="{Binding CanRemoveFreePoints, Converter={StaticResource BoolToVis}}"/>
+                    <Button DockPanel.Dock="Right" Command="{Binding CustomizeFromImageCommand}" Margin="0,0,6,0" VerticalAlignment="Top" Padding="8,2"
+                            ToolTip="{loc:Loc gen.customize.tooltip}" AutomationProperties.Name="{loc:Loc gen.customize}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource ChipButton}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding GeneratedTab, Converter={StaticResource EnumEquals}, ConverterParameter=Extracted}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <ListBox ItemsSource="{Binding HarmonyKinds}" SelectedValue="{Binding HarmonyKind}" SelectedValuePath="Value" x:Name="HarmonyList">
                         <ListBox.Style>
                             <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">

@@ -1,0 +1,84 @@
+name: Release automático por versión
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Leer versión del proyecto
+        id: ver
+        shell: pwsh
+        run: |
+          $props = Get-Content Directory.Build.props -Raw
+          $v = [regex]::Match($props, '<Version>([^<]+)</Version>').Groups[1].Value
+          if (-not $v) { throw "No se encontro <Version> en Directory.Build.props" }
+          Write-Host "Version del proyecto: $v"
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Decidir si hay release pendiente
+        id: gate
+        shell: pwsh
+        run: |
+          git fetch --tags --force
+          $project = [version]'${{ steps.ver.outputs.version }}'
+          # Solo cuentan tags de version estrictos vX.Y.Z(.W): los legacy (v1.01) se ignoran
+          $tags = git tag -l 'v*' | Where-Object { $_ -match '^v\d+\.\d+\.\d+(\.\d+)?$' }
+          $already = $false
+          foreach ($t in $tags) {
+            if ([version]$t.TrimStart('v') -eq $project) { $already = $true }
+          }
+          if ($already) {
+            Write-Host "La version $project ya tiene tag de release. Nada que publicar."
+            "skip=true" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "Nueva version $project pendiente de release."
+            "skip=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Setup .NET
+        if: steps.gate.outputs.skip == 'false'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Compilar y testear
+        if: steps.gate.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          .\build.ps1 test
+
+      - name: Publicar portable single-file
+        if: steps.gate.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          .\build.ps1 native
+          if (-not (Test-Path 'publish\win-x64-native\Matiz.exe')) { throw "No se genero publish\win-x64-native\Matiz.exe" }
+          $v = '${{ steps.ver.outputs.version }}'
+          $zip = "publish\Matiz-$v-win-x64.zip"
+          Compress-Archive -Path @('publish\win-x64-native\Matiz.exe', 'LICENSE') -DestinationPath $zip -Force
+          Write-Host "Zipeado: $zip"
+
+      - name: Crear tag y release
+        if: steps.gate.outputs.skip == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: Matiz v${{ steps.ver.outputs.version }}
+          files: publish/Matiz-*-win-x64.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true

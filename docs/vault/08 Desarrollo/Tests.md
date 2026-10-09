@@ -5,6 +5,6 @@ tags: [desarrollo, tests]
 ```bash
 dotnet test Matiz.slnx
 ```
-- `tests/Matiz.Core.Tests` (145): conversiones (incluye ida y vuelta exhaustiva de 16,7 M colores), parser, formatos, sesión/deshacer, escala/armonías/neutros, puntos libres, extracción, paletas, exportación, persistencia (corrupción, migración, escritura atómica).
+- `tests/Matiz.Core.Tests` (154): conversiones (incluye ida y vuelta exhaustiva de 16,7 M colores), parser, formatos, sesión/deshacer, escala/armonías/neutros, puntos libres (Δbrillo), extracción (hasta 64), límites de paleta (64), exportación, persistencia (corrupción, migración, escritura atómica).
 - `tests/Matiz.App.Tests` (9): PNG con píxel exacto y tamaño 2×, atajos.
 - La UI no se testea exhaustivamente: ver [[Pendiente de verificar]].

@@ -16,9 +16,9 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 - **Todos los formatos**: HEX, RGB, HSL, HSV, CMYK (aprox.), OKLCH y fragmentos de código (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Pega cualquier formato para fijar un color.
 - **Escala 50–950** generada en OKLCH, lista para design systems.
 - **Armonías** (complementaria, análoga, dividida, triádica, tetrádica, monocromática) dibujadas en la rueda, con luminosidad equilibrada.
-- **Puntos libres**: hasta 16 colores secundarios añadidos con click derecho en la rueda (o el botón "+"); siguen rígidamente al color principal y personalizar una armonía la convierte a Libre en vez de romperla.
+- **Puntos libres**: hasta 64 colores secundarios añadidos con click derecho en la rueda (o el botón "+"); siguen rígidamente al color principal y personalizar una armonía la convierte a Libre en vez de romperla.
 - **Tints / shades, neutros** y **colores dominantes de imágenes** (abrir, arrastrar o pegar una captura).
-- **Paletas guardadas** con autoguardado, reordenamiento y deshacer; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
+- **Paletas guardadas** con autoguardado, reordenamiento y deshacer; **Recargar** vuelve a poner una paleta guardada en la rueda (modo Libre) para editarla; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.
 
 ## Requisitos
@@ -58,7 +58,7 @@ El empaquetado MSIX no usa Visual Studio ni `.wapproj`: `.\build.ps1 msix` hace 
 
 - `src/Matiz.Core` — modelo de color, conversiones, generación de paletas, exportación, persistencia (sin UI, multiplataforma).
 - `src/Matiz.App` — app WPF (MVVM), controles propios, captura de pantalla.
-- `tests/` — xUnit (139 tests).
+- `tests/` — xUnit (163 tests).
 - `openspec/` — especificaciones (spec-driven).
 - `docs/vault/` — documentación completa como vault de Obsidian (empieza por `00 Inicio`).
 

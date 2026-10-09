@@ -16,9 +16,9 @@ A small, fast Windows color tool for developers and designers: pick any pixel on
 - **Every format**: HEX, RGB, HSL, HSV, CMYK (approx.), OKLCH, plus code snippets (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Paste any format to set a color.
 - **Design scale 50–950** generated in OKLCH, ready for design systems.
 - **Harmonies** (complementary, analogous, split, triadic, tetradic, monochromatic) drawn on the wheel, with balanced lightness.
-- **Free points**: up to 16 secondary colors added by right-clicking the wheel (or the + button); they follow the main color rigidly, and customizing a harmony converts it to Free instead of breaking it.
+- **Free points**: up to 64 secondary colors added by right-clicking the wheel (or the + button); they follow the main color rigidly, and customizing a harmony converts it to Free instead of breaking it.
 - **Tints / shades, neutrals** and **dominant colors from images** (open, drop or paste a screenshot).
-- **Saved palettes** with autosave, reordering and undo; export as **CSS variables, JSON, Dart, C#, Tailwind** or a **PNG** image.
+- **Saved palettes** with autosave, reordering and undo; **Reload** puts a saved palette back on the wheel (Free mode) to edit it; export as **CSS variables, JSON, Dart, C#, Tailwind** or a **PNG** image.
 - Recent colors, undo/redo, light/dark theme, always-on-top, keyboard shortcuts.
 
 > The UI is currently in Spanish.
@@ -60,7 +60,7 @@ The MSIX packaging does not use Visual Studio or `.wapproj`: `.\build.ps1 msix` 
 
 - `src/Matiz.Core` — color model, conversions, palette generation, export, persistence (no UI, cross-platform).
 - `src/Matiz.App` — WPF app (MVVM), custom controls, screen capture.
-- `tests/` — xUnit (139 tests).
+- `tests/` — xUnit (163 tests).
 - `openspec/` — spec-driven specifications.
 - `docs/vault/` — full documentation as an Obsidian vault (start at `00 Inicio`).
 

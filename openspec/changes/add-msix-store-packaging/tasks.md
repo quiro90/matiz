@@ -21,5 +21,5 @@
 ## 4. Documentación y envío a Store
 
 - [x] 4.1 README: apartado "Publicar en Microsoft Store" con los pasos 1 a 1 de Partner Center (reservar nombre, identidad, completar envío), más el bump de versión (`Directory.Build.props` + manifiesto, un commit) y cómo correr `msix`/`native` para un release; verificación: leyendo el apartado es posible seguir el flujo sin pedir ayuda
-- [ ] 4.2 (el usuario, en Partner Center) Completar el envío: descripción corta/larga, screenshots, ícono 300x300 de listado, URL de privacidad (link al README del repo), clasificación de edad, precios, subir el `.msixupload`; verificación: envío queda "En revisión" en Partner Center
+- [x] 4.2 (el usuario, en Partner Center) Completar el envío: descripción corta/larga, screenshots, ícono 300x300 de listado, URL de privacidad (link al README del repo), clasificación de edad, precios, subir el `.msixupload`; verificación: envío queda "En revisión" en Partner Center
 - [ ] 4.3 Al aprobar la Store: crear release de GitHub con `publish\win-x64-native\Matiz.exe` (y opcionalmente el zip del framework-dependent con instrucciones de runtime); verificación: release publica y descargable, con nota sobre qué versión corresponde a la Store

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Matiz.App.Localization;
 using Matiz.Core.Colors;
 using Matiz.Core.Formatting;
 using Matiz.Core.Parsing;
@@ -144,5 +145,21 @@ public sealed partial class MainViewModel
     {
         var p = Session.Previous.Argb;
         Copy(p.IsOpaque ? ColorFormats.Hex(p, FormatOptions) : ColorFormats.ArgbHex(p, FormatOptions), p);
+    }
+
+    [RelayCommand]
+    private void AddCurrentColorToPalette()
+    {
+        var p = _palettes.EnsureActive();
+        _palettes.AddColor(p.Id, Session.Current.Argb, null);
+        ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
+    }
+
+    [RelayCommand]
+    private void AddPreviousColorToPalette()
+    {
+        var p = _palettes.EnsureActive();
+        _palettes.AddColor(p.Id, Session.Previous.Argb, null);
+        ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
 }

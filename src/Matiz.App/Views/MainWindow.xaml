@@ -250,9 +250,12 @@
                                             <TextBlock Text="{Binding PreviousHex}" FontSize="11" FontFamily="{StaticResource MonoFont}" Foreground="{Binding PreviousForeground}"/>
                                         </StackPanel>
                                     </Button>
-                                    <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding PreviousForeground}" Width="18" Height="18" FontSize="10"
-                                            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
-                                            Command="{Binding CopyPreviousHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1">
+                                        <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding PreviousForeground}" Width="18" Height="18" FontSize="10"
+                                                Command="{Binding CopyPreviousHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                        <Button Style="{StaticResource SmallIconButton}" Content="&#xE710;" Foreground="{Binding PreviousForeground}" Width="18" Height="18" FontSize="10"
+                                                Command="{Binding AddPreviousColorToPaletteCommand}" ToolTip="{loc:Loc swatch.addToPalette}" AutomationProperties.Name="{loc:Loc swatch.addToPalette}"/>
+                                    </StackPanel>
                                 </Grid>
                                 <Border Grid.Column="1" Background="{Binding CurrentBrush}" CornerRadius="0,8,8,0" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,1,1">
                                     <Grid>
@@ -260,9 +263,12 @@
                                             <TextBlock Text="{loc:Loc color.current}" FontSize="10.5" Foreground="{Binding CurrentForeground}" Opacity="0.8"/>
                                             <TextBlock Text="{Binding CurrentHex}" FontSize="20" FontWeight="SemiBold" FontFamily="{StaticResource MonoFont}" Foreground="{Binding CurrentForeground}"/>
                                         </StackPanel>
-                                        <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding CurrentForeground}" Width="18" Height="18" FontSize="10"
-                                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0"
-                                                Command="{Binding CopyHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0">
+                                            <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding CurrentForeground}" Width="18" Height="18" FontSize="10"
+                                                    Command="{Binding CopyHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                            <Button Style="{StaticResource SmallIconButton}" Content="&#xE710;" Foreground="{Binding CurrentForeground}" Width="18" Height="18" FontSize="10"
+                                                    Command="{Binding AddCurrentColorToPaletteCommand}" ToolTip="{loc:Loc swatch.addToPalette}" AutomationProperties.Name="{loc:Loc swatch.addToPalette}"/>
+                                        </StackPanel>
                                     </Grid>
                                 </Border>
                             </Grid>

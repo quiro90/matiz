@@ -34,5 +34,5 @@ Referencias: `proposal.md` (por qué/qué), `specs/` (requisitos), `design.md` (
 ## 5. Verificación final
 
 - [x] 5.1 `dotnet build Matiz.sln` compila sin warnings nuevos y `openspec validate "palette-building-ux"` pasa — comando y salida registrados.
-- [ ] 5.2 Recorrido manual end-to-end: Alt+C (principal+2 secundarios con Shift) →"+" en Escala → click der en imagen → renames visibles → drag con feedback y persistencia — listar resultados observados contra los escenarios de specs.
-- [ ] 5.3 `openspec archive "palette-building-ux"` tras confirmación del usuario (aplicar deltas a specs principales) — verificar `openspec list` sin changes activos y specs actualizados.
+- [x] 5.2 Recorrido manual end-to-end: Alt+C (principal+2 secundarios con Shift) →"+" en Escala → click der en imagen → renames visibles → drag con feedback y persistencia — listar resultados observados contra los escenarios de specs. ✅ Confirmado por el usuario ("todo perfecto").
+- [x] 5.3 `openspec archive "palette-building-ux"` tras confirmación del usuario (aplicar deltas a specs principales) — verificar `openspec list` sin changes activos y specs actualizados.

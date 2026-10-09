@@ -662,7 +662,7 @@
                     </Grid>
 
                     <TextBlock Style="{StaticResource Muted}" FontSize="11.5" LineHeight="19" Margin="0,2,0,6" TextWrapping="Wrap">
-                        <Run Text="Matiz"/> <Run Text="{Binding Version, Mode=OneWay, StringFormat=v{0}}"/> <Run Text="by"/> <Run Text="Juan Quiroga" FontWeight="Bold"/> <LineBreak/> <Run Text="insta:"/> <Hyperlink NavigateUri="https://www.instagram.com/juanquirogaart/" RequestNavigate="ExternalHyperlink_Click" Foreground="{DynamicResource TextBrush}">@juanquirogaart</Hyperlink>
+                        <Run Text="Matiz"/> <Run Text="{Binding Version, Mode=OneWay, StringFormat=v{0}}"/> <Run Text="by"/> <Run Text="Juan Quiroga" FontWeight="Bold"/> <Run Text=" - "/> <Hyperlink NavigateUri="https://www.instagram.com/juanquirogaart/" RequestNavigate="ExternalHyperlink_Click" Foreground="{DynamicResource TextBrush}">@juanquirogaart</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Text="{loc:Loc settings.section.language}" Style="{StaticResource SectionTitle}" Margin="0,8,0,6"/>

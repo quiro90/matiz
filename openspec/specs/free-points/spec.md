@@ -87,7 +87,7 @@ El sistema SHALL permitir añadir puntos secundarios desde cualquier pestaña me
 Arrastrar un punto secundario con la pestaña Personalizado activa SHALL actualizar su posición relativa (Δhue/Δsat) de forma independiente, sin mover el marcador principal ni cambiar el color actual, y su tarjeta SHALL actualizarse en vivo durante el arrastre. La saturación SHALL limitarse al rango [0, 1] y el punto SHALL permanecer dentro del disco de la rueda. Mover el color principal por cualquier vía —arrastre de la rueda, control de brillo, campos numéricos, historial, captura de pantalla (incluido el `Shift`+click izquierdo del modo captura), imagen, entrada manual, deshacer/rehacer, click sobre el cuerpo de una tarjeta— SHALL conservar las posiciones relativas de los puntos: la figura SHALL trasladarse rígidamente al nuevo principal; en particular, usar un punto secundario como principal (click sobre su tarjeta) SHALL re-anclar la figura respecto de él conservando los desfases del resto.
 
 #### Scenario: Arrastre independiente
-- **WHEN** el usuario arrastra el punto 1 en Libre
+- **WHEN** el usuario arrastra el punto 1 en Personalizado
 - **THEN** durante el arrastre el punto sigue al cursor, su tarjeta cambia de color en vivo, el principal y los demás puntos no se mueven y el color actual no cambia
 
 #### Scenario: Seguimiento rígido al mover el principal
@@ -125,6 +125,6 @@ Cada tarjeta de la pestaña Personalizado SHALL mostrar, al pasar el mouse, un b
 - **WHEN** Personalizado tiene principal + 3 secundarios y el usuario hace doble click sobre el punto 2 en la rueda
 - **THEN** el punto 2 desaparece de la rueda y de las tarjetas, el principal y los otros 2 puntos no cambian y el color actual no cambia
 
-#### Scenario: Doble click sobre un punto de armonía pasa a Libre sin él
+#### Scenario: Doble click sobre un punto de armonía pasa a Personalizado sin él
 - **WHEN** en Armonías con "Triádica" y color `#5246BC` el usuario hace doble click sobre el marcador en +120°
 - **THEN** la pestaña pasa a Personalizado con el base y solo el punto en +240° (el marcador de +120° queda eliminado) y el color actual no cambia

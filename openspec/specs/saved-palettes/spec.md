@@ -85,15 +85,15 @@ Toda paleta guardada SHALL tener como máximo 64 colores. Regla dura aplicada en
 - **THEN** la paleta se muestra y se exporta completa (70 colores), se puede renombrar y borrar/reordenar colores, pero añadir está bloqueado con el aviso hasta que quede bajo el límite
 
 ### Requirement: Recargar la paleta marcada en la rueda
-El panel Biblioteca ("Paletas") SHALL presentar un botón "Recargar" al lado de "Nueva" que cargue la paleta marcada (activa) en la rueda cromática en modo Libre. El botón SHALL deshabilitarse si no existe paleta marcada con colores o si la rueda ya muestra esa paleta sin cambios que editar. Al pulsarlo el sistema SHALL advertir antes de cargar —toast con el texto "Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales." y un botón de confirmación "Recargar"— y sin confirmar SHALL no cambiar nada. Al confirmar: el primer color de la paleta SHALL pasar a ser el color actual (cambio confirmado) y el principal del conjunto; cada color restante SHALL añadirse como punto secundario en su posición hue/saturación relativa al principal con su brillo propio de modo que cada tarjeta SHALL reproducir el color exacto de la paleta; el conjunto libre previo SHALL reemplazarse; la paleta marcada SHALL evaluarse al confirmar (si entre el aviso y la confirmación se marca otra paleta, se carga esa); la operación SHALL respetar los límites (una paleta de 64 colores carga principal + 63 secundarios, dentro del límite de la rueda) y el panel Biblioteca SHALL cerrarse para mostrar la rueda. Si la paleta tiene un solo color SHALL cargar solo el principal. No SHALL añadir colores a la paleta ni modificarla.
+El panel Biblioteca ("Paletas") SHALL presentar un botón "Recargar" al lado de "Nueva" que cargue la paleta marcada (activa) en la rueda cromática en modo Personalizado. El botón SHALL deshabilitarse si no existe paleta marcada con colores o si la rueda ya muestra esa paleta sin cambios que editar. Al pulsarlo el sistema SHALL advertir antes de cargar —toast con el texto "Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales." y un botón de confirmación "Recargar"— y sin confirmar SHALL no cambiar nada. Al confirmar: el primer color de la paleta SHALL pasar a ser el color actual (cambio confirmado) y el principal del conjunto; cada color restante SHALL añadirse como punto secundario en su posición hue/saturación relativa al principal con su brillo propio de modo que cada tarjeta SHALL reproducir el color exacto de la paleta; el conjunto libre previo SHALL reemplazarse; la paleta marcada SHALL evaluarse al confirmar (si entre el aviso y la confirmación se marca otra paleta, se carga esa); la operación SHALL respetar los límites (una paleta de 64 colores carga principal + 63 secundarios, dentro del límite de la rueda) y el panel Biblioteca SHALL cerrarse para mostrar la rueda. Si la paleta tiene un solo color SHALL cargar solo el principal. No SHALL añadir colores a la paleta ni modificarla.
 
 #### Scenario: Aviso antes de cargar
 - **WHEN** hay una paleta marcada con 8 colores y el usuario pulsa "Recargar"
 - **THEN** aparece el toast "Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales." con botón "Recargar", y hasta confirmar no cambian la rueda, el color actual ni las selecciones
 
-#### Scenario: Carga completa en Libre
+#### Scenario: Carga completa en Personalizado
 - **WHEN** el usuario confirma "Recargar" sobre la paleta "PuchiApp" con colores `#5246BC`, `#E24347`, `#F7F9FB`
-- **THEN** la pestaña pasa a Libre, el color actual pasa a ser `#5246BC` como cambio confirmado, aparecen los puntos 1 (`#E24347`) y 2 (`#F7F9FB`) en las posiciones hue/saturación de la rueda correspondientes con su brillo propio y el panel Biblioteca se cierra
+- **THEN** la pestaña pasa a Personalizado, el color actual pasa a ser `#5246BC` como cambio confirmado, aparecen los puntos 1 (`#E24347`) y 2 (`#F7F9FB`) en las posiciones hue/saturación de la rueda correspondientes con su brillo propio y el panel Biblioteca se cierra
 
 #### Scenario: Conteo correcto al recargar una paleta llena
 - **WHEN** la paleta marcada tiene 64 colores y el usuario confirma "Recargar"
@@ -105,4 +105,4 @@ El panel Biblioteca ("Paletas") SHALL presentar un botón "Recargar" al lado de 
 
 #### Scenario: Solo principal
 - **WHEN** la paleta marcada tiene un único color y el usuario confirma "Recargar"
-- **THEN** la pestaña pasa a Libre con solo la tarjeta base (ese color como color actual), sin puntos secundarios, y se cierra el panel Biblioteca
+- **THEN** la pestaña pasa a Personalizado con solo la tarjeta base (ese color como color actual), sin puntos secundarios, y se cierra el panel Biblioteca

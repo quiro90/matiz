@@ -102,12 +102,20 @@ public partial class MainWindow : Window, IShell
 
     public BitmapSource? LoadImage(string path, out string? error) => ImageLoader.TryLoad(path, out error);
 
-    /// <summary>Abre los hipervínculos externos (p. ej. el Instagram en los créditos) con el navegador predeterminado.</summary>
+    /// <summary>Abre los hipervínculos externos (p. ej. el Instagram del bloque de créditos) con el navegador predeterminado.</summary>
     private void ExternalHyperlink_Click(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
     {
-        Process.Start(new ProcessStartInfo(e.Uri.ToString()) { UseShellExecute = true });
+        OpenExternal(e.Uri.ToString());
         e.Handled = true;
     }
+
+    /// <summary>Abre el enlace del Tag de los botones externos (p. ej. los de donación en Ajustes) con el navegador predeterminado.</summary>
+    private void ExternalLinkButton_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.Tag is string url) OpenExternal(url);
+    }
+
+    private static void OpenExternal(string url) => Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 
     // ---------- barra de título integrada ----------
 

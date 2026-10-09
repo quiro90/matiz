@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\matiz.ico" />
+    <Resource Include="Assets\cafecito.png" />
   </ItemGroup>
 
   <ItemGroup>

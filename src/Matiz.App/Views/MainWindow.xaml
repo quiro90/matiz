@@ -665,6 +665,20 @@
                         <Run Text="Matiz"/> <Run Text="{Binding Version, Mode=OneWay, StringFormat=v{0}}"/> <Run Text="by"/> <Run Text="Juan Quiroga" FontWeight="Bold"/> <Run Text=" - "/> <Hyperlink NavigateUri="https://www.instagram.com/juanquirogaart/" RequestNavigate="ExternalHyperlink_Click" Foreground="{DynamicResource TextBrush}">@juanquirogaart</Hyperlink>
                     </TextBlock>
 
+                    <!-- Apoyar el proyecto: Cafecito (imagen oficial del botón) y PayPal (estilo del vínculo de pago) -->
+                    <StackPanel Margin="0,8,0,0">
+                        <Button Style="{StaticResource GhostButton}" Padding="0" HorizontalAlignment="Left"
+                                Click="ExternalLinkButton_Click" Tag="https://cafecito.app/juanquiroga"
+                                AutomationProperties.Name="{loc:Loc settings.support.cafecito}" ToolTip="{loc:Loc settings.support.cafecito}">
+                            <Image Source="/Matiz;component/Assets/cafecito.png" Width="192" Height="40" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Button>
+                        <Button Style="{StaticResource PrimaryButton}" Background="#FFD140" Foreground="#FF000000" FontWeight="Bold"
+                                MinWidth="186" Height="42" HorizontalAlignment="Left" Margin="0,8,0,0"
+                                Click="ExternalLinkButton_Click" Tag="https://www.paypal.com/ncp/payment/PJXDUSBHSE8DE"
+                                AutomationProperties.Name="{loc:Loc settings.support.paypal}" ToolTip="{loc:Loc settings.support.paypal}"
+                                Content="{loc:Loc settings.support.donate}"/>
+                    </StackPanel>
+
                     <TextBlock Text="{loc:Loc settings.section.language}" Style="{StaticResource SectionTitle}" Margin="0,8,0,6"/>
                     <StackPanel Orientation="Horizontal">
                         <RadioButton Style="{StaticResource Segment}" Content="English" GroupName="lang"

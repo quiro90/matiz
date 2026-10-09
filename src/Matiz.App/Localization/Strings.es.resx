@@ -385,6 +385,15 @@
   <data name="settings.title" xml:space="preserve">
     <value>Ajustes</value>
   </data>
+  <data name="settings.support.cafecito" xml:space="preserve">
+    <value>Invitame un café en Cafecito</value>
+  </data>
+  <data name="settings.support.paypal" xml:space="preserve">
+    <value>Donar con PayPal</value>
+  </data>
+  <data name="settings.support.donate" xml:space="preserve">
+    <value>Donar</value>
+  </data>
   <data name="settings.section.appearance" xml:space="preserve">
     <value>APARIENCIA</value>
   </data>

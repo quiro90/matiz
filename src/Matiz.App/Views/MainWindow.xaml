@@ -420,7 +420,7 @@
                     <DockPanel Margin="0,0,0,6" Visibility="{Binding GeneratedTab, Converter={StaticResource EnumEquals}, ConverterParameter=Harmony}">
                     <CheckBox DockPanel.Dock="Right" Style="{StaticResource Switch}" IsChecked="{Binding HarmonyBalanceLightness}" Content="{loc:Loc gen.balance}" FontSize="12" Margin="12,0,0,0"
                               ToolTip="{loc:Loc gen.balance.tooltip}"/>
-                    <Button DockPanel.Dock="Right" Content="{loc:Loc harmony.reset}" Command="{Binding ResetHarmonyOffsetsCommand}" FontSize="12" Margin="0,0,8,0"
+                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Content="{loc:Loc harmony.reset}" Command="{Binding ResetHarmonyOffsetsCommand}" Margin="0,0,8,0"
                             ToolTip="{loc:Loc harmony.reset.tooltip}" AutomationProperties.Name="{loc:Loc harmony.reset}"
                             Visibility="{Binding HasHarmonyOffsets, Converter={StaticResource BoolToVis}}"/>
                     <ListBox ItemsSource="{Binding HarmonyKinds}" SelectedValue="{Binding HarmonyKind}" SelectedValuePath="Value" x:Name="HarmonyList">

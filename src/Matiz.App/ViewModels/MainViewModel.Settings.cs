@@ -85,7 +85,7 @@ public sealed partial class MainViewModel
     private void RefreshForLanguage()
     {
         foreach (var row in FormatRows.Concat(ExtraFormatRows)) row.RefreshTexts();
-        HarmonyKinds = Enum.GetValues<HarmonyKind>().Select(k => new Option<HarmonyKind>(k, PaletteGenerator.HarmonyName(k))).ToList();
+        foreach (var option in HarmonyKinds) option.RefreshName();
         RefreshGenerated();
         SyncPalettes();
         SyncHistory();

@@ -47,8 +47,8 @@ public sealed partial class MainViewModel
 
     public ObservableCollection<SwatchItem> GeneratedColors { get; } = [];
 
-    [ObservableProperty] public partial IReadOnlyList<Option<HarmonyKind>> HarmonyKinds { get; private set; } =
-        Enum.GetValues<HarmonyKind>().Select(k => new Option<HarmonyKind>(k, PaletteGenerator.HarmonyName(k))).ToList();
+    [ObservableProperty] public partial IReadOnlyList<HarmonyOption> HarmonyKinds { get; private set; } =
+        Enum.GetValues<HarmonyKind>().Select(k => new HarmonyOption(k, PaletteGenerator.HarmonyName(k))).ToList();
 
     public IReadOnlyList<IPaletteFormatter> PaletteFormats => PaletteFormatters.All;
 

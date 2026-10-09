@@ -47,7 +47,13 @@
     <value>Capturar color de la pantalla</value>
   </data>
   <data name="ui.capture.tooltip" xml:space="preserve">
-    <value>Captura cualquier píxel visible del escritorio (cualquier monitor). Click: color principal · Click derecho: punto secundario del conjunto Personalizado · Shift: seguir capturando · Esc: cancelar (flechas mueven 1 px).</value>
+    <value>Captura cualquier píxel visible del escritorio (cualquier monitor). Click izquierdo: color principal · Click derecho: color secundario (→ paleta Personalizado) · Shift: seguir capturando · Esc: cancelar (flechas mueven 1 px).</value>
+  </data>
+  <data name="settings.shortcuts.ruleTitle" xml:space="preserve">
+    <value>Regla general (captura)</value>
+  </data>
+  <data name="settings.shortcuts.rule" xml:space="preserve">
+    <value>Click izquierdo: captura el color principal. Click derecho: añade un color secundario (pestaña Personalizado, hasta 64 colores).</value>
   </data>
   <data name="ui.image" xml:space="preserve">
     <value>Imagen</value>

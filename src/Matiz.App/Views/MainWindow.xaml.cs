@@ -48,12 +48,12 @@ public partial class MainWindow : Window, IShell
         }
 
         foreach (var kb in Shortcuts.CreateBindings(vm)) InputBindings.Add(kb);
-        ShortcutList.Text = Shortcuts.Describe(vm.CaptureHotkey);
+        UpdateShortcuts(vm.CaptureHotkey);
         vm.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(MainViewModel.CaptureHotkey)) ShortcutList.Text = Shortcuts.Describe(vm.CaptureHotkey);
+            if (e.PropertyName == nameof(MainViewModel.CaptureHotkey)) UpdateShortcuts(vm.CaptureHotkey);
         };
-        LocalizationService.Instance.LanguageChanged += (_, _) => ShortcutList.Text = Shortcuts.Describe(_vm.CaptureHotkey);
+        LocalizationService.Instance.LanguageChanged += (_, _) => UpdateShortcuts(_vm.CaptureHotkey);
 
         SourceInitialized += (_, _) =>
         {
@@ -70,6 +70,23 @@ public partial class MainWindow : Window, IShell
             e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
             e.Handled = true;
         };
+    }
+
+    private void UpdateShortcuts(string captureHotkey)
+    {
+        ShortcutList.Inlines.Clear();
+        ShortcutList.Inlines.Add(new Run(Shortcuts.Describe(captureHotkey)));
+        var ruleTitle = Loc.T("settings.shortcuts.ruleTitle");
+        var rule = Loc.T("settings.shortcuts.rule");
+        if (ruleTitle.Length == 0 && rule.Length == 0) return;
+        ShortcutList.Inlines.Add(new LineBreak());
+        ShortcutList.Inlines.Add(new LineBreak());
+        if (ruleTitle.Length > 0) ShortcutList.Inlines.Add(new Run(ruleTitle) { FontWeight = FontWeights.Bold });
+        if (rule.Length > 0)
+        {
+            ShortcutList.Inlines.Add(new LineBreak());
+            ShortcutList.Inlines.Add(new Run(rule));
+        }
     }
 
     // ---------- IShell ----------

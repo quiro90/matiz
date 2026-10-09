@@ -118,7 +118,7 @@
                     <Button Style="{StaticResource PrimaryButton}" Command="{Binding CaptureCommand}" Padding="12,6"
                             AutomationProperties.Name="{loc:Loc ui.capture.automation}" WindowChrome.IsHitTestVisibleInChrome="True">
                         <Button.ToolTip>
-                            <TextBlock Text="{loc:Loc ui.capture.tooltip}"/>
+                            <TextBlock Text="{loc:Loc ui.capture.tooltip}" MaxWidth="320" TextWrapping="Wrap"/>
                         </Button.ToolTip>
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource CrosshairGeometry}" Stroke="{DynamicResource InverseTextBrush}" StrokeThickness="1.6" Width="16" Height="16" Stretch="None" Margin="0,0,8,0" VerticalAlignment="Center"/>

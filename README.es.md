@@ -11,14 +11,14 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 
 ## Funcionalidades
 
-- **Captura de pantalla**: atajo global (`Alt+C`, configurable), lupa con cuadrícula de píxeles, multi-monitor y DPI por monitor, precisión de píxel. Click izquierdo toma el color principal, click derecho lo añade como punto secundario del conjunto Personalizado, y con **Shift** presionado la lupa sigue abierta para capturar varios colores seguidos (Esc cancela).
+- **Captura de pantalla**: atajo global (`Alt+C`, configurable), lupa con cuadrícula de píxeles, multi-monitor y DPI por monitor, precisión de píxel. Click izquierdo toma el color principal, click derecho lo añade como punto secundario del conjunto Personalizado (hasta 64 colores), y con **Shift** presionado la lupa sigue abierta para capturar varios colores seguidos (Esc cancela).
 - **Selector visual**: rueda de tono/saturación (centro blanco), barra de brillo con el propio color, enfoque Vivo ↔ Pastel, campos H/S/B precisos y escala de grises.
 - **Todos los formatos**: HEX, RGB, HSL, HSV, CMYK (aprox.), OKLCH y fragmentos de código (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Pega cualquier formato para fijar un color.
 - **Escala 50–950** generada en OKLCH, lista para design systems.
 - **Armonías** (complementaria, análoga, dividida, triádica, tetrádica, monocromática) dibujadas en la rueda, con luminosidad equilibrada.
 - **Puntos libres**: hasta 64 colores secundarios añadidos con click derecho en la rueda, click derecho al capturar o sobre la imagen (o el botón "+", visible en todas las pestañas y siempre a la misma altura); siguen rígidamente al color principal y personalizar una armonía la convierte a Personalizado en vez de romperla.
 - **Tints / shades, neutros** y **colores dominantes de imágenes** (abrir, arrastrar o pegar una captura).
-- **Paletas guardadas** con autoguardado, reordenamiento (también arrastrando las tarjetas) y deshacer; **Recargar** vuelve a poner una paleta guardada en la rueda (modo Personalizado) para editarla; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
+- **Paletas guardadas** (hasta 64 colores por paleta) con autoguardado, reordenamiento (también arrastrando las tarjetas) y deshacer; **Recargar** vuelve a poner una paleta guardada en la rueda (modo Personalizado) para editarla; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.
 
 ## Requisitos

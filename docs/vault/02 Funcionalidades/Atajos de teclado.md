@@ -16,4 +16,7 @@ tags: [funcionalidad, referencia]
 | Esc | Cerrar panel / volver al selector |
 
 Dentro de campos de texto, Ctrl+C/V/Z actúan sobre el texto.
-Tabla central: `src/Matiz.App/Services/Shortcuts.cs`. En captura: ver [[Captura de pantalla]].
+
+**Regla general de la captura**: click izquierdo = color principal; click derecho = añade un color secundario (pestaña **Personalizado**, hasta 64 colores).
+
+Tabla central: `src/Matiz.App/Services/Shortcuts.cs`. En captura: ver [[Captura de pantalla]]; los secundarios: [[Puntos libres]].

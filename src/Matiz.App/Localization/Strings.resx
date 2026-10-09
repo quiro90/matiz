@@ -386,6 +386,12 @@
   <data name="library.duplicate" xml:space="preserve">
     <value>Duplicate</value>
   </data>
+  <data name="library.reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="library.reload.tooltip" xml:space="preserve">
+    <value>Load the marked palette into the color wheel</value>
+  </data>
   <data name="library.name" xml:space="preserve">
     <value>NAME</value>
   </data>
@@ -616,6 +622,15 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   </data>
   <data name="toasts.addedCount" xml:space="preserve">
     <value>{0} colors added to "{1}"</value>
+  </data>
+  <data name="toasts.maxPaletteColors" xml:space="preserve">
+    <value>Maximum 64 colors per palette</value>
+  </data>
+  <data name="toasts.reloadPaletteWarning" xml:space="preserve">
+    <value>The palette will be loaded into the color wheel and the current selections will be lost.</value>
+  </data>
+  <data name="toasts.paletteLoaded" xml:space="preserve">
+    <value>Palette "{0}" loaded into the wheel</value>
   </data>
   <data name="toasts.hotkeyBusy" xml:space="preserve">
     <value>The shortcut {0} is already in use by another application. Change it in Settings.</value>

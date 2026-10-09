@@ -151,7 +151,7 @@ public sealed partial class MainViewModel
     private void AddCurrentColorToPalette()
     {
         var p = _palettes.EnsureActive();
-        _palettes.AddColor(p.Id, Session.Current.Argb, null);
+        if (_palettes.AddColor(p.Id, Session.Current.Argb, null) is null) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; }
         ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
 
@@ -159,7 +159,7 @@ public sealed partial class MainViewModel
     private void AddPreviousColorToPalette()
     {
         var p = _palettes.EnsureActive();
-        _palettes.AddColor(p.Id, Session.Previous.Argb, null);
+        if (_palettes.AddColor(p.Id, Session.Previous.Argb, null) is null) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; }
         ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
 }

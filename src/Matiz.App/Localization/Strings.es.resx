@@ -386,6 +386,12 @@
   <data name="library.duplicate" xml:space="preserve">
     <value>Duplicar</value>
   </data>
+  <data name="library.reload" xml:space="preserve">
+    <value>Recargar</value>
+  </data>
+  <data name="library.reload.tooltip" xml:space="preserve">
+    <value>Cargar la paleta marcada en la rueda cromática</value>
+  </data>
   <data name="library.name" xml:space="preserve">
     <value>NOMBRE</value>
   </data>
@@ -616,6 +622,15 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="toasts.addedCount" xml:space="preserve">
     <value>{0} colores agregados a «{1}»</value>
+  </data>
+  <data name="toasts.maxPaletteColors" xml:space="preserve">
+    <value>Máximo 64 colores por paleta</value>
+  </data>
+  <data name="toasts.reloadPaletteWarning" xml:space="preserve">
+    <value>Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales.</value>
+  </data>
+  <data name="toasts.paletteLoaded" xml:space="preserve">
+    <value>Paleta «{0}» cargada en la rueda</value>
   </data>
   <data name="toasts.hotkeyBusy" xml:space="preserve">
     <value>El atajo {0} está ocupado por otra aplicación. Cámbialo en Ajustes.</value>

@@ -80,21 +80,24 @@ public static class PaletteGenerator
 
     /// <summary>
     /// Modo Libre: base + un color por cada desfase relativo respecto del principal —
-    /// hue = baseHue + Δhue (normalizado), saturación = clamp(baseSat + Δsat, 0, 1); el brillo se ajusta con
-    /// "Equilibrar" igual que en las armonías (o queda el del base). Las coordenadas de rueda son exactas y las
+    /// hue = baseHue + Δhue (normalizado), saturación = clamp(baseSat + Δsat, 0, 1). Con Δbrillo (ValueDelta)
+    /// explícito el punto reproduce su brillo propio: v = clamp(base.V + Δv) —usado al cargar una paleta—, y
+    /// "Equilibrar" no lo altera; con Δbrillo nulo el brillo se ajusta con "Equilibrar"
+    /// igual que en las armonías (o queda el del base). Las coordenadas de rueda son exactas y las
     /// etiquetas son números consecutivos ("1", "2", …). Se usa desde las coordenadas continuas del selector.
     /// </summary>
     public static IReadOnlyList<GeneratedColor> FreePoints(ColorState baseState,
-        IReadOnlyList<(double HueDelta, double SatDelta)> offsets, bool balanceLightness = true)
+        IReadOnlyList<(double HueDelta, double SatDelta, double? ValueDelta)> offsets, bool balanceLightness = true)
     {
         var baseColor = baseState.Argb;
         var targetL = LightnessOf(baseState.Hue, baseState.Saturation, baseState.Value);
         var list = new List<GeneratedColor> { new(Texts.Current.Base, baseColor, true, baseState.Hue, baseState.Saturation) };
-        foreach (var (hueDelta, satDelta) in offsets)
+        foreach (var (hueDelta, satDelta, valueDelta) in offsets)
         {
             var s = Math.Clamp(baseState.Saturation + satDelta, 0, 1);
             var h = ColorMath.NormalizeHue(baseState.Hue + hueDelta);
-            var v = balanceLightness ? ValueForLightness(h, s, targetL) : baseState.Value;
+            var v = valueDelta is { } dv ? Math.Clamp(baseState.Value + dv, 0, 1)
+                : balanceLightness ? ValueForLightness(h, s, targetL) : baseState.Value;
             var c = ColorMath.FromHsv(h, s, v, baseState.Alpha);
             list.Add(new GeneratedColor(list.Count.ToString(), c, false, h, s));
         }

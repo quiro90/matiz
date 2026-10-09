@@ -249,5 +249,37 @@ public class GenerationTests
         Assert.True(sw.ElapsedMilliseconds < 1000, $"{sw.ElapsedMilliseconds} ms");
     }
 
+    [Fact]
+    public void Dominant_colors_clamps_count_to_1_and_64()
+    {
+        const int w = 300, h = 200;
+        var px = new byte[w * h * 4];
+        for (var y = 0; y < h; y++)
+        for (var x = 0; x < w; x++)
+        {
+            var o = (y * w + x) * 4;
+            var (r, g, b) = x < 150 ? (82, 70, 188) : y < 100 ? (255, 138, 0) : (34, 197, 94);
+            px[o] = (byte)b; px[o + 1] = (byte)g; px[o + 2] = (byte)r; px[o + 3] = 255;
+        }
+        var one = DominantColors.Extract(px, w, h, w * 4, 0); // fuera de rango → mínimo 1
+        Assert.Single(one);
+
+        // 64 franjas constantes: con k=64 extrae 64 colores distintos
+        const int sw = 256, sh = 128;
+        var stripes = new byte[sw * sh * 4];
+        for (var y = 0; y < sh; y++)
+        for (var x = 0; x < sw; x++)
+        {
+            var o = (y * sw + x) * 4;
+            var v = (byte)(x * 64 / sw); // franja de 4 px
+            stripes[o] = v; stripes[o + 1] = v; stripes[o + 2] = v; stripes[o + 3] = 255;
+        }
+        var many = DominantColors.Extract(stripes, sw, sh, sw * 4, 64);
+        Assert.Equal(64, many.Distinct().Count());
+
+        var max = DominantColors.Extract(px, w, h, w * 4, 70); // nunca más de 64
+        Assert.InRange(max.Count, 1, DominantColors.MaxCount);
+    }
+
     private static double HueDistance(double a, double b) => Math.Abs(((a - b) % 360 + 540) % 360 - 180);
 }

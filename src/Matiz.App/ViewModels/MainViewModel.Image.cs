@@ -68,7 +68,7 @@ public sealed partial class MainViewModel
             var h = bgra.PixelHeight;
             var pixels = new byte[w * h * 4];
             bgra.CopyPixels(pixels, w * 4, 0);
-            var count = (int)Math.Clamp(ExtractCount, 3, 10);
+            var count = (int)Math.Clamp(ExtractCount, 1, DominantColors.MaxCount);
             var colors = await Task.Run(() => DominantColors.Extract(pixels, w, h, w * 4, count));
             _extracted = colors.Select((c, i) => new GeneratedColor((i + 1).ToString(), c)).ToList();
             HasExtracted = _extracted.Count > 0;

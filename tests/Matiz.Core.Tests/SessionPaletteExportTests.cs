@@ -148,6 +148,71 @@ public class PaletteServiceTests
         Assert.Equal((byte)128, pc.Alpha);
         Assert.Equal(new Argb(128, 82, 70, 188), pc.Color);
     }
+
+    [Fact]
+    public void AddColor_at_limit_returns_null_and_modifies_nothing()
+    {
+        var s = NewService();
+        var p = s.Create("Llena");
+        Fill(s, p, PaletteService.MaxColors);
+        Assert.Equal(PaletteService.MaxColors, p.Colors.Count);
+
+        var before = p.ModifiedAt;
+        _now = before.AddMinutes(1);
+        Assert.Null(s.AddColor(p.Id, Argb.FromRgb(255, 0, 0)));
+        Assert.Equal(PaletteService.MaxColors, p.Colors.Count);
+        Assert.Equal(before, p.ModifiedAt);
+    }
+
+    [Fact]
+    public void AddColors_bulk_that_does_not_fit_adds_nothing()
+    {
+        var s = NewService();
+        var p = s.Create("Casi llena");
+        Fill(s, p, 60);
+        var before = p.ModifiedAt;
+
+        var added = s.AddColors(p.Id, Enumerable.Range(0, 6).Select(i => (Argb.FromRgb((byte)i, 1, 1), (string?)null)));
+        Assert.Equal(0, added); // 60 + 6 excede 64: todo-o-nada
+        Assert.Equal(60, p.Colors.Count);
+        Assert.Equal(before, p.ModifiedAt);
+    }
+
+    [Fact]
+    public void AddColors_bulk_that_fits_adds_all_in_order()
+    {
+        var s = NewService();
+        var p = s.Create("Con hueco");
+        Fill(s, p, 3);
+
+        var added = s.AddColors(p.Id, Enumerable.Range(0, 10).Select(i => (Argb.FromRgb((byte)i, 1, 1), (string?)$"C{i}")));
+        Assert.Equal(10, added);
+        Assert.Equal(13, p.Colors.Count);
+        Assert.Equal("C0", p.Colors[3].Name);
+        Assert.Equal(Argb.FromRgb(9, 1, 1), p.Colors[12].Color);
+    }
+
+    [Fact]
+    public void Palette_created_outside_the_limit_is_preserved()
+    {
+        var s = NewService();
+        var external = new Palette
+        {
+            Name = "Externa",
+            Colors = Enumerable.Range(0, 70).Select(i => PaletteColor.Create(Argb.FromRgb((byte)i, 0, 0), $"C{i}")).ToList(),
+        };
+        s.Library.Palettes.Add(external);
+
+        Assert.Equal(70, s.Find(external.Id)!.Colors.Count);
+        Assert.Null(s.AddColor(external.Id, Argb.FromRgb(255, 0, 0))); // bloqueado al límite
+        Assert.Equal(70, external.Colors.Count); // sin recortes
+    }
+
+    private static void Fill(PaletteService s, Palette p, int count)
+    {
+        for (var i = 0; i < count; i++)
+            Assert.True(s.AddColor(p.Id, Argb.FromRgb((byte)i, 0, 0)) is not null, $"setup: color {i}");
+    }
 }
 
 public class ExportTests

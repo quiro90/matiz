@@ -34,11 +34,11 @@ public sealed partial class MainViewModel
     /// <summary>Índice en <see cref="GeneratedColors"/> del punto seleccionado en la rueda (-1 ninguno).</summary>
     private int _selectedHarmonyIndex = -1;
 
-    /// <summary>Límite de puntos secundarios que admite el modo Libre.</summary>
-    private const int MaxFreePoints = 16;
+    /// <summary>Límite de puntos secundarios que admite el modo Libre (regla global de 64 colores por paleta, v1.0.7).</summary>
+    private const int MaxFreePoints = 64;
 
-    /// <summary>Puntos del modo Libre: desfases relativos al color principal (Δhue°/Δsat).</summary>
-    private readonly List<(double HueDelta, double SatDelta)> _freeOffsets = [];
+    /// <summary>Puntos del modo Libre: desfases relativos al color principal (Δhue°, Δsat y Δbrillo opcional; brillo propio solo al cargar paletas).</summary>
+    private readonly List<(double HueDelta, double SatDelta, double? ValueDelta)> _freeOffsets = [];
 
     /// <summary>True si el conjunto libre tiene al menos 2 colores: habilita el botón "−" de las tarjetas.</summary>
     [ObservableProperty] public partial bool CanRemoveFreePoints { get; private set; }
@@ -148,13 +148,13 @@ public sealed partial class MainViewModel
     /// </summary>
     private void ConvertHarmonyToFree(WheelMarkerDrag? drag)
     {
-        List<(double HueDelta, double SatDelta)> offsets = [];
+        List<(double HueDelta, double SatDelta, double? ValueDelta)> offsets = [];
         if (HarmonyKind != HarmonyKind.Monochromatic)
-            offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0)));
+            offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0, (double?)null)));
         if (drag is { } d)
         {
             var st = Session.Current;
-            var delta = (ColorMath.NormalizeHue(d.Hue - st.Hue), Math.Clamp(d.Saturation, 0, 1) - st.Saturation);
+            var delta = (ColorMath.NormalizeHue(d.Hue - st.Hue), Math.Clamp(d.Saturation, 0, 1) - st.Saturation, (double?)null);
             var idx = Math.Min(d.MarkerIndex, offsets.Count); // el marcador i-ésimo ↔ el i-ésimo punto no base
             if (idx == offsets.Count) offsets.Add(delta); else offsets[idx] = delta;
         }
@@ -176,9 +176,11 @@ public sealed partial class MainViewModel
         if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(drag);
         if (drag.MarkerIndex >= _freeOffsets.Count) return;
         var st = Session.Current;
+        // Conserva el Δbrillo propio del punto si lo tenía (cargado de una paleta).
         _freeOffsets[drag.MarkerIndex] = (
             ColorMath.NormalizeHue(drag.Hue - st.Hue),
-            Math.Clamp(drag.Saturation, 0, 1) - st.Saturation);
+            Math.Clamp(drag.Saturation, 0, 1) - st.Saturation,
+            _freeOffsets[drag.MarkerIndex].ValueDelta);
         RefreshGenerated();
     }
 
@@ -200,16 +202,16 @@ public sealed partial class MainViewModel
     /// secundarios; en caso contrario, al lado del último añadido (hue +30° por paso, conservando su
     /// saturación) hasta no solaparse con ningún punto existente ni con el principal.
     /// </summary>
-    private (double HueDelta, double SatDelta) NextAddPointPosition()
+    private (double HueDelta, double SatDelta, double? ValueDelta) NextAddPointPosition()
     {
-        if (_freeOffsets.Count == 0) return (180.0, 0.0);
-        var (hue, sat) = _freeOffsets[^1];
+        if (_freeOffsets.Count == 0) return (180.0, 0.0, null);
+        var (hue, sat, _) = _freeOffsets[^1];
         for (var i = 0; i < 12; i++)
         {
             hue = ColorMath.NormalizeHue(hue + 30.0);
-            if (IsFreePosition(hue)) return (hue, sat);
+            if (IsFreePosition(hue)) return (hue, sat, null);
         }
-        return (ColorMath.NormalizeHue(hue + 30.0), sat);
+        return (ColorMath.NormalizeHue(hue + 30.0), sat, null);
     }
 
     private bool IsFreePosition(double hueDelta)
@@ -226,14 +228,19 @@ public sealed partial class MainViewModel
         return d > 180 ? 360 - d : d;
     }
 
-    /// <summary>Click derecho en la rueda: añade un punto libre en esa posición desde cualquier pestaña y pasa a Libre.</summary>
+    /// <summary>Click derecho en la rueda: añade un punto libre en esa posición desde cualquier pestaña y pasa a Libre; al límite advierte y no añade.</summary>
     [RelayCommand]
     private void AddFreePointAt(WheelPoint? point)
     {
-        if (point is null || double.IsNaN(point.Hue) || _freeOffsets.Count >= MaxFreePoints) return;
+        if (point is null || double.IsNaN(point.Hue)) return;
+        if (_freeOffsets.Count >= MaxFreePoints)
+        {
+            ShowToast(Loc.T("toasts.maxPaletteColors"));
+            return;
+        }
         if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
         var st = Session.Current;
-        _freeOffsets.Add((ColorMath.NormalizeHue(point.Hue - st.Hue), Math.Clamp(point.Saturation, 0, 1) - st.Saturation));
+        _freeOffsets.Add((ColorMath.NormalizeHue(point.Hue - st.Hue), Math.Clamp(point.Saturation, 0, 1) - st.Saturation, (double?)null));
         if (GeneratedTab != GeneratedTab.Free)
         {
             GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
@@ -256,10 +263,14 @@ public sealed partial class MainViewModel
         {
             var k = _freeOffsets[0];
             var promoted = GeneratedColors[1].Color;
+            // Con Δbrillos explícitos (paleta cargada): recalcula Δv desde los colores generados reales
+            // para que los puntos sigan mostrando su color absoluto tras la promoción.
+            var promotedV = ColorMath.ToHsv(promoted).V;
             for (var i = 1; i < _freeOffsets.Count; i++)
                 _freeOffsets[i] = (
                     ColorMath.NormalizeHue(_freeOffsets[i].HueDelta - k.HueDelta),
-                    _freeOffsets[i].SatDelta - k.SatDelta);
+                    _freeOffsets[i].SatDelta - k.SatDelta,
+                    _freeOffsets[i].ValueDelta is { } ? (double?)Math.Clamp(ColorMath.ToHsv(GeneratedColors[i + 1].Color).V - promotedV, -1, 1) : null);
             _freeOffsets.RemoveAt(0);
             Session.Commit(promoted, ColorChangeSource.Generated); // refresca el panel vía Session.Changed
         }
@@ -282,9 +293,9 @@ public sealed partial class MainViewModel
         if (index < 0) return;
         if (GeneratedTab == GeneratedTab.Harmony)
         {
-            var offsets = new List<(double HueDelta, double SatDelta)>();
+            var offsets = new List<(double HueDelta, double SatDelta, double? ValueDelta)>();
             if (HarmonyKind != HarmonyKind.Monochromatic)
-                offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0)));
+                offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0, (double?)null)));
             if (index < offsets.Count) offsets.RemoveAt(index);
             _freeOffsets.Clear();
             _freeOffsets.AddRange(offsets);
@@ -378,7 +389,8 @@ public sealed partial class MainViewModel
         if (s is null) return;
         var p = _palettes.EnsureActive();
         var index = GeneratedColors.IndexOf(s);
-        _palettes.AddColor(p.Id, s.Color, index >= 0 ? GeneratedName(s, index) : null);
+        var added = _palettes.AddColor(p.Id, s.Color, index >= 0 ? GeneratedName(s, index) : null);
+        if (added is null) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; }
         ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
 
@@ -387,8 +399,9 @@ public sealed partial class MainViewModel
     {
         if (GeneratedColors.Count == 0) return;
         var p = _palettes.EnsureActive();
-        _palettes.AddColors(p.Id, GeneratedColors.Select((s, i) => (s.Color, (string?)GeneratedName(s, i))).ToList());
-        ShowToast(Loc.F("toasts.addedCount", GeneratedColors.Count, p.Name));
+        var added = _palettes.AddColors(p.Id, GeneratedColors.Select((s, i) => (s.Color, (string?)GeneratedName(s, i))).ToList());
+        if (added == 0) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; } // todo-o-nada
+        ShowToast(Loc.F("toasts.addedCount", added, p.Name));
     }
 
     [RelayCommand]

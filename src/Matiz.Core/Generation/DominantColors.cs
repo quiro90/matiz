@@ -9,13 +9,15 @@ namespace Matiz.Core.Generation;
 public static class DominantColors
 {
     public const int MaxSide = 128;
+    /// <summary>Límite de colores por paleta (regla global, v1.0.7).</summary>
+    public const int MaxCount = 64;
     private const int Seed = 1234;
     private const int Iterations = 12;
 
     /// <param name="bgra">Píxeles BGRA de 32 bits, fila a fila.</param>
     public static IReadOnlyList<Argb> Extract(ReadOnlySpan<byte> bgra, int width, int height, int stride, int count)
     {
-        count = Math.Clamp(count, 1, 32);
+        count = Math.Clamp(count, 1, MaxCount);
         var samples = Sample(bgra, width, height, stride);
         if (samples.Count == 0) return [];
 

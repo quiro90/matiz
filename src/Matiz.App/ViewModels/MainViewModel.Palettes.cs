@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Matiz.App.Localization;
+using Matiz.Core.Colors;
 using Matiz.Core.Export;
 using Matiz.Core.Formatting;
+using Matiz.Core.Generation;
 using Matiz.Core.Session;
 
 namespace Matiz.App.ViewModels;
@@ -54,6 +56,7 @@ public sealed partial class MainViewModel
                 foreach (var c in active.Colors) ActivePaletteColors.Add(new PaletteColorItem(c, OnPaletteColorRenamed));
             HasActiveColors = ActivePaletteColors.Count > 0;
             ExportActivePaletteImageCommand.NotifyCanExecuteChanged();
+            ReloadPaletteToFreeCommand.NotifyCanExecuteChanged();
         }
         finally
         {
@@ -95,7 +98,7 @@ public sealed partial class MainViewModel
     private void AddCurrentToPalette()
     {
         var p = _palettes.EnsureActive();
-        _palettes.AddColor(p.Id, Session.Current.Argb);
+        if (_palettes.AddColor(p.Id, Session.Current.Argb) is null) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; }
         ShowToast(Loc.F("toasts.addedToPalette", Session.Current.Argb, p.Name));
     }
 
@@ -105,6 +108,40 @@ public sealed partial class MainViewModel
         _palettes.Create();
         IsSettingsOpen = false;
         IsLibraryOpen = true;
+    }
+
+    /// <summary>Recargar: carga la paleta marcada en la rueda cromática (modo Libre) tras advertir que
+    /// se perderán las selecciones actuales. Deshabilitado sin paleta marcada con colores.</summary>
+    [RelayCommand(CanExecute = nameof(HasActiveColors))]
+    private void ReloadPaletteToFree() =>
+        ShowToast(Loc.T("toasts.reloadPaletteWarning"), Loc.T("library.reload"), LoadPaletteToFree, seconds: 5);
+
+    /// <summary>Confirmación del "Recargar": evalúa la paleta marcada al confirmar (si se marcó otra entre
+    /// aviso y confirmación, carga esa); primer color = principal/color actual, resto = secundarios con su
+    /// brillo propio (cada tarjeta reproduce el color exacto). Reemplaza el conjunto libre previo, cierra
+    /// la Biblioteca y no modifica la paleta.</summary>
+    private void LoadPaletteToFree()
+    {
+        if (_palettes.Active is not { Colors.Count: > 0 } p) return;
+        var first = p.Colors[0].Color;
+        Session.Commit(first, ColorChangeSource.Palette);
+        var st = Session.Current;
+        _freeOffsets.Clear();
+        foreach (var c in p.Colors.Skip(1))
+        {
+            var hsv = ColorMath.ToHsv(c.Color);
+            _freeOffsets.Add((
+                ColorMath.NormalizeHue(hsv.H - st.Hue),
+                Math.Clamp(hsv.S, 0, 1) - st.Saturation,
+                hsv.V - st.Value));
+        }
+        if (GeneratedTab == GeneratedTab.Free) RefreshGenerated();
+        else GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
+        IsSettingsOpen = false;
+        IsLibraryOpen = false;
+        if (IsImageMode) IsImageMode = false; // para que se vea la rueda
+        NotifyFreePointCommands();
+        ShowToast(Loc.F("toasts.paletteLoaded", p.Name));
     }
 
     [RelayCommand]
@@ -157,6 +194,7 @@ public sealed partial class MainViewModel
             if (_palettes.Find(p.Id) is not { } target) return;
             var added = _palettes.AddColor(target.Id, model.Color, model.Name);
             if (added is not null) _palettes.MoveColor(target.Id, added.Id, index);
+            else ShowToast(Loc.T("toasts.maxPaletteColors")); // la paleta llegó al límite: no se puede restaurar
         });
     }
 

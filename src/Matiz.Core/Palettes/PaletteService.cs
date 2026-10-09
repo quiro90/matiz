@@ -108,20 +108,27 @@ public sealed class PaletteService
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>Límite de colores por paleta (regla global, v1.0.7).</summary>
+    public const int MaxColors = 64;
+
     public PaletteColor? AddColor(Guid paletteId, Argb color, string? name = null)
     {
-        if (Find(paletteId) is not { } p) return null;
+        if (Find(paletteId) is not { } p || p.Colors.Count >= MaxColors) return null;
         var pc = PaletteColor.Create(color, Normalize(name));
         p.Colors.Add(pc);
         Touch(p);
         return pc;
     }
 
-    public void AddColors(Guid paletteId, IEnumerable<(Argb Color, string? Name)> colors)
+    /// <summary>Añade un lote en bloque: si el total final superaría <see cref="MaxColors"/> no añade ninguno
+    /// (todo-o-nada) y devuelve 0. Devuelve la cantidad de colores añadidos.</summary>
+    public int AddColors(Guid paletteId, IEnumerable<(Argb Color, string? Name)> colors)
     {
-        if (Find(paletteId) is not { } p) return;
-        foreach (var (c, n) in colors) p.Colors.Add(PaletteColor.Create(c, Normalize(n)));
+        var items = (colors ?? Enumerable.Empty<(Argb Color, string? Name)>()).ToList();
+        if (Find(paletteId) is not { } p || items.Count == 0 || p.Colors.Count + items.Count > MaxColors) return 0;
+        foreach (var (c, n) in items) p.Colors.Add(PaletteColor.Create(c, Normalize(n)));
         Touch(p);
+        return items.Count;
     }
 
     public void RenameColor(Guid paletteId, Guid colorId, string? name)

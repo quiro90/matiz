@@ -2,7 +2,7 @@
 tags: [funcionalidad, paletas]
 ---
 # Puntos libres
-Modo de [[Paletas generadas]] para armar paletas personalizadas: el color actual es el **principal** (tarjeta base) y se le suman hasta **16 puntos secundarios** definidos por su posición relativa en la rueda (Δhue/Δsat).
+Modo de [[Paletas generadas]] para armar paletas personalizadas: el color actual es el **principal** (tarjeta base) y se le suman hasta **64 puntos secundarios** definidos por su posición relativa en la rueda (Δhue/Δsat) y por un Δbrillo opcional propio (usado al cargar paletas; "Equilibrar" no lo altera). Límite común con las paletas guardadas: **64 colores**.
 
 - **Añadir**: click derecho sobre la [[Selector visual|rueda]] desde cualquier pestaña, o el botón **"+"** junto a "Luminosidad equilibrada" (Armonías y Libre). El primer punto es opuesto al principal (180°); los siguientes se colocan **al lado del último** (avanza el hue hasta no solaparse). Cualquiera pasa automáticamente a Libre.
 - Desde **Armonías**: arrastrar un punto, click derecho o "+" **convierte la armonía actual** en conjunto libre (ángulos canónicos + el punto nuevo) y reemplaza los puntos previos — las armonías ya no se "rompen".

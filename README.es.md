@@ -16,6 +16,7 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 - **Todos los formatos**: HEX, RGB, HSL, HSV, CMYK (aprox.), OKLCH y fragmentos de código (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Pega cualquier formato para fijar un color.
 - **Escala 50–950** generada en OKLCH, lista para design systems.
 - **Armonías** (complementaria, análoga, dividida, triádica, tetrádica, monocromática) dibujadas en la rueda, con luminosidad equilibrada.
+- **Puntos libres**: hasta 16 colores secundarios añadidos con click derecho en la rueda (o el botón "+"); siguen rígidamente al color principal y personalizar una armonía la convierte a Libre en vez de romperla.
 - **Tints / shades, neutros** y **colores dominantes de imágenes** (abrir, arrastrar o pegar una captura).
 - **Paletas guardadas** con autoguardado, reordenamiento y deshacer; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.

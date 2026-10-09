@@ -54,6 +54,10 @@ public sealed partial class MainViewModel
     [RelayCommand]
     private void PickImageColor(Argb color) => Session.Commit(color, ColorChangeSource.Image);
 
+    /// <summary>Click derecho sobre la imagen: añade el píxel como punto secundario del conjunto Personalizado.</summary>
+    [RelayCommand]
+    private void AddImageSecondary(Argb color) => AddFreePointFromColor(color);
+
     [RelayCommand]
     private async Task ExtractColors() => await ExtractColorsCoreAsync();
 

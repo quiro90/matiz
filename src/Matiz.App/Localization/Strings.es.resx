@@ -47,7 +47,7 @@
     <value>Capturar color de la pantalla</value>
   </data>
   <data name="ui.capture.tooltip" xml:space="preserve">
-    <value>Captura cualquier píxel visible del escritorio (cualquier monitor). Click confirma, Esc cancela, flechas mueven 1 px.</value>
+    <value>Captura cualquier píxel visible del escritorio (cualquier monitor). Click: color principal · Click derecho: punto secundario del conjunto Personalizado · Shift: seguir capturando · Esc: cancelar (flechas mueven 1 px).</value>
   </data>
   <data name="ui.image" xml:space="preserve">
     <value>Imagen</value>
@@ -257,7 +257,7 @@
     <value>Neutros</value>
   </data>
   <data name="gen.tab.free" xml:space="preserve">
-    <value>Libre</value>
+    <value>Personalizado</value>
   </data>
   <data name="gen.tab.extracted" xml:space="preserve">
     <value>De la imagen</value>
@@ -296,7 +296,7 @@
     <value>Añadir punto</value>
   </data>
   <data name="gen.addPoint.tooltip" xml:space="preserve">
-    <value>Añade un punto secundario opuesto al color principal (pasa a la pestaña Libre)</value>
+    <value>Añade un punto secundario opuesto al color principal (pasa a la pestaña Personalizado)</value>
   </data>
   <data name="gen.clearPoints" xml:space="preserve">
     <value>Borrar</value>
@@ -311,7 +311,7 @@
     <value>Neutral</value>
   </data>
   <data name="gen.exportTitle.free" xml:space="preserve">
-    <value>Libre</value>
+    <value>Personalizado</value>
   </data>
   <data name="gen.exportTitle.imageColors" xml:space="preserve">
     <value>Colores de imagen</value>
@@ -340,7 +340,10 @@
     <value>Nombre del color</value>
   </data>
   <data name="palette.color.tooltip" xml:space="preserve">
-    <value>Nombre (se usa al exportar)</value>
+    <value>Click: usar como color actual · Arrastrar: mover de posición · El nombre se usa al exportar</value>
+  </data>
+  <data name="palette.drag.tooltip" xml:space="preserve">
+    <value>Arrastrar para mover de posición</value>
   </data>
   <data name="palette.replaceWithCurrent" xml:space="preserve">
     <value>Reemplazar con el color actual</value>

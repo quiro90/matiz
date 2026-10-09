@@ -3,6 +3,7 @@ using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Matiz.App.Localization;
+using Matiz.App.ScreenCapture;
 using Matiz.App.Services;
 using Matiz.Core.Colors;
 using Matiz.Core.Formatting;
@@ -205,12 +206,31 @@ public sealed partial class MainViewModel : ObservableObject
     {
         Shell?.StartScreenCapture(result =>
         {
-            if (result is not { } c) return;
-            Session.Commit(c, ColorChangeSource.ScreenCapture);
-            if (_settings.ShowAfterCapture) Shell?.ShowAndActivate();
-            if (_settings.CopyOnCapture) CopyDefault(c);
-            else ShowToast(Loc.F("toasts.captured", c));
+            if (result is not { } r) return;
+            ApplyCapture(r);
         });
+    }
+
+    /// <summary>
+    /// Enruta el resultado del modo captura: principal (como antes) o secundario del conjunto Personalizado.
+    /// El secundario no cambia el color actual ni copia al portapapeles; en modo continuo (Shift) la ventana
+    /// no se muestra ni se activa hasta que la sesión de captura termina.
+    /// </summary>
+    private void ApplyCapture(CaptureResult r)
+    {
+        if (r.Kind == CaptureResultKind.Secondary)
+        {
+            AddFreePointFromColor(r.Color);
+            if (r.Continue) return;
+            if (_settings.ShowAfterCapture) Shell?.ShowAndActivate();
+            else ShowToast(Loc.F("toasts.captured", r.Color));
+            return;
+        }
+        Session.Commit(r.Color, ColorChangeSource.ScreenCapture);
+        if (r.Continue) return;
+        if (_settings.ShowAfterCapture) Shell?.ShowAndActivate();
+        if (_settings.CopyOnCapture) CopyDefault(r.Color);
+        else ShowToast(Loc.F("toasts.captured", r.Color));
     }
 
     [RelayCommand]

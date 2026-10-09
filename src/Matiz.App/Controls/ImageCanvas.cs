@@ -19,6 +19,8 @@ public sealed class ImageCanvas : FrameworkElement
 
     public static readonly DependencyProperty PickCommandProperty = DependencyProperty.Register(nameof(PickCommand), typeof(ICommand), typeof(ImageCanvas));
 
+    public static readonly DependencyProperty SecondaryPickCommandProperty = DependencyProperty.Register(nameof(SecondaryPickCommand), typeof(ICommand), typeof(ImageCanvas));
+
     private byte[] _pixels = [];
     private int _w, _h, _stride;
     private double _scale = 1;
@@ -40,6 +42,7 @@ public sealed class ImageCanvas : FrameworkElement
 
     public BitmapSource? Source { get => (BitmapSource?)GetValue(SourceProperty); set => SetValue(SourceProperty, value); }
     public ICommand? PickCommand { get => (ICommand?)GetValue(PickCommandProperty); set => SetValue(PickCommandProperty, value); }
+    public ICommand? SecondaryPickCommand { get => (ICommand?)GetValue(SecondaryPickCommandProperty); set => SetValue(SecondaryPickCommandProperty, value); }
 
     private void OnSourceChanged()
     {
@@ -156,6 +159,13 @@ public sealed class ImageCanvas : FrameworkElement
         }
         _panning = false;
         InvalidateVisual();
+    }
+
+    /// <summary>Click derecho: segundo píxel de la imagen como punto secundario (ver AddImageSecondaryCommand).</summary>
+    protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+    {
+        var (x, y) = PixelUnder(e.GetPosition(this));
+        if (PixelAt(x, y) is { } c && SecondaryPickCommand?.CanExecute(c.Opaque) == true) SecondaryPickCommand.Execute(c.Opaque);
     }
 
     protected override void OnMouseLeave(MouseEventArgs e)

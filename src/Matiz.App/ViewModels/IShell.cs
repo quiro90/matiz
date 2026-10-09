@@ -1,4 +1,5 @@
 using System.Windows.Media.Imaging;
+using Matiz.App.ScreenCapture;
 using Matiz.Core.Colors;
 using Matiz.Core.Export;
 
@@ -8,7 +9,7 @@ namespace Matiz.App.ViewModels;
 public interface IShell
 {
     void ShowAndActivate();
-    void StartScreenCapture(Action<Argb?> onDone);
+    void StartScreenCapture(Action<CaptureResult?> onDone);
     string? PickImageFile();
     void ShowExportImage(PaletteExportModel palette);
     void ShowExportOverlay(PaletteExportModel palette);

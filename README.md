@@ -11,14 +11,14 @@ A small, fast Windows color tool for developers and designers: pick any pixel on
 
 ## Features
 
-- **Screen picker**: global hotkey (`Alt+C`, configurable), magnifier with pixel grid, multi-monitor and per-monitor DPI aware, pixel-accurate.
+- **Screen picker**: global hotkey (`Alt+C`, configurable), magnifier with pixel grid, multi-monitor and per-monitor DPI aware, pixel-accurate. Left-click picks the primary color, right-click adds it as a secondary point of the **Custom** set, and holding **Shift** keeps the magnifier open to grab several colors in a row (Esc cancels).
 - **Visual picker**: hue/saturation wheel (white center), brightness bar showing the color itself, Vivid ↔ Pastel focus, precise H/S/B inputs and a gray scale.
 - **Every format**: HEX, RGB, HSL, HSV, CMYK (approx.), OKLCH, plus code snippets (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Paste any format to set a color.
 - **Design scale 50–950** generated in OKLCH, ready for design systems.
 - **Harmonies** (complementary, analogous, split, triadic, tetradic, monochromatic) drawn on the wheel, with balanced lightness.
-- **Free points**: up to 64 secondary colors added by right-clicking the wheel (or the + button); they follow the main color rigidly, and customizing a harmony converts it to Free instead of breaking it.
+- **Free points**: up to 64 secondary colors added by right-clicking the wheel, right-clicking during capture or over the image (or the + button, visible on every tab at the same height); they follow the main color rigidly, and customizing a harmony converts it to **Custom** instead of breaking it.
 - **Tints / shades, neutrals** and **dominant colors from images** (open, drop or paste a screenshot).
-- **Saved palettes** with autosave, reordering and undo; **Reload** puts a saved palette back on the wheel (Free mode) to edit it; export as **CSS variables, JSON, Dart, C#, Tailwind** or a **PNG** image.
+- **Saved palettes** with autosave, reordering (drag the cards too) and undo; **Reload** puts a saved palette back on the wheel (Custom mode) to edit it; export as **CSS variables, JSON, Dart, C#, Tailwind** or a **PNG** image.
 - Recent colors, undo/redo, light/dark theme, always-on-top, keyboard shortcuts.
 
 > The UI is currently in Spanish.

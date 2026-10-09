@@ -1,7 +1,7 @@
 # free-points Specification
 
 ## Purpose
-Modo Libre: paletas personalizadas de 1 a 65 colores construidas por el usuario —un color principal (el color actual) y hasta 64 puntos secundarios con posición relativa en la rueda—, complementando las armonías geométricas fijas de `palette-generation`.
+Modo Personalizado: paletas personalizadas de 1 a 65 colores construidas por el usuario —un color principal (el color actual) y hasta 64 puntos secundarios con posición relativa en la rueda—, complementando las armonías geométricas fijas de `palette-generation`. Anteriormente llamado modo "Libre".
 
 ## Requirements
 

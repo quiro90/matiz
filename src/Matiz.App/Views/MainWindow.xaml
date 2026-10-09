@@ -247,7 +247,7 @@
                                 <Button Command="{Binding ExtractColorsCommand}" Content="{loc:Loc image.extract}" Margin="6,0,0,0" ToolTip="{loc:Loc image.extract.tooltip}"/>
                             </StackPanel>
                         </Grid>
-                        <c:ImageCanvas Grid.Row="1" Source="{Binding ImageSource}" PickCommand="{Binding PickImageColorCommand}" Margin="1,0,1,1"
+                        <c:ImageCanvas Grid.Row="1" Source="{Binding ImageSource}" PickCommand="{Binding PickImageColorCommand}" SecondaryPickCommand="{Binding AddImageSecondaryCommand}" Margin="1,0,1,1"
                                        ToolTip="{loc:Loc image.canvas.tooltip}"/>
                     </Grid>
                 </Border>
@@ -446,9 +446,13 @@
                         </StackPanel>
                     </Grid>
 
+                    <!-- Fila del "+": siempre visible y a la misma altura en todas las pestañas (alineada arriba,
+                         aunque los chips de armonía envuelvan); "Equilibrar" y "Borrar" solo en Armonías/Personalizado. -->
                     <DockPanel Margin="0,0,0,6">
-                        <DockPanel.Style>
-                            <Style TargetType="DockPanel">
+                    <CheckBox DockPanel.Dock="Right" IsChecked="{Binding HarmonyBalanceLightness}" Content="{loc:Loc gen.balance}" FontSize="12" Margin="12,0,0,0"
+                              VerticalAlignment="Top" ToolTip="{loc:Loc gen.balance.tooltip}">
+                        <CheckBox.Style>
+                            <Style TargetType="CheckBox" BasedOn="{StaticResource Switch}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding GeneratedTab, Converter={StaticResource EnumEquals}, ConverterParameter=Harmony}" Value="True">
@@ -459,14 +463,13 @@
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </DockPanel.Style>
-                    <CheckBox DockPanel.Dock="Right" Style="{StaticResource Switch}" IsChecked="{Binding HarmonyBalanceLightness}" Content="{loc:Loc gen.balance}" FontSize="12" Margin="12,0,0,0"
-                              ToolTip="{loc:Loc gen.balance.tooltip}"/>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding AddFreePointCommand}" Margin="0,0,12,0"
+                        </CheckBox.Style>
+                    </CheckBox>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding AddFreePointCommand}" Margin="0,0,12,0" VerticalAlignment="Top"
                             ToolTip="{loc:Loc gen.addPoint.tooltip}" AutomationProperties.Name="{loc:Loc gen.addPoint}">
                         <TextBlock Text="&#xE710;" FontFamily="{StaticResource IconFont}" FontSize="11"/>
                     </Button>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding ClearFreePointsCommand}" Margin="0,0,6,0"
+                    <Button DockPanel.Dock="Right" Style="{StaticResource ChipButton}" Command="{Binding ClearFreePointsCommand}" Margin="0,0,6,0" VerticalAlignment="Top"
                             Content="{loc:Loc gen.clearPoints}" ToolTip="{loc:Loc gen.clearPoints.tooltip}" AutomationProperties.Name="{loc:Loc gen.clearPoints}"
                             Visibility="{Binding CanRemoveFreePoints, Converter={StaticResource BoolToVis}}"/>
                     <ListBox ItemsSource="{Binding HarmonyKinds}" SelectedValue="{Binding HarmonyKind}" SelectedValuePath="Value" x:Name="HarmonyList">
@@ -601,7 +604,8 @@
                         </StackPanel>
                     </Button>
 
-                    <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="4,0" Focusable="False">
+                    <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="4,0" Focusable="False"
+                              AllowDrop="True" Drop="PaletteList_Drop" DragOver="PaletteList_DragOver" DragLeave="PaletteList_DragLeave">
                         <ItemsControl ItemsSource="{Binding ActivePaletteColors}" Focusable="False" x:Name="PaletteList">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -610,7 +614,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="vm:PaletteColorItem">
-                                    <StackPanel Width="78" Margin="0,0,6,0" AllowDrop="True" Drop="PaletteSwatch_Drop" DragOver="PaletteSwatch_DragOver" Background="Transparent">
+                                    <StackPanel Width="78" Margin="0,0,6,0" AllowDrop="True" Background="Transparent">
                                         <StackPanel.Tag>
                                             <Binding Path="DataContext" ElementName="PaletteList"/>
                                         </StackPanel.Tag>
@@ -633,6 +637,11 @@
                                                     ToolTip="{loc:Loc palette.color.tooltip}">
                                                 <TextBlock Text="{Binding Hex}" Foreground="{Binding Foreground}" FontFamily="{StaticResource MonoFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
+                                            <!-- Hint de arrastre: aparece al pasar el mouse sobre la tarjeta -->
+                                            <TextBlock Text="&#xE7C9;" FontFamily="{StaticResource IconFont}" FontSize="9" Width="16" Height="16" Foreground="{Binding Foreground}"
+                                                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0" Panel.ZIndex="1" IsHitTestVisible="False"
+                                                       Visibility="{Binding IsMouseOver, ElementName=SwatchRoot, Converter={StaticResource BoolToVis}}"
+                                                       ToolTip="{loc:Loc palette.drag.tooltip}"/>
                                             <Button Style="{StaticResource SmallIconButton}" Content="&#xE711;" Width="16" Height="16" FontSize="9"
                                                     Foreground="{Binding Foreground}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
                                                     Command="{Binding DataContext.RemovePaletteColorCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"

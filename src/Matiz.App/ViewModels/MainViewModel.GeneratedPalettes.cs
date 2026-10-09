@@ -186,14 +186,43 @@ public sealed partial class MainViewModel
 
     private bool CanAddFreePoint() => GeneratedTab == GeneratedTab.Harmony || _freeOffsets.Count < MaxFreePoints;
 
-    /// <summary>Botón "+": añade un punto opuesto al principal si aún no hay secundarios y, si los hay, al lado del último; en Armonías además convierte la armonía a Libre.</summary>
+    /// <summary>
+    /// Botón "+" (visible en todas las pestañas): en Armonías convierte la armonía a Personalizado y añade;
+    /// en Personalizado añade directo; en las demás pestañas (Escala, Tints/Shades, Neutros, Extraídas de imagen)
+    /// pasa automáticamente a Personalizado y añade. El punto va opuesto al principal si no hay secundarios
+    /// y si los hay, al lado del último. No toca el color actual.
+    /// </summary>
     [RelayCommand(CanExecute = nameof(CanAddFreePoint))]
     private void AddFreePoint()
     {
         if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
-        else if (GeneratedTab != GeneratedTab.Free) return;
+        else if (GeneratedTab != GeneratedTab.Free) GeneratedTab = GeneratedTab.Free;
         if (_freeOffsets.Count < MaxFreePoints) _freeOffsets.Add(NextAddPointPosition());
         RefreshGenerated();
+        NotifyFreePointCommands();
+    }
+
+    /// <summary>
+    /// Añade un punto secundario por su color exacto (captura de pantalla o imagen): Δhue/Δsat/Δv relativos
+    /// al principal, con brillo propio para que la tarjeta reproduzca el color capturado. Pasa a Personalizado
+    /// si hace falta. Al límite advierte y no añade. No cambia el color actual ni es deshacible.
+    /// </summary>
+    private void AddFreePointFromColor(Argb c)
+    {
+        if (_freeOffsets.Count >= MaxFreePoints)
+        {
+            ShowToast(Loc.T("toasts.maxPaletteColors"));
+            return;
+        }
+        if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
+        var st = Session.Current;
+        var hsv = ColorMath.ToHsv(c);
+        _freeOffsets.Add((
+            ColorMath.NormalizeHue(hsv.H - st.Hue),
+            Math.Clamp(hsv.S - st.Saturation, -1, 1),
+            Math.Clamp(hsv.V - st.Value, -1, 1)));
+        if (GeneratedTab != GeneratedTab.Free) GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
+        else RefreshGenerated();
         NotifyFreePointCommands();
     }
 

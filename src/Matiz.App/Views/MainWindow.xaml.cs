@@ -2,8 +2,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Matiz.App.Interop;
 using Matiz.App.Localization;
@@ -37,6 +39,13 @@ public partial class MainWindow : Window, IShell
         Width = Math.Min(Width, work.Width - 24);
         Height = Math.Min(Height, work.Height - 24);
         vm.Shell = this;
+        // Indicador del hueco al arrastrar tarjetas de la paleta activa.
+        if (AdornerLayer.GetAdornerLayer(PaletteList) is { } adornerLayer)
+        {
+            _dropIndicator = new DropIndicatorAdorner(PaletteList);
+            adornerLayer.Add(_dropIndicator);
+            _dropIndicator.Hide();
+        }
 
         foreach (var kb in Shortcuts.CreateBindings(vm)) InputBindings.Add(kb);
         ShortcutList.Text = Shortcuts.Describe(vm.CaptureHotkey);
@@ -80,7 +89,7 @@ public partial class MainWindow : Window, IShell
         Focus();
     }
 
-    public void StartScreenCapture(Action<Argb?> onDone) => _picker.Start(onDone);
+    public void StartScreenCapture(Action<CaptureResult?> onDone) => _picker.Start(onDone);
 
     public string? PickImageFile()
     {
@@ -185,14 +194,18 @@ public partial class MainWindow : Window, IShell
 
     // ---------- paleta activa: click y arrastrar para reordenar ----------
 
+    // La tarjeta de origen se atenúa mientras está "levantada"; el indicador marca el hueco objetivo.
     private Point _dragStart;
     private PaletteColorItem? _dragItem;
+    private Border? _dragOrigin;
     private bool _dragged;
+    private DropIndicatorAdorner? _dropIndicator;
 
     private void PaletteSwatch_MouseDown(object sender, MouseButtonEventArgs e)
     {
         _dragStart = e.GetPosition(this);
         _dragItem = (sender as FrameworkElement)?.DataContext as PaletteColorItem;
+        _dragOrigin = sender as Border;
         _dragged = false;
     }
 
@@ -203,8 +216,19 @@ public partial class MainWindow : Window, IShell
         if (Math.Abs(d.X) < SystemParameters.MinimumHorizontalDragDistance && Math.Abs(d.Y) < SystemParameters.MinimumVerticalDragDistance) return;
         _dragged = true;
         var item = _dragItem;
+        var origin = _dragOrigin;
         _dragItem = null;
-        DragDrop.DoDragDrop((DependencyObject)sender, new DataObject(typeof(PaletteColorItem), item), DragDropEffects.Move);
+        _dragOrigin = null;
+        if (origin != null) origin.Opacity = 0.45;
+        try
+        {
+            DragDrop.DoDragDrop((DependencyObject)sender, new DataObject(typeof(PaletteColorItem), item), DragDropEffects.Move);
+        }
+        finally
+        {
+            if (origin != null) origin.Opacity = 1.0;
+            HideDropIndicator();
+        }
     }
 
     private void PaletteSwatch_MouseUp(object sender, MouseButtonEventArgs e)
@@ -212,23 +236,70 @@ public partial class MainWindow : Window, IShell
         if (!_dragged && (sender as FrameworkElement)?.DataContext is PaletteColorItem item)
             _vm.UsePaletteColorCommand.Execute(item);
         _dragItem = null;
+        _dragOrigin = null;
         _dragged = false;
     }
 
-    private void PaletteSwatch_DragOver(object sender, DragEventArgs e)
+    // El arrastre se gestiona a nivel del ScrollViewer de la lista: por geometría de las tarjetas deduce el
+    // hueco objetivo (cubre también los espacios entre tarjetas y la zona vacía al final).
+
+    private void PaletteList_DragOver(object sender, DragEventArgs e)
     {
-        e.Effects = e.Data.GetDataPresent(typeof(PaletteColorItem)) ? DragDropEffects.Move : DragDropEffects.None;
+        if (!e.Data.GetDataPresent(typeof(PaletteColorItem))) { e.Effects = DragDropEffects.None; e.Handled = true; return; }
+        ShowDropIndicator(ComputeDropGap(e));
         e.Handled = true;
     }
 
-    private void PaletteSwatch_Drop(object sender, DragEventArgs e)
+    private void PaletteList_Drop(object sender, DragEventArgs e)
     {
-        if (e.Data.GetData(typeof(PaletteColorItem)) is not PaletteColorItem source) return;
-        if ((sender as FrameworkElement)?.DataContext is not PaletteColorItem target || target.Id == source.Id) return;
-        var index = _vm.ActivePaletteColors.IndexOf(target);
-        _vm.MovePaletteColor(source, index);
+        HideDropIndicator();
+        if (e.Data.GetData(typeof(PaletteColorItem)) is not PaletteColorItem source) return; // otros drops (archivos) siguen subiendo
+        ApplyDrop(source, ComputeDropGap(e));
         e.Handled = true;
     }
+
+    private void PaletteList_DragLeave(object sender, DragEventArgs e) => HideDropIndicator();
+
+    /// <summary>Hueco objetivo (0..count): primera tarjeta cuyo punto medio queda a la derecha del mouse.</summary>
+    private int ComputeDropGap(DragEventArgs e)
+    {
+        var x = e.GetPosition(PaletteList).X;
+        var count = _vm.ActivePaletteColors.Count;
+        for (var i = 0; i < count; i++)
+        {
+            if (PaletteList.ItemContainerGenerator.ContainerFromIndex(i) is not FrameworkElement c) continue;
+            if (x < c.TranslatePoint(new Point(0, 0), PaletteList).X + c.ActualWidth / 2) return i;
+        }
+        return count;
+    }
+
+    private void ApplyDrop(PaletteColorItem source, int gap)
+    {
+        var sourceIdx = _vm.ActivePaletteColors.IndexOf(source);
+        if (sourceIdx < 0) return;
+        var newIndex = gap - (sourceIdx < gap ? 1 : 0); // moveColor trabaja con el índice tras remover
+        if (newIndex != sourceIdx) _vm.MovePaletteColor(source, newIndex);
+    }
+
+    private void ShowDropIndicator(int gap)
+    {
+        if (_dropIndicator is null) return;
+        var count = _vm.ActivePaletteColors.Count;
+        if (count == 0) { _dropIndicator.Hide(); return; }
+        // Tarjeta de referencia: la que queda a la derecha del hueco, o la última si el hueco es el final.
+        var index = Math.Min(gap, count - 1);
+        if (PaletteList.ItemContainerGenerator.ContainerFromIndex(index) is not FrameworkElement container)
+        {
+            _dropIndicator.Hide();
+            return;
+        }
+        var left = container.TranslatePoint(new Point(0, 0), PaletteList).X;
+        // El slot incluye 6px de margen tras la tarjeta: el hueco visual queda centrado en ±3px del borde.
+        var x = gap >= count ? left + container.ActualWidth - 3 : left - 3;
+        _dropIndicator.Show(x);
+    }
+
+    private void HideDropIndicator() => _dropIndicator?.Hide();
 
     // ---------- posición de la ventana (píxeles físicos) ----------
 
@@ -263,5 +334,33 @@ public partial class MainWindow : Window, IShell
             Height = r.Height,
             Maximized = WindowState == WindowState.Maximized,
         };
+    }
+
+    /// <summary>Línea vertical que marca dónde caerá la tarjeta mientras se arrastra sobre la paleta activa.</summary>
+    private sealed class DropIndicatorAdorner : Adorner
+    {
+        private static readonly Brush Fill = CreateFill();
+        private double _x = double.NaN;
+
+        public DropIndicatorAdorner(UIElement adorned) : base(adorned) => IsHitTestVisible = false;
+
+        private static Brush CreateFill()
+        {
+            var b = new SolidColorBrush(Color.FromArgb(200, 0x52, 0x46, 0xBC));
+            b.Freeze();
+            return b;
+        }
+
+        public void Show(double x) { _x = x; Visibility = Visibility.Visible; InvalidateVisual(); }
+
+        public void Hide() { _x = double.NaN; Visibility = Visibility.Collapsed; InvalidateVisual(); }
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            if (double.IsNaN(_x)) return;
+            var h = AdornedElement.RenderSize.Height;
+            if (h <= 8) return;
+            dc.DrawRoundedRectangle(Fill, null, new Rect(_x, 2, 3, h - 4), 1.5, 1.5);
+        }
     }
 }

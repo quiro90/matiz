@@ -47,7 +47,7 @@
     <value>Capture a color from the screen</value>
   </data>
   <data name="ui.capture.tooltip" xml:space="preserve">
-    <value>Capture any visible pixel of the desktop (any monitor). Click confirms, Esc cancels, arrow keys move 1 px.</value>
+    <value>Capture any visible pixel of the desktop (any monitor). Click: primary color · Right-click: secondary point of the custom set · Shift: keep capturing · Esc: cancel (arrow keys move 1 px).</value>
   </data>
   <data name="ui.image" xml:space="preserve">
     <value>Image</value>
@@ -257,7 +257,7 @@
     <value>Neutrals</value>
   </data>
   <data name="gen.tab.free" xml:space="preserve">
-    <value>Free</value>
+    <value>Custom</value>
   </data>
   <data name="gen.tab.extracted" xml:space="preserve">
     <value>From image</value>
@@ -296,7 +296,7 @@
     <value>Add point</value>
   </data>
   <data name="gen.addPoint.tooltip" xml:space="preserve">
-    <value>Add a secondary point opposite to the principal color (switches to the Free tab)</value>
+    <value>Add a secondary point opposite to the principal color (switches to the Custom tab)</value>
   </data>
   <data name="gen.clearPoints" xml:space="preserve">
     <value>Clear</value>
@@ -311,7 +311,7 @@
     <value>Neutral</value>
   </data>
   <data name="gen.exportTitle.free" xml:space="preserve">
-    <value>Free</value>
+    <value>Custom</value>
   </data>
   <data name="gen.exportTitle.imageColors" xml:space="preserve">
     <value>Image colors</value>
@@ -340,7 +340,10 @@
     <value>Color name</value>
   </data>
   <data name="palette.color.tooltip" xml:space="preserve">
-    <value>Name (used when exporting)</value>
+    <value>Click: use as current color · Drag to move its position · The name is used when exporting</value>
+  </data>
+  <data name="palette.drag.tooltip" xml:space="preserve">
+    <value>Drag to move its position</value>
   </data>
   <data name="palette.replaceWithCurrent" xml:space="preserve">
     <value>Replace with the current color</value>

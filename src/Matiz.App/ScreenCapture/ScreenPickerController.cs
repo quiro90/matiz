@@ -19,12 +19,12 @@ internal sealed class ScreenPickerController
 
     private List<MonitorSnapshot> _snapshots = [];
     private readonly List<OverlayWindow> _overlays = [];
-    private Action<Argb?>? _onDone;
+    private Action<CaptureResult?>? _onDone;
     private int _n = 11;
 
     public bool IsActive { get; private set; }
 
-    public void Start(Action<Argb?> onDone)
+    public void Start(Action<CaptureResult?> onDone)
     {
         if (IsActive) return;
         IsActive = true;
@@ -68,22 +68,43 @@ internal sealed class ScreenPickerController
         Refresh();
     }
 
+    /// <summary>Click izquierdo o Enter: confirma el píxel como color principal (con Shift el overlay sigue abierto).</summary>
     public void Confirm()
     {
         GetCursorPos(out var p);
-        Finish(PixelAt(p.X, p.Y));
+        var c = PixelAt(p.X, p.Y);
+        Finish(c is null ? null : new CaptureResult(c.Value, CaptureResultKind.Principal, IsShiftPressed()));
+    }
+
+    /// <summary>Click derecho: captura el píxel como punto secundario del conjunto Personalizado (el principal no cambia).</summary>
+    public void ConfirmSecondary()
+    {
+        GetCursorPos(out var p);
+        var c = PixelAt(p.X, p.Y);
+        Finish(c is null ? null : new CaptureResult(c.Value, CaptureResultKind.Secondary, IsShiftPressed()));
     }
 
     public void Cancel() => Finish(null);
 
-    private void Finish(Argb? result)
+    private static bool IsShiftPressed() => Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+
+    /// <summary>
+    /// Entrega el resultado: con Shift (modo continuo) el overlay sigue abierto para capturar varios colores
+    /// y el callback queda vivo para las siguientes acciones; sin Shift (o al cancelar) cierra todo.
+    /// </summary>
+    private void Finish(CaptureResult? result)
     {
         if (!IsActive) return;
+        var cb = _onDone;
+        if (result is { Continue: true })
+        {
+            cb?.Invoke(result);
+            return;
+        }
         IsActive = false;
         foreach (var o in _overlays) o.CloseOverlay();
         _overlays.Clear();
         _snapshots = [];
-        var cb = _onDone;
         _onDone = null;
         cb?.Invoke(result);
     }
@@ -128,7 +149,7 @@ internal sealed class OverlayWindow : Window
         DpiChanged += (_, _) => Dispatcher.BeginInvoke(PlaceOnMonitor);
         MouseMove += (_, _) => _controller.Refresh();
         MouseLeftButtonDown += (_, e) => { e.Handled = true; _controller.Confirm(); };
-        MouseRightButtonDown += (_, e) => { e.Handled = true; _controller.Cancel(); };
+        MouseRightButtonDown += (_, e) => { e.Handled = true; _controller.ConfirmSecondary(); };
         MouseWheel += (_, e) => _controller.Zoom(e.Delta);
         KeyDown += OnKeyDown;
         Deactivated += (_, _) => { /* el foco puede pasar a otro overlay: no cancelar */ };

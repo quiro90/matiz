@@ -17,3 +17,5 @@ tags: [referencia, persistencia]
 }
 ```
 `hex` siempre `#RRGGBB`; `alpha` solo si ≠ 255. Ver [[Persistencia JSON]].
+
+Los archivos de exportación **`.mpalette`** ([[Paletas guardadas]]) siguen la misma estructura de paleta: JSON standalone con `schemaVersion`, nombre, descripción, fechas y colores (`hex` + `alpha` opcional). El doble click del SO o "Importar" los agrega siempre como paleta nueva.

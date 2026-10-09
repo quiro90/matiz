@@ -19,4 +19,4 @@
 
 ## Fase 4 — Validación final
 - [x] 4.1. `dotnet build` de la solución + `dotnet test tests/Matiz.Core.Tests` (y tests de App si aplica). Verificar: sin errores/regresiones.
-- [ ] 4.2. Recorrido manual rápido (entregable final): exportar "PuchiApp" → importar (quedan ambas), revisar preview con 13/20 colores, doble click del `.mpalette` con app corriendo, título "Paletas de Colores". Verificar: comportamiento según specs del cambio.
+- [x] 4.2. Recorrido manual rápido (entregable final): exportar "PuchiApp" → importar (quedan ambas), revisar preview con 13/20 colores, doble click del `.mpalette` con app corriendo, título "Paletas de Colores". Verificar: comportamiento según specs del cambio. *(Confirmado por el usuario: "está perfecto")*

@@ -85,7 +85,7 @@ Toda paleta guardada SHALL tener como máximo 64 colores. Regla dura aplicada en
 - **THEN** la paleta se muestra y se exporta completa (70 colores), se puede renombrar y borrar/reordenar colores, pero añadir está bloqueado con el aviso hasta que quede bajo el límite
 
 ### Requirement: Recargar la paleta marcada en la rueda
-El panel Biblioteca ("Paletas") SHALL presentar un botón "Recargar" al lado de "Nueva" que cargue la paleta marcada (activa) en la rueda cromática en modo Personalizado. El botón SHALL deshabilitarse si no existe paleta marcada con colores o si la rueda ya muestra esa paleta sin cambios que editar. Al pulsarlo el sistema SHALL advertir antes de cargar —toast con el texto "Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales." y un botón de confirmación "Recargar"— y sin confirmar SHALL no cambiar nada. Al confirmar: el primer color de la paleta SHALL pasar a ser el color actual (cambio confirmado) y el principal del conjunto; cada color restante SHALL añadirse como punto secundario en su posición hue/saturación relativa al principal con su brillo propio de modo que cada tarjeta SHALL reproducir el color exacto de la paleta; el conjunto libre previo SHALL reemplazarse; la paleta marcada SHALL evaluarse al confirmar (si entre el aviso y la confirmación se marca otra paleta, se carga esa); la operación SHALL respetar los límites (una paleta de 64 colores carga principal + 63 secundarios, dentro del límite de la rueda) y el panel Biblioteca SHALL cerrarse para mostrar la rueda. Si la paleta tiene un solo color SHALL cargar solo el principal. No SHALL añadir colores a la paleta ni modificarla.
+El panel Biblioteca ("Paletas de Colores") SHALL presentar un botón "Recargar" al lado de "Nueva" que cargue la paleta marcada (activa) en la rueda cromática en modo Personalizado. El botón SHALL deshabilitarse si no existe paleta marcada con colores o si la rueda ya muestra esa paleta sin cambios que editar. Al pulsarlo el sistema SHALL advertir antes de cargar —toast con el texto "Se cargará la paleta en la rueda cromática y se perderán las selecciones actuales." y un botón de confirmación "Recargar"— y sin confirmar SHALL no cambiar nada. Al confirmar: el primer color de la paleta SHALL pasar a ser el color actual (cambio confirmado) y el principal del conjunto; cada color restante SHALL añadirse como punto secundario en su posición hue/saturación relativa al principal con su brillo propio de modo que cada tarjeta SHALL reproducir el color exacto de la paleta; el conjunto libre previo SHALL reemplazarse; la paleta marcada SHALL evaluarse al confirmar (si entre el aviso y la confirmación se marca otra paleta, se carga esa); la operación SHALL respetar los límites (una paleta de 64 colores carga principal + 63 secundarios, dentro del límite de la rueda) y el panel Biblioteca SHALL cerrarse para mostrar la rueda. Si la paleta tiene un solo color SHALL cargar solo el principal. No SHALL añadir colores a la paleta ni modificarla.
 
 #### Scenario: Aviso antes de cargar
 - **WHEN** hay una paleta marcada con 8 colores y el usuario pulsa "Recargar"
@@ -106,3 +106,25 @@ El panel Biblioteca ("Paletas") SHALL presentar un botón "Recargar" al lado de 
 #### Scenario: Solo principal
 - **WHEN** la paleta marcada tiene un único color y el usuario confirma "Recargar"
 - **THEN** la pestaña pasa a Personalizado con solo la tarjeta base (ese color como color actual), sin puntos secundarios, y se cierra el panel Biblioteca
+
+### Requirement: Presentación del panel Biblioteca
+El panel Biblioteca SHALL titularse "Paletas de Colores" (EN: "Color Palettes") y, debajo del editor de nombre y descripción de la paleta marcada, SHALL presentar una fila de acciones con el botón "Exportar" seguido del botón "Importar" —siempre en ese orden y con "Importar" a la derecha— alineada al borde inferior derecho. Cuando no existe paleta marcada (lista vacía) SHALL quedar visible únicamente el botón "Importar", de modo que importar sea alcanzable desde una biblioteca vacía; "Exportar" SHALL deshabilitarse cuando la paleta marcada no tenga colores.
+
+#### Scenario: Fila con paleta marcada
+- **WHEN** hay una paleta marcada con colores
+- **THEN** debajo de la descripción se ven los botones "Exportar" e "Importar" en ese orden, con "Importar" a la derecha
+
+#### Scenario: Sin paleta marcada
+- **WHEN** la biblioteca no tiene paletas y se abre el panel
+- **THEN** solo se muestra el botón "Importar" (sin los campos de nombre/descripción ni "Exportar")
+
+### Requirement: Preview de la biblioteca sin truncar
+La mini-vista previa de cada paleta de la lista SHALL mostrar todos los colores en su orden (hasta el máximo de 64) dispuestos en filas que envuelven, en lugar de truncarse a los primeros 12: la primera fila SHALL mostrar el máximo que entra en el ancho del panel y los restantes SHALL envolver a la fila siguiente.
+
+#### Scenario: Paleta con 13 colores
+- **WHEN** la paleta marcada tiene 13 colores y se ve la lista en el panel Biblioteca
+- **THEN** el preview de la paleta muestra los 13 colores (los primeros ~17 en la primera fila), ya no quedan ocultos por el límite de 12
+
+#### Scenario: Paleta que envuelve a 2 filas
+- **WHEN** la paleta marcada tiene 20 colores y se ve la lista
+- **THEN** el preview los muestra en al menos 2 filas de muestras (por ejemplo 17 + 3), envueltas al ancho disponible del panel, sin truncar a 12

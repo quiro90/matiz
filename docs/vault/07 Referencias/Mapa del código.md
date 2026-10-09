@@ -10,6 +10,7 @@ tags: [referencia]
 | Formatos de color | `src/Matiz.Core/Formatting/` |
 | Escala / armonías / neutros | `src/Matiz.Core/Generation/` |
 | Formatos de paleta | `src/Matiz.Core/Export/PaletteFormatters.cs` |
+| Archivo de paleta (.mpalette) | `src/Matiz.Core/Palettes/PaletteFile.cs` · import/export y doble click del SO en `MainViewModel.Palettes.cs` + `App.xaml.cs` |
 | Persistencia | `src/Matiz.Core/Persistence/` |
 | Ventana principal | `src/Matiz.App/Views/MainWindow.xaml` |
 | Lógica de UI | `src/Matiz.App/ViewModels/MainViewModel.*.cs` |

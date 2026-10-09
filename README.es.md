@@ -18,7 +18,7 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 - **Armonías** (complementaria, análoga, dividida, triádica, tetrádica, monocromática) dibujadas en la rueda, con luminosidad equilibrada.
 - **Puntos libres**: hasta 64 colores secundarios añadidos con click derecho en la rueda, click derecho al capturar o sobre la imagen (o el botón "+", visible en todas las pestañas y siempre a la misma altura); siguen rígidamente al color principal y personalizar una armonía la convierte a Personalizado en vez de romperla.
 - **Tints / shades, neutros** y **colores dominantes de imágenes** (abrir, arrastrar o pegar una captura); en "De la imagen" el botón **"Personalizar"** carga los extraídos de una vez como puntos del conjunto Personalizado (con aviso si reemplaza una paleta ya armada).
-- **Paletas guardadas** (hasta 64 colores por paleta) con autoguardado, reordenamiento (también arrastrando las tarjetas) y deshacer; **Recargar** vuelve a poner una paleta guardada en la rueda (modo Personalizado) para editarla; exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
+- **Paletas guardadas** (hasta 64 colores por paleta) con autoguardado, reordenamiento (también arrastrando las tarjetas) y deshacer; **Recargar** vuelve a poner una paleta guardada en la rueda (modo Personalizado) para editarla; exportar/importar una paleta como archivo **`.mpalette`** autocontenido (el doble click lo abre en Matiz y lo agrega como paleta nueva); exportación a **variables CSS, JSON, Dart, C#, Tailwind** o **imagen PNG**.
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.
 
 ## Requisitos

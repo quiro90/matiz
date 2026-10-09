@@ -473,7 +473,7 @@
                             Content="{loc:Loc gen.clearPoints}" ToolTip="{loc:Loc gen.clearPoints.tooltip}" AutomationProperties.Name="{loc:Loc gen.clearPoints}"
                             Visibility="{Binding CanRemoveFreePoints, Converter={StaticResource BoolToVis}}"/>
                     <Button DockPanel.Dock="Right" Command="{Binding CustomizeFromImageCommand}" Margin="0,0,6,0" VerticalAlignment="Top" Padding="8,2"
-                            ToolTip="{loc:Loc gen.customize.tooltip}" AutomationProperties.Name="{loc:Loc gen.customize}">
+                            Content="{loc:Loc gen.customize}" ToolTip="{loc:Loc gen.customize.tooltip}" AutomationProperties.Name="{loc:Loc gen.customize}">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource ChipButton}">
                                 <Setter Property="Visibility" Value="Collapsed"/>

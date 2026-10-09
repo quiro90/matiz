@@ -60,12 +60,8 @@ El sistema SHALL ofrecer campos numéricos editables para Hue (0–360, un decim
 - **WHEN** el usuario escribe `120` en Saturación
 - **THEN** el campo se marca como inválido y el color no cambia
 
-### Requirement: Escala de grises
-El sistema SHALL mostrar una tira de grises continua de blanco a negro, con marcas numéricas cada 10 que expresan luminosidad (100 = blanco, 0 = negro, coherente con HSL L, HSV B y OKLCH L). Hacer click o arrastrar sobre ella SHALL reemplazar el color actual por el gris correspondiente (R = G = B = round(L × 255)). El sistema SHALL ofrecer además una acción "Gris equivalente" que convierta el color actual al gris de igual luminosidad perceptual (OKLab L).
-
-#### Scenario: Gris medio
-- **WHEN** el usuario hace click en la marca 50
-- **THEN** el color actual es `#808080`
+### Requirement: Selección de grises
+El sistema SHALL permitir seleccionar grises desde el centro de la rueda cromática (saturación 0, manteniendo la luminosidad actual) y SHALL ofrecer una acción "Gris equivalente" que convierta el color actual al gris de igual luminosidad perceptual (OKLab L). El estado del color SHALL conservar el hue y la saturación de origen cuando el color actual pasa a gris o negro, de modo que bajar el brillo a cero y volver recupera el color.
 
 #### Scenario: Gris equivalente
 - **WHEN** el color actual es `#5246BC` y el usuario ejecuta "Gris equivalente"

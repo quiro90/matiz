@@ -6,7 +6,7 @@ tags: [arquitectura]
 flowchart TB
   subgraph App[Matiz.App · WPF]
     V[Views XAML] --> VM[MainViewModel]
-    C[Controles: rueda, brillo, grises, lupa, visor]
+    C[Controles: rueda, brillo, lupa, visor]
     SC[ScreenCapture]
     SV[Services: portapapeles, tema, hotkey]
   end

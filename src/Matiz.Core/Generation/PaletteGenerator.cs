@@ -78,6 +78,29 @@ public static class PaletteGenerator
         }).ToList();
     }
 
+    /// <summary>
+    /// Modo Libre: base + un color por cada desfase relativo respecto del principal —
+    /// hue = baseHue + Δhue (normalizado), saturación = clamp(baseSat + Δsat, 0, 1); el brillo se ajusta con
+    /// "Equilibrar" igual que en las armonías (o queda el del base). Las coordenadas de rueda son exactas y las
+    /// etiquetas son números consecutivos ("1", "2", …). Se usa desde las coordenadas continuas del selector.
+    /// </summary>
+    public static IReadOnlyList<GeneratedColor> FreePoints(ColorState baseState,
+        IReadOnlyList<(double HueDelta, double SatDelta)> offsets, bool balanceLightness = true)
+    {
+        var baseColor = baseState.Argb;
+        var targetL = LightnessOf(baseState.Hue, baseState.Saturation, baseState.Value);
+        var list = new List<GeneratedColor> { new(Texts.Current.Base, baseColor, true, baseState.Hue, baseState.Saturation) };
+        foreach (var (hueDelta, satDelta) in offsets)
+        {
+            var s = Math.Clamp(baseState.Saturation + satDelta, 0, 1);
+            var h = ColorMath.NormalizeHue(baseState.Hue + hueDelta);
+            var v = balanceLightness ? ValueForLightness(h, s, targetL) : baseState.Value;
+            var c = ColorMath.FromHsv(h, s, v, baseState.Alpha);
+            list.Add(new GeneratedColor(list.Count.ToString(), c, false, h, s));
+        }
+        return list;
+    }
+
     /// <summary>OKLab L de un color HSV continuo (sin redondear a 8 bits).</summary>
     public static double LightnessOf(double h, double s, double v)
     {

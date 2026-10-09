@@ -242,6 +242,9 @@
   <data name="swatch.colorBase.tooltip" xml:space="preserve">
     <value>Color base</value>
   </data>
+  <data name="swatch.removePoint" xml:space="preserve">
+    <value>Quitar punto</value>
+  </data>
 
   <!-- generated palettes -->
   <data name="gen.tab.scale" xml:space="preserve">
@@ -252,6 +255,9 @@
   </data>
   <data name="gen.tab.neutrals" xml:space="preserve">
     <value>Neutros</value>
+  </data>
+  <data name="gen.tab.free" xml:space="preserve">
+    <value>Libre</value>
   </data>
   <data name="gen.tab.extracted" xml:space="preserve">
     <value>De la imagen</value>
@@ -284,13 +290,22 @@
     <value>Equilibrar</value>
   </data>
   <data name="gen.balance.tooltip" xml:space="preserve">
-    <value>Activado: cada color de la armonía ajusta su brillo para tener la misma luminosidad percibida que el base (la posición en la rueda no cambia). Desactivado: todos con el mismo brillo HSV.</value>
+    <value>Activado: cada color ajusta su brillo para tener la misma luminosidad percibida que el base (la posición en la rueda no cambia). Desactivado: todos con el mismo brillo HSV.</value>
+  </data>
+  <data name="gen.addPoint" xml:space="preserve">
+    <value>Añadir punto</value>
+  </data>
+  <data name="gen.addPoint.tooltip" xml:space="preserve">
+    <value>Añade un punto secundario opuesto al color principal (pasa a la pestaña Libre)</value>
   </data>
   <data name="gen.exportTitle.tints" xml:space="preserve">
     <value>Tints y Shades</value>
   </data>
   <data name="gen.exportTitle.neutrals" xml:space="preserve">
     <value>Neutral</value>
+  </data>
+  <data name="gen.exportTitle.free" xml:space="preserve">
+    <value>Libre</value>
   </data>
   <data name="gen.exportTitle.imageColors" xml:space="preserve">
     <value>Colores de imagen</value>
@@ -675,12 +690,6 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="harmony.colorFallback" xml:space="preserve">
     <value>Color {0}</value>
-  </data>
-  <data name="harmony.reset" xml:space="preserve">
-    <value>Restaurar</value>
-  </data>
-  <data name="harmony.reset.tooltip" xml:space="preserve">
-    <value>Restaura los ángulos de la armonía elegida; lo mismo que hacer doble click sobre un punto desplazado. No se puede deshacer.</value>
   </data>
 
   <!-- palette defaults -->

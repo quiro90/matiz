@@ -104,9 +104,6 @@ public sealed partial class MainViewModel : ObservableObject
         }
 
         Refresh();
-        // Los desfases personalizados de la armonía se conservan al mover el principal (rueda) o al usar un color
-        // generado como principal (tarjetas); cualquier otra vía parte de una armonía canónica.
-        if (e.Kind == ColorChangeKind.Commit && e.Source is not (ColorChangeSource.Picker or ColorChangeSource.Generated)) ClearHarmonyOffsets();
         if (e.Kind == ColorChangeKind.Commit && e.Source is ColorChangeSource.ScreenCapture or ColorChangeSource.Image or ColorChangeSource.ManualInput)
             _history.Add(e.State.Argb);
 

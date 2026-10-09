@@ -18,6 +18,7 @@ public enum GeneratedTab
     Harmony,
     TintsShades,
     Neutrals,
+    Free,
     Extracted,
 }
 
@@ -27,23 +28,20 @@ public sealed partial class MainViewModel
     [ObservableProperty] public partial HarmonyKind HarmonyKind { get; set; } = HarmonyKind.Complementary;
     [ObservableProperty] public partial bool HasExtracted { get; private set; }
 
-    /// <summary>Puntos de la armonía que se dibujan en la rueda (vacío fuera de la pestaña Armonías).</summary>
+    /// <summary>Puntos de la armonía que se dibujan en la rueda (vacío fuera de Armonías y Libre).</summary>
     [ObservableProperty] public partial IReadOnlyList<WheelMarker> WheelMarkers { get; private set; } = [];
 
-    /// <summary>Índice en <see cref="GeneratedColors"/> del color de armonía seleccionado en la rueda (-1 ninguno).</summary>
+    /// <summary>Índice en <see cref="GeneratedColors"/> del punto seleccionado en la rueda (-1 ninguno).</summary>
     private int _selectedHarmonyIndex = -1;
 
-    /// <summary>Desfases personalizados de los puntos de armonía (Δhue°/Δsat del canónico), por índice generado; null = armonía canónica.</summary>
-    private (double HueDelta, double SatDelta)[]? _harmonyOffsets;
+    /// <summary>Límite de puntos secundarios que admite el modo Libre.</summary>
+    private const int MaxFreePoints = 16;
 
-    /// <summary>Indica si hay desfases personalizados activos: solo entonces se muestra el botón "Restaurar".</summary>
-    [ObservableProperty] public partial bool HasHarmonyOffsets { get; private set; }
+    /// <summary>Puntos del modo Libre: desfases relativos al color principal (Δhue°/Δsat).</summary>
+    private readonly List<(double HueDelta, double SatDelta)> _freeOffsets = [];
 
-    private void ClearHarmonyOffsets()
-    {
-        _harmonyOffsets = null;
-        HasHarmonyOffsets = false;
-    }
+    /// <summary>True si el conjunto libre tiene al menos 2 colores: habilita el botón "−" de las tarjetas.</summary>
+    [ObservableProperty] public partial bool CanRemoveFreePoints { get; private set; }
 
     public ObservableCollection<SwatchItem> GeneratedColors { get; } = [];
 
@@ -58,12 +56,12 @@ public sealed partial class MainViewModel
     {
         _selectedHarmonyIndex = -1;
         RefreshGenerated();
+        AddFreePointCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnHarmonyKindChanged(HarmonyKind value)
     {
         _selectedHarmonyIndex = -1;
-        ClearHarmonyOffsets();
         RefreshGenerated();
     }
 
@@ -74,9 +72,10 @@ public sealed partial class MainViewModel
         IReadOnlyList<GeneratedColor> list = GeneratedTab switch
         {
             GeneratedTab.Scale => DesignScale.Generate(c, anchor),
-            GeneratedTab.Harmony => PaletteGenerator.Harmony(Session.Current, HarmonyKind, anchor, HarmonyBalanceLightness, _harmonyOffsets),
+            GeneratedTab.Harmony => PaletteGenerator.Harmony(Session.Current, HarmonyKind, anchor, HarmonyBalanceLightness),
             GeneratedTab.TintsShades => PaletteGenerator.TintsAndShades(c),
             GeneratedTab.Neutrals => PaletteGenerator.Neutrals(c),
+            GeneratedTab.Free => PaletteGenerator.FreePoints(Session.Current, _freeOffsets, HarmonyBalanceLightness),
             GeneratedTab.Extracted => _extracted,
             _ => [],
         };
@@ -96,16 +95,18 @@ public sealed partial class MainViewModel
                 GeneratedColors[i].WheelSaturation = list[i].WheelSaturation;
             }
         }
+        CanRemoveFreePoints = GeneratedTab == GeneratedTab.Free && GeneratedColors.Count >= 2;
         RefreshWheelMarkers();
     }
 
     private void RefreshWheelMarkers()
     {
+        var markersVisible = GeneratedTab is GeneratedTab.Harmony or GeneratedTab.Free;
         if (_selectedHarmonyIndex >= GeneratedColors.Count) _selectedHarmonyIndex = -1;
         for (var i = 0; i < GeneratedColors.Count; i++)
-            GeneratedColors[i].IsSelected = GeneratedTab == GeneratedTab.Harmony && i == _selectedHarmonyIndex;
+            GeneratedColors[i].IsSelected = markersVisible && i == _selectedHarmonyIndex;
 
-        if (GeneratedTab != GeneratedTab.Harmony)
+        if (!markersVisible)
         {
             if (WheelMarkers.Count > 0) WheelMarkers = [];
             return;
@@ -136,51 +137,107 @@ public sealed partial class MainViewModel
         RefreshWheelMarkers();
         var s = GeneratedColors[_selectedHarmonyIndex];
         var text = ColorFormatters.Get(_settings.DefaultFormatId).Format(s.Color, FormatOptions);
-        ShowToast($"{PaletteGenerator.HarmonyName(HarmonyKind)} {s.Label}  ·  {text}", Loc.T("common.copy"), () => Copy(text, s.Color), seconds: 6);
+        var title = GeneratedTab == GeneratedTab.Harmony ? $"{PaletteGenerator.HarmonyName(HarmonyKind)} {s.Label}" : s.Label;
+        ShowToast($"{title}  ·  {text}", Loc.T("common.copy"), () => Copy(text, s.Color), seconds: 6);
     }
 
-    /// <summary>Arrastre de un punto secundario en la rueda: fija su desfase personalizado (hue/sat de la rueda) sin tocar el color actual.</summary>
+    /// <summary>
+    /// Conversión Armonías → Libre: el conjunto libre se define desde la armonía canónica actual (un punto por
+    /// cada color de la armonía en su ángulo, Δsat 0; en Monocromática solo el principal) y reemplaza el conjunto
+    /// previo. El punto interactuado toma el desfase de la posición dada.
+    /// </summary>
+    private void ConvertHarmonyToFree(WheelMarkerDrag? drag)
+    {
+        List<(double HueDelta, double SatDelta)> offsets = [];
+        if (HarmonyKind != HarmonyKind.Monochromatic)
+            offsets.AddRange(PaletteGenerator.HarmonyOffsets(HarmonyKind).Where(a => a != 0).Select(a => ((double)a, 0.0)));
+        if (drag is { } d)
+        {
+            var st = Session.Current;
+            var delta = (ColorMath.NormalizeHue(d.Hue - st.Hue), Math.Clamp(d.Saturation, 0, 1) - st.Saturation);
+            var idx = Math.Min(d.MarkerIndex, offsets.Count); // el marcador i-ésimo ↔ el i-ésimo punto no base
+            if (idx == offsets.Count) offsets.Add(delta); else offsets[idx] = delta;
+        }
+        _freeOffsets.Clear();
+        _freeOffsets.AddRange(offsets);
+        GeneratedTab = GeneratedTab.Free;
+        AddFreePointCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Arrastre de un punto en la rueda: en Armonías pasa a Libre (conversión) conservando el orden de marcadores;
+    /// en Libre actualiza el desfase relativo del punto. No toca el color actual.
+    /// </summary>
     [RelayCommand]
     private void SetWheelMarkerOffset(WheelMarkerDrag? drag)
     {
-        if (drag is null || HarmonyKind == HarmonyKind.Monochromatic) return;
-        if (drag.MarkerIndex < 0 || drag.MarkerIndex >= _markerToSwatch.Count) return;
-        var angles = PaletteGenerator.HarmonyOffsets(HarmonyKind);
-        var swatch = _markerToSwatch[drag.MarkerIndex];
-        if (swatch >= angles.Count || angles[swatch] == 0) return;
+        if (drag is null || drag.MarkerIndex < 0 || drag.MarkerIndex >= _markerToSwatch.Count) return;
         if (double.IsNaN(drag.Hue)) return;
-        var hue = ColorMath.NormalizeHue(drag.Hue);
-        var sat = Math.Clamp(drag.Saturation, 0, 1);
+        if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(drag);
+        if (drag.MarkerIndex >= _freeOffsets.Count) return;
         var st = Session.Current;
-        _harmonyOffsets ??= new (double HueDelta, double SatDelta)[angles.Count];
-        _harmonyOffsets[swatch] = (
-            ColorMath.NormalizeHue(hue - ColorMath.NormalizeHue(st.Hue + angles[swatch])),
-            sat - st.Saturation);
-        HasHarmonyOffsets = _harmonyOffsets.Any(o => o != default);
+        _freeOffsets[drag.MarkerIndex] = (
+            ColorMath.NormalizeHue(drag.Hue - st.Hue),
+            Math.Clamp(drag.Saturation, 0, 1) - st.Saturation);
         RefreshGenerated();
     }
 
-    /// <summary>Doble click en un punto de la rueda: reinicia ese punto a su desfase canónico sin cambiar el color actual.</summary>
-    [RelayCommand]
-    private void ResetWheelMarkerOffset(int markerIndex)
+    private bool CanAddFreePoint() => GeneratedTab == GeneratedTab.Harmony || _freeOffsets.Count < MaxFreePoints;
+
+    /// <summary>Botón "+": añade un punto opuesto al principal; en Armonías además convierte la armonía a Libre.</summary>
+    [RelayCommand(CanExecute = nameof(CanAddFreePoint))]
+    private void AddFreePoint()
     {
-        if (_harmonyOffsets is null || markerIndex < 0 || markerIndex >= _markerToSwatch.Count) return;
-        var angles = PaletteGenerator.HarmonyOffsets(HarmonyKind);
-        var swatch = _markerToSwatch[markerIndex];
-        if (swatch >= angles.Count || angles[swatch] == 0) return;
-        if (_harmonyOffsets[swatch] == default) return;
-        _harmonyOffsets[swatch] = default;
-        if (_harmonyOffsets.All(o => o == default)) ClearHarmonyOffsets();
+        if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
+        else if (GeneratedTab != GeneratedTab.Free) return;
+        if (_freeOffsets.Count < MaxFreePoints) _freeOffsets.Add((180.0, 0.0));
         RefreshGenerated();
+        AddFreePointCommand.NotifyCanExecuteChanged();
     }
 
-    /// <summary>Botón "Restaurar": restablece todos los puntos a la armonía canónica (no es deshacible).</summary>
+    /// <summary>Click derecho en la rueda: añade un punto libre en esa posición desde cualquier pestaña y pasa a Libre.</summary>
     [RelayCommand]
-    private void ResetHarmonyOffsets()
+    private void AddFreePointAt(WheelPoint? point)
     {
-        if (!HasHarmonyOffsets) return;
-        ClearHarmonyOffsets();
-        RefreshGenerated();
+        if (point is null || double.IsNaN(point.Hue) || _freeOffsets.Count >= MaxFreePoints) return;
+        if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
+        var st = Session.Current;
+        _freeOffsets.Add((ColorMath.NormalizeHue(point.Hue - st.Hue), Math.Clamp(point.Saturation, 0, 1) - st.Saturation));
+        if (GeneratedTab != GeneratedTab.Free)
+        {
+            GeneratedTab = GeneratedTab.Free; // dispara RefreshGenerated
+        }
+        else RefreshGenerated();
+        AddFreePointCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Botón "−" de una tarjeta en Libre: quita ese color del conjunto. Quitar el principal promueve al primer
+    /// secundario como cambio confirmado, con los demás en sus posiciones absolutas (no es deshacible).
+    /// </summary>
+    [RelayCommand]
+    private void RemoveFreePoint(SwatchItem? s)
+    {
+        if (GeneratedTab != GeneratedTab.Free || s is null) return;
+        var idx = GeneratedColors.IndexOf(s);
+        if (idx < 0 || (idx == 0 && _freeOffsets.Count == 0)) return;
+        if (idx == 0)
+        {
+            var k = _freeOffsets[0];
+            var promoted = GeneratedColors[1].Color;
+            for (var i = 1; i < _freeOffsets.Count; i++)
+                _freeOffsets[i] = (
+                    ColorMath.NormalizeHue(_freeOffsets[i].HueDelta - k.HueDelta),
+                    _freeOffsets[i].SatDelta - k.SatDelta);
+            _freeOffsets.RemoveAt(0);
+            Session.Commit(promoted, ColorChangeSource.Generated); // refresca el panel vía Session.Changed
+        }
+        else
+        {
+            _freeOffsets.RemoveAt(idx - 1);
+            RefreshGenerated();
+        }
+        AddFreePointCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>Nombres de los colores generados al agregarlos a una paleta o exportarlos.</summary>
@@ -204,6 +261,7 @@ public sealed partial class MainViewModel
             GeneratedTab.Harmony => PaletteGenerator.HarmonyName(HarmonyKind),
             GeneratedTab.TintsShades => Loc.T("gen.exportTitle.tints"),
             GeneratedTab.Neutrals => "Neutral",
+            GeneratedTab.Free => Loc.T("gen.exportTitle.free"),
             _ => Loc.T("gen.exportTitle.imageColors"),
         };
         return new PaletteExportModel(title, GeneratedColors.Select((s, i) => new PaletteExportColor(GeneratedName(s, i), s.Color)).ToList());

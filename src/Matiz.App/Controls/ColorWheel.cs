@@ -24,8 +24,8 @@ public sealed class ColorWheel : FrameworkElement
     /// <summary>Arrastre de un punto secundario (parámetro: <see cref="WheelMarkerDrag"/>).</summary>
     public static readonly DependencyProperty MarkerDragCommandProperty = DependencyProperty.Register(nameof(MarkerDragCommand), typeof(ICommand), typeof(ColorWheel));
 
-    /// <summary>Doble click en un punto secundario: reinicia su desfase (parámetro: índice del marcador).</summary>
-    public static readonly DependencyProperty MarkerResetCommandProperty = DependencyProperty.Register(nameof(MarkerResetCommand), typeof(ICommand), typeof(ColorWheel));
+    /// <summary>Click derecho en la rueda: añade un punto libre en esa posición (parámetro: <see cref="WheelPoint"/>).</summary>
+    public static readonly DependencyProperty AddPointAtCommandProperty = DependencyProperty.Register(nameof(AddPointAtCommand), typeof(ICommand), typeof(ColorWheel));
 
     public static readonly DependencyProperty HueProperty = DependencyProperty.Register(nameof(Hue), typeof(double), typeof(ColorWheel),
         new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault | FrameworkPropertyMetadataOptions.AffectsRender));
@@ -70,7 +70,7 @@ public sealed class ColorWheel : FrameworkElement
     public IReadOnlyList<WheelMarker>? Markers { get => (IReadOnlyList<WheelMarker>?)GetValue(MarkersProperty); set => SetValue(MarkersProperty, value); }
     public ICommand? MarkerClickCommand { get => (ICommand?)GetValue(MarkerClickCommandProperty); set => SetValue(MarkerClickCommandProperty, value); }
     public ICommand? MarkerDragCommand { get => (ICommand?)GetValue(MarkerDragCommandProperty); set => SetValue(MarkerDragCommandProperty, value); }
-    public ICommand? MarkerResetCommand { get => (ICommand?)GetValue(MarkerResetCommandProperty); set => SetValue(MarkerResetCommandProperty, value); }
+    public ICommand? AddPointAtCommand { get => (ICommand?)GetValue(AddPointAtCommandProperty); set => SetValue(AddPointAtCommandProperty, value); }
 
     private const double MarkerHitRadius = 9;
     private const double MainHitRadius = 11;
@@ -186,15 +186,7 @@ public sealed class ColorWheel : FrameworkElement
         var hit = HitMarker(e.GetPosition(this));
         if (hit >= 0)
         {
-            if (e.ClickCount >= 2)
-            {
-                // Doble click en un punto: reinicia ese punto a su desfase canónico (no cambia el principal).
-                var reset = MarkerResetCommand;
-                if (reset?.CanExecute(hit) == true) reset.Execute(hit);
-                e.Handled = true;
-                return;
-            }
-            // Candidato de arrastre: click en up solo si no se movió; drag con umbral.
+            // Candidato de arrastre: click en up solo si no se movió; drag con umbral. Doble click: no action adicional.
             CaptureMouse();
             _markerCapture = hit;
             _markerDown = e.GetPosition(this);
@@ -291,6 +283,21 @@ public sealed class ColorWheel : FrameworkElement
         if (cmd?.CanExecute(arg) == true) cmd.Execute(arg);
     }
 
+    /// <summary>Click derecho en la rueda: añade un punto libre en la posición del cursor (sin menú contextual).</summary>
+    protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+    {
+        if (_markerCapture >= 0 || _dragging) return;
+        var p = e.GetPosition(this);
+        var c = Center;
+        var v = p - c;
+        if (v.Length > Radius && v.Length > 0) p = c + v * (Radius / v.Length);
+        var (hue, sat) = WheelMapping.FromPoint(p.X - c.X, p.Y - c.Y, Radius, Gamma);
+        if (double.IsNaN(hue)) return;
+        var arg = new WheelPoint(hue, sat);
+        if (AddPointAtCommand?.CanExecute(arg) == true) AddPointAtCommand.Execute(arg);
+        e.Handled = true;
+    }
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
         var big = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
@@ -328,3 +335,6 @@ public sealed record WheelMarker(double Hue, double Saturation, Argb Color, bool
 
 /// <summary>Arrastre de un punto secundario: índice del marcador y coordenadas de rueda (hue/sat) del cursor.</summary>
 public sealed record WheelMarkerDrag(int MarkerIndex, double Hue, double Saturation);
+
+/// <summary>Posición de rueda (hue/sat) donde se pide añadir un punto libre.</summary>
+public sealed record WheelPoint(double Hue, double Saturation);

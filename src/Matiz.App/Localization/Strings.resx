@@ -242,6 +242,9 @@
   <data name="swatch.colorBase.tooltip" xml:space="preserve">
     <value>Base color</value>
   </data>
+  <data name="swatch.removePoint" xml:space="preserve">
+    <value>Remove point</value>
+  </data>
 
   <!-- generated palettes -->
   <data name="gen.tab.scale" xml:space="preserve">
@@ -252,6 +255,9 @@
   </data>
   <data name="gen.tab.neutrals" xml:space="preserve">
     <value>Neutrals</value>
+  </data>
+  <data name="gen.tab.free" xml:space="preserve">
+    <value>Free</value>
   </data>
   <data name="gen.tab.extracted" xml:space="preserve">
     <value>From image</value>
@@ -284,13 +290,22 @@
     <value>Balance</value>
   </data>
   <data name="gen.balance.tooltip" xml:space="preserve">
-    <value>On: each harmony color adjusts its brightness to match the perceived lightness of the base color (its wheel position does not change). Off: all with the same HSV brightness.</value>
+    <value>On: each color adjusts its brightness to match the perceived lightness of the base color (its wheel position does not change). Off: all with the same HSV brightness.</value>
+  </data>
+  <data name="gen.addPoint" xml:space="preserve">
+    <value>Add point</value>
+  </data>
+  <data name="gen.addPoint.tooltip" xml:space="preserve">
+    <value>Add a secondary point opposite to the principal color (switches to the Free tab)</value>
   </data>
   <data name="gen.exportTitle.tints" xml:space="preserve">
     <value>Tints &amp; Shades</value>
   </data>
   <data name="gen.exportTitle.neutrals" xml:space="preserve">
     <value>Neutral</value>
+  </data>
+  <data name="gen.exportTitle.free" xml:space="preserve">
+    <value>Free</value>
   </data>
   <data name="gen.exportTitle.imageColors" xml:space="preserve">
     <value>Image colors</value>
@@ -675,12 +690,6 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   </data>
   <data name="harmony.colorFallback" xml:space="preserve">
     <value>Color {0}</value>
-  </data>
-  <data name="harmony.reset" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="harmony.reset.tooltip" xml:space="preserve">
-    <value>Restores the angles of the chosen harmony; the same as double-clicking a moved point. This cannot be undone.</value>
   </data>
 
   <!-- palette defaults -->

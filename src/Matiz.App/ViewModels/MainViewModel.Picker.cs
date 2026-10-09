@@ -17,9 +17,6 @@ public sealed partial class MainViewModel
     [ObservableProperty] public partial double SatPct { get; set; }
     [ObservableProperty] public partial double BriPct { get; set; }
 
-    /// <summary>Luminosidad del gris actual (NaN si el color no es gris).</summary>
-    [ObservableProperty] public partial double GrayValue { get; set; } = double.NaN;
-
     /// <summary>Enfoque de la rueda: −1 vivo, 0 lineal, +1 pastel.</summary>
     [ObservableProperty] public partial double WheelFocus { get; set; }
     [ObservableProperty] public partial double WheelGamma { get; set; } = 1;
@@ -54,13 +51,6 @@ public sealed partial class MainViewModel
         if (!_syncing) Session.Commit(Session.Current.WithValue(value / 100), ColorChangeSource.Picker);
     }
 
-    partial void OnGrayValueChanged(double value)
-    {
-        if (_syncing || double.IsNaN(value)) return;
-        var v = Argb.ToByte(value);
-        Session.SetPreview(ColorState.FromArgb(new Argb(Session.Current.Alpha, v, v, v), Session.Current));
-    }
-
     partial void OnWheelFocusChanged(double value)
     {
         WheelGamma = WheelMapping.GammaFromFocus(value);
@@ -70,9 +60,6 @@ public sealed partial class MainViewModel
 
     [RelayCommand]
     private void CommitPicker() => Session.Commit(Session.Current, ColorChangeSource.Picker);
-
-    [RelayCommand]
-    private void CommitGray() => Session.Commit(Session.Current, ColorChangeSource.Gray);
 
     [RelayCommand]
     private void ResetFocus() => WheelFocus = 0;

@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Input;
@@ -126,61 +125,5 @@ public sealed class BrightnessSlider : DragValueControl
         dc.DrawRoundedRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(160, 0, 0, 0)), 4), handle, 4, 4);
         dc.DrawRoundedRectangle(null, new Pen(Brushes.White, 2), handle, 4, 4);
         if (IsKeyboardFocused) dc.DrawRoundedRectangle(null, FocusPen, new Rect(0, 2, ActualWidth, ActualHeight - 4), 6, 6);
-    }
-}
-
-/// <summary>
-/// Tira de grises de blanco (100, izquierda) a negro (0, derecha). Value = luminosidad 0–1 (NaN oculta el marcador).
-/// </summary>
-public sealed class GrayStrip : DragValueControl
-{
-    private static readonly Typeface Ui = new("Segoe UI");
-    private const double Inset = 6;
-    private const double BarHeight = 22;
-
-    public GrayStrip()
-    {
-        AutomationProperties.SetName(this, Loc.T("controls.gray"));
-        LocalizationService.Instance.LanguageChanged += (_, _) => AutomationProperties.SetName(this, Loc.T("controls.gray"));
-        Height = 42;
-    }
-
-    protected override Key IncreaseKey => Key.Left;
-    protected override Key DecreaseKey => Key.Right;
-
-    protected override double ValueFromPoint(Point p)
-    {
-        var t = (p.X - Inset) / Math.Max(1, ActualWidth - 2 * Inset);
-        // Ajuste a decenas cerca de las marcas para elegir valores redondos fácilmente.
-        var v = Math.Clamp(1 - t, 0, 1);
-        var snapped = Math.Round(v * 10) / 10;
-        return Math.Abs(snapped - v) < 0.008 ? snapped : v;
-    }
-
-    protected override void OnRender(DrawingContext dc)
-    {
-        var bar = new Rect(Inset, 0, Math.Max(0, ActualWidth - 2 * Inset), BarHeight);
-        var brush = new LinearGradientBrush(Colors.White, Colors.Black, 0) { ColorInterpolationMode = ColorInterpolationMode.SRgbLinearInterpolation };
-        dc.DrawRoundedRectangle(brush, new Pen(new SolidColorBrush(Color.FromArgb(60, 128, 128, 128)), 1), bar, 5, 5);
-
-        var muted = (Brush?)TryFindResource("TextMutedBrush") ?? Brushes.Gray;
-        var dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
-        for (var i = 0; i <= 10; i++)
-        {
-            var x = bar.Left + i / 10.0 * bar.Width;
-            var label = new FormattedText(((10 - i) * 10).ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight, Ui, 10, muted, dpi);
-            dc.DrawLine(new Pen(muted, 1), new Point(x, BarHeight + 1), new Point(x, BarHeight + 4));
-            dc.DrawText(label, new Point(Math.Clamp(x - label.Width / 2, 0, ActualWidth - label.Width), BarHeight + 4));
-        }
-
-        if (!double.IsNaN(Value))
-        {
-            var x = bar.Left + (1 - Value) * bar.Width;
-            var handle = new Rect(x - 4, -2, 8, BarHeight + 4);
-            dc.DrawRoundedRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(160, 0, 0, 0)), 4), handle, 4, 4);
-            dc.DrawRoundedRectangle(null, new Pen(Brushes.White, 2), handle, 4, 4);
-        }
-        if (IsKeyboardFocused) dc.DrawRoundedRectangle(null, FocusPen, new Rect(0, -3, ActualWidth, BarHeight + 6), 6, 6);
     }
 }

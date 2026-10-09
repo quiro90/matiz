@@ -120,12 +120,6 @@
   <data name="picker.grayEquivalent.tooltip" xml:space="preserve">
     <value>Converts the color to the gray with the same perceived lightness (OKLab L)</value>
   </data>
-  <data name="picker.grays" xml:space="preserve">
-    <value>GRAYS</value>
-  </data>
-  <data name="picker.gray.tooltip" xml:space="preserve">
-    <value>Lightness: 100 = white, 0 = black</value>
-  </data>
 
   <!-- image -->
   <data name="image.back" xml:space="preserve">
@@ -723,9 +717,6 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   </data>
   <data name="controls.brightness" xml:space="preserve">
     <value>Brightness</value>
-  </data>
-  <data name="controls.gray" xml:space="preserve">
-    <value>Gray scale</value>
   </data>
   <data name="controls.image" xml:space="preserve">
     <value>Image to pick colors from</value>

@@ -138,7 +138,6 @@ public sealed partial class MainViewModel : ObservableObject
             RValue = c.R;
             GValue = c.G;
             BValue = c.B;
-            GrayValue = c.R == c.G && c.G == c.B ? c.R / 255.0 : double.NaN;
         }
         finally
         {

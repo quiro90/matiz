@@ -120,12 +120,6 @@
   <data name="picker.grayEquivalent.tooltip" xml:space="preserve">
     <value>Convierte el color al gris de igual luminosidad perceptual (OKLab L)</value>
   </data>
-  <data name="picker.grays" xml:space="preserve">
-    <value>GRISES</value>
-  </data>
-  <data name="picker.gray.tooltip" xml:space="preserve">
-    <value>Luminosidad: 100 = blanco, 0 = negro</value>
-  </data>
 
   <!-- image -->
   <data name="image.back" xml:space="preserve">
@@ -723,9 +717,6 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="controls.brightness" xml:space="preserve">
     <value>Brillo</value>
-  </data>
-  <data name="controls.gray" xml:space="preserve">
-    <value>Escala de grises</value>
   </data>
   <data name="controls.image" xml:space="preserve">
     <value>Imagen para seleccionar colores</value>

@@ -194,15 +194,6 @@
                                         ToolTip="{loc:Loc picker.grayEquivalent.tooltip}"/>
                             </StackPanel>
 
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="64"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{loc:Loc picker.grays}" Style="{StaticResource SectionTitle}" VerticalAlignment="Top" Margin="0,4,0,0"/>
-                                <c:GrayStrip Grid.Column="1" Value="{Binding GrayValue}" CommitCommand="{Binding CommitGrayCommand}"
-                                             ToolTip="{loc:Loc picker.gray.tooltip}"/>
-                            </Grid>
                         </StackPanel>
                     </Grid>
                 </Border>

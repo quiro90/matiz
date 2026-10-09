@@ -71,6 +71,32 @@ public class PaletteImageRendererTests
         Assert.Equal(h1 * 2, h2);
         Assert.Equal(Puchi.Colors.Select(c => c.Color), centers);
     }
+
+    [Fact]
+    public void Transparent_background_keeps_alpha_and_block_colors()
+    {
+        var (bg, block) = RunSta(() =>
+        {
+            // Horizontal, escala 2, fondo transparente (texto estilo claro).
+            var b = PaletteImageRenderer.Render(Puchi, new PaletteImageOptions(true, 2, DarkBackground: false, Transparent: true));
+            var path = Path.Combine(Path.GetTempPath(), $"matiz-{Guid.NewGuid():N}.png");
+            PaletteImageRenderer.SavePng(b, path);
+            var decoded = new FormatConvertedBitmap(BitmapFrame.Create(new Uri(path), BitmapCreateOptions.None, BitmapCacheOption.OnLoad), PixelFormats.Bgra32, null, 0);
+            File.Delete(path);
+            var stride = decoded.PixelWidth * 4;
+            var px = new byte[stride * decoded.PixelHeight];
+            decoded.CopyPixels(px, stride, 0);
+            (byte, byte, byte, byte) At(double x, double y)
+            {
+                var o = (int)(y * 2) * stride + (int)(x * 2) * 4;
+                return (px[o + 3], px[o + 2], px[o + 1], px[o]);
+            }
+            return (At(5, 5), At(128, 164));
+        });
+
+        Assert.Equal((0, 0, 0, 0), bg);
+        Assert.Equal((255, 0x52, 0x46, 0xBC), block);
+    }
 }
 
 public class HotkeyGestureTests

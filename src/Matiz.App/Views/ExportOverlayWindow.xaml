@@ -1,8 +1,8 @@
-<Window x:Class="Matiz.App.Views.ExportImageWindow"
+<Window x:Class="Matiz.App.Views.ExportOverlayWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:Matiz.App.Localization"
-        Title="{loc:Loc export.windowTitle}" Icon="/Matiz;component/Assets/matiz.ico" Width="920" Height="640" MinWidth="640" MinHeight="420"
+        Title="{loc:Loc overlay.windowTitle}" Icon="/Matiz;component/Assets/matiz.ico" Width="920" Height="640" MinWidth="640" MinHeight="420"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
         Background="{DynamicResource BgBrush}" Foreground="{DynamicResource TextBrush}"
         FontFamily="{StaticResource UiFont}" FontSize="13" UseLayoutRounding="True">
@@ -20,10 +20,17 @@
         </Border>
 
         <StackPanel Grid.Column="2">
-            <TextBlock Text="{loc:Loc export.orientation}" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
+            <TextBlock Text="{loc:Loc overlay.shape}" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
             <StackPanel Orientation="Horizontal">
-                <RadioButton x:Name="Horizontal" Style="{StaticResource Segment}" Content="Horizontal" GroupName="o" IsChecked="True" Checked="OnOptionChanged"/>
-                <RadioButton Style="{StaticResource Segment}" Content="Vertical" GroupName="o" Checked="OnOptionChanged"/>
+                <RadioButton x:Name="ShapeSquare" Style="{StaticResource Segment}" Content="{loc:Loc overlay.shape.square}" GroupName="sh" IsChecked="True" Checked="OnOptionChanged"/>
+                <RadioButton x:Name="ShapeCircle" Style="{StaticResource Segment}" Content="{loc:Loc overlay.shape.circle}" GroupName="sh" Checked="OnOptionChanged"/>
+                <RadioButton x:Name="ShapeTriangle" Style="{StaticResource Segment}" Content="{loc:Loc overlay.shape.triangle}" GroupName="sh" Checked="OnOptionChanged"/>
+            </StackPanel>
+
+            <TextBlock Text="{loc:Loc overlay.order}" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="OrderForward" Style="{StaticResource Segment}" Content="{loc:Loc overlay.order.forward}" GroupName="r" IsChecked="True" Checked="OnOptionChanged"/>
+                <RadioButton x:Name="OrderReverse" Style="{StaticResource Segment}" Content="{loc:Loc overlay.order.reverse}" GroupName="r" Checked="OnOptionChanged"/>
             </StackPanel>
 
             <TextBlock Text="{loc:Loc export.size}" Style="{StaticResource SectionTitle}" Margin="0,16,0,6"/>

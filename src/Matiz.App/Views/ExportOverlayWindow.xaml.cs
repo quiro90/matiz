@@ -9,14 +9,14 @@ using Microsoft.Win32;
 
 namespace Matiz.App.Views;
 
-/// <summary>Vista previa y opciones de exportación de una paleta a PNG.</summary>
-public partial class ExportImageWindow : Window
+/// <summary>Vista previa y opciones de exportación de una paleta a PNG apilando sus colores como superpuestos.</summary>
+public partial class ExportOverlayWindow : Window
 {
     private readonly PaletteExportModel _palette;
     private BitmapSource? _bitmap;
     private bool _ready;
 
-    public ExportImageWindow(PaletteExportModel palette, ThemeService theme)
+    public ExportOverlayWindow(PaletteExportModel palette, ThemeService theme)
     {
         _palette = palette;
         InitializeComponent();
@@ -25,11 +25,12 @@ public partial class ExportImageWindow : Window
         Render();
     }
 
-    private PaletteImageOptions Options => new(
-        Horizontal: Horizontal.IsChecked == true,
-        Scale: Scale1.IsChecked == true ? 1 : Scale3.IsChecked == true ? 3 : 2,
+    private OverlayImageOptions Options => new(
         DarkBackground: DarkBg.IsChecked == true && TransparentBg.IsChecked != true,
         Transparent: TransparentBg.IsChecked == true,
+        Scale: Scale1.IsChecked == true ? 1 : Scale3.IsChecked == true ? 3 : 2,
+        Shape: ShapeCircle.IsChecked == true ? OverlayShape.Circle : ShapeTriangle.IsChecked == true ? OverlayShape.Triangle : OverlayShape.Square,
+        Reverse: OrderReverse.IsChecked == true,
         ShowHsl: ShowHsl.IsChecked == true,
         ShowCmyk: ShowCmyk.IsChecked == true);
 
@@ -38,7 +39,7 @@ public partial class ExportImageWindow : Window
     private void Render()
     {
         if (!_ready) return;
-        _bitmap = PaletteImageRenderer.Render(_palette, Options);
+        _bitmap = OverlayImageRenderer.Render(_palette, Options);
         Preview.Source = _bitmap;
         SizeText.Text = $"{_bitmap.PixelWidth} × {_bitmap.PixelHeight} px";
     }
@@ -51,7 +52,7 @@ public partial class ExportImageWindow : Window
         {
             Filter = Loc.T("export.pngFilter"),
             FileName = string.IsNullOrWhiteSpace(name) ? Loc.T("export.defaultFileName") + ".png" : $"{name}.png",
-            Title = Loc.T("export.saveDialog"),
+            Title = Loc.T("overlay.saveDialog"),
         };
         if (dlg.ShowDialog(this) != true) return;
         try

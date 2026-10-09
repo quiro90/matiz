@@ -11,6 +11,7 @@ public interface IShell
     void StartScreenCapture(Action<Argb?> onDone);
     string? PickImageFile();
     void ShowExportImage(PaletteExportModel palette);
+    void ShowExportOverlay(PaletteExportModel palette);
     void OpenFolder(string path);
     BitmapSource? LoadImage(string path, out string? error);
 }

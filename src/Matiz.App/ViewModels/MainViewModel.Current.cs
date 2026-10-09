@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Matiz.App.Localization;
 using Matiz.Core.Colors;
+using Matiz.Core.Export;
 using Matiz.Core.Formatting;
 using Matiz.Core.Parsing;
 using Matiz.Core.Session;
@@ -162,4 +163,13 @@ public sealed partial class MainViewModel
         if (_palettes.AddColor(p.Id, Session.Previous.Argb, null) is null) { ShowToast(Loc.T("toasts.maxPaletteColors")); return; }
         ShowToast(Loc.F("toasts.addedToPaletteSimple", p.Name));
     }
+
+    [RelayCommand]
+    private void ExportCurrentPreviousOverlay() =>
+        Shell?.ShowExportOverlay(new PaletteExportModel(
+            Loc.T("overlay.prevCurrentTitle"),
+            [
+                new PaletteExportColor(Loc.T("color.previous"), Session.Previous.Argb),
+                new PaletteExportColor(Loc.T("color.current"), Session.Current.Argb),
+            ]));
 }

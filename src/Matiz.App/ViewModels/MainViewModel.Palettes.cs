@@ -56,6 +56,7 @@ public sealed partial class MainViewModel
                 foreach (var c in active.Colors) ActivePaletteColors.Add(new PaletteColorItem(c, OnPaletteColorRenamed));
             HasActiveColors = ActivePaletteColors.Count > 0;
             ExportActivePaletteImageCommand.NotifyCanExecuteChanged();
+            ExportActivePaletteOverlayCommand.NotifyCanExecuteChanged();
             ReloadPaletteToFreeCommand.NotifyCanExecuteChanged();
         }
         finally
@@ -229,6 +230,12 @@ public sealed partial class MainViewModel
     private void ExportActivePaletteImage()
     {
         if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportImage(PaletteExportModel.From(p));
+    }
+
+    [RelayCommand(CanExecute = nameof(HasActiveColors))]
+    private void ExportActivePaletteOverlay()
+    {
+        if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportOverlay(PaletteExportModel.From(p));
     }
 
     [RelayCommand]

@@ -1,42 +1,6 @@
-# palette-export Specification
+# Delta: palette-export
 
-## Purpose
-Lleva paletas y escalas a código y a imagen: formatos de texto extensibles listos para pegar en proyectos y una imagen PNG limpia para compartir.
-
-## Requirements
-
-### Requirement: Formatos de código para paletas
-El sistema SHALL copiar una paleta guardada o una paleta/escala generada en al menos: CSS variables, JSON, Dart/Flutter y C#; y en una fase posterior Tailwind. Los nombres de los colores SHALL convertirse a identificadores válidos de cada lenguaje (CSS kebab-case, JSON el nombre original, Dart camelCase, C# PascalCase); los colores sin nombre SHALL nombrarse `color1`, `color2`… según su posición. Los formatos SHALL ser extensibles mediante registro, sin modificar la UI.
-
-#### Scenario: CSS variables
-- **WHEN** la paleta contiene "Primary" `#5246BC` y "Secondary" `#FF8A00` y el usuario copia como CSS
-- **THEN** el portapapeles contiene:
-  ```
-  :root {
-    --primary: #5246BC;
-    --secondary: #FF8A00;
-  }
-  ```
-
-#### Scenario: JSON
-- **WHEN** la misma paleta se copia como JSON
-- **THEN** el portapapeles contiene un objeto JSON válido `{ "Primary": "#5246BC", "Secondary": "#FF8A00" }` (con indentación)
-
-#### Scenario: Dart/Flutter
-- **WHEN** la misma paleta se copia como Dart
-- **THEN** el resultado contiene `static const Color primary = Color(0xFF5246BC);` y `static const Color secondary = Color(0xFFFF8A00);` dentro de una clase con el nombre de la paleta en PascalCase
-
-#### Scenario: C#
-- **WHEN** la misma paleta se copia como C#
-- **THEN** el resultado contiene `public static readonly Color Primary = Color.FromArgb(255, 82, 70, 188);` dentro de una clase estática con el nombre de la paleta en PascalCase
-
-#### Scenario: Escala con pasos
-- **WHEN** el usuario copia la Design Scale con prefijo "Primary" como CSS
-- **THEN** el resultado contiene `--primary-50` … `--primary-950`
-
-#### Scenario: Nombres duplicados
-- **WHEN** dos colores producen el mismo identificador
-- **THEN** el segundo recibe un sufijo numérico (`primary-2`) y el resultado es código válido
+## MODIFIED Requirements
 
 ### Requirement: Exportar paleta como imagen PNG
 El sistema SHALL exportar una paleta a PNG mostrando el título de la paleta, grandes bloques de color y debajo de cada uno el nombre, HEX y RGB; opcionalmente HSL y CMYK. El usuario SHALL poder elegir orientación (horizontal/vertical), tamaño (escala 1×, 2× o 3×) y fondo (claro, oscuro o transparente), con vista previa antes de guardar. El texto SHALL ser legible sobre el fondo elegido. En el fondo transparente el PNG SHALL conservar canal alfa y el texto SHALL usar el estilo del modo claro.
@@ -56,6 +20,8 @@ El sistema SHALL exportar una paleta a PNG mostrando el título de la paleta, gr
 #### Scenario: Fondo transparente
 - **WHEN** el usuario elige fondo "Transparente" y guarda el PNG
 - **THEN** el PNG no tiene rectángulo de fondo (sus zonas de fondo tienen alfa 0) y título, valores y bordes conservan el estilo del modo claro
+
+## ADDED Requirements
 
 ### Requirement: Entrada de exportación por desplegable
 El botón de exportación de la paleta activa (icono de imagen + texto "Exportar") SHALL abrir un desplegable con exactamente dos opciones: **"Paleta"** (mismo logo) y **"Superpuestos"**. "Paleta" SHALL abrir la ventana clásica de exportación a PNG; "Superpuestos" SHALL abrir la ventana de exportación de superpuestos de la paleta. El atajo `Ctrl+E` SHALL seguir abriendo la exportación "Paleta".

@@ -13,13 +13,15 @@ public sealed record PaletteImageOptions(
     bool Horizontal = true,
     int Scale = 2,
     bool DarkBackground = false,
+    bool Transparent = false,
     bool ShowHsl = false,
     bool ShowCmyk = false);
 
 /// <summary>
 /// Compone la imagen de una paleta (título, bloques de color, nombre, HEX, RGB y opcionalmente HSL/CMYK)
 /// con DrawingVisual y la rasteriza a escala entera. Los bloques se dibujan sin antialiasing: el centro
-/// de cada bloque tiene exactamente el color de la paleta.
+/// de cada bloque tiene exactamente el color de la paleta. Con Transparent no se dibuja el fondo
+/// (el PNG conserva canal alfa) y el texto usa el estilo del modo claro.
 /// </summary>
 public static class PaletteImageRenderer
 {
@@ -61,7 +63,7 @@ public static class PaletteImageRenderer
 
         using (var dc = visual.RenderOpen())
         {
-            dc.DrawRectangle(new SolidColorBrush(bg), null, new Rect(size));
+            if (!o.Transparent) dc.DrawRectangle(new SolidColorBrush(bg), null, new Rect(size));
             dc.DrawText(Text(palette.Name, Title, 28, fg), new Point(Pad, Pad - 4));
 
             var lines = Lines(o);

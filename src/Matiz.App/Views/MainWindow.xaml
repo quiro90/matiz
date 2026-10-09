@@ -51,6 +51,25 @@
             </ContextMenu.ItemContainerStyle>
         </ContextMenu>
 
+        <ContextMenu x:Key="ExportPaletteMenu">
+            <MenuItem Command="{Binding DataContext.ExportActivePaletteImageCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xEB9F;" FontFamily="{StaticResource IconFont}"/>
+                </MenuItem.Icon>
+                <MenuItem.Header>
+                    <TextBlock Text="{loc:Loc palette.exportImageItem}"/>
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding DataContext.ExportActivePaletteOverlayCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE899;" FontFamily="{StaticResource IconFont}"/>
+                </MenuItem.Icon>
+                <MenuItem.Header>
+                    <TextBlock Text="{loc:Loc palette.exportOverlayItem}"/>
+                </MenuItem.Header>
+            </MenuItem>
+        </ContextMenu>
+
         <!-- Icono de captura (mira) -->
         <Geometry x:Key="CrosshairGeometry">M8,1 V5 M8,11 V15 M1,8 H5 M11,8 H15 M8,3.2 A4.8,4.8 0 1 1 7.99,3.2 Z</Geometry>
     </Window.Resources>
@@ -347,6 +366,7 @@
                                     </StackPanel>
                                 </Button>
                                 <Button Content="{loc:Loc color.addToPalette}" Command="{Binding AddCurrentToPaletteCommand}" Margin="0,0,6,6" ToolTip="{loc:Loc color.addToPalette.tooltip}"/>
+                                <Button Content="{loc:Loc export.overlay}" Command="{Binding ExportCurrentPreviousOverlayCommand}" Margin="0,0,6,6" ToolTip="{loc:Loc overlay.button.tooltip}"/>
                             </WrapPanel>
                         </StackPanel>
                     </ScrollViewer>
@@ -636,10 +656,11 @@
                                 <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding ExportActivePaletteImageCommand}" ToolTip="{loc:Loc palette.export.tooltip}">
+                        <Button Click="OpenMenu_Click" ContextMenu="{StaticResource ExportPaletteMenu}" ToolTip="{loc:Loc palette.export.tooltip}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xEB9F;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBlock Text="PNG" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc palette.export}" VerticalAlignment="Center"/>
+                                <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>

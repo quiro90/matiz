@@ -565,6 +565,56 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   <data name="export.copyFailed" xml:space="preserve">
     <value>No se pudo copiar: el portapapeles está ocupado.</value>
   </data>
+  <data name="export.transparent" xml:space="preserve">
+    <value>Transparente</value>
+  </data>
+  <data name="palette.export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="palette.exportImageItem" xml:space="preserve">
+    <value>Paleta</value>
+  </data>
+  <data name="palette.exportOverlayItem" xml:space="preserve">
+    <value>Superpuestos</value>
+  </data>
+  <data name="export.overlay" xml:space="preserve">
+    <value>Exportar superpuestos</value>
+  </data>
+
+  <!-- overlay export window -->
+  <data name="overlay.windowTitle" xml:space="preserve">
+    <value>Exportar paleta como superpuestos</value>
+  </data>
+  <data name="overlay.shape" xml:space="preserve">
+    <value>FORMA</value>
+  </data>
+  <data name="overlay.shape.square" xml:space="preserve">
+    <value>Cuadrado</value>
+  </data>
+  <data name="overlay.shape.circle" xml:space="preserve">
+    <value>Círculo</value>
+  </data>
+  <data name="overlay.shape.triangle" xml:space="preserve">
+    <value>Triángulo</value>
+  </data>
+  <data name="overlay.order" xml:space="preserve">
+    <value>ORDEN</value>
+  </data>
+  <data name="overlay.order.forward" xml:space="preserve">
+    <value>Primero → último</value>
+  </data>
+  <data name="overlay.order.reverse" xml:space="preserve">
+    <value>Último → primero</value>
+  </data>
+  <data name="overlay.saveDialog" xml:space="preserve">
+    <value>Guardar superpuestos como PNG</value>
+  </data>
+  <data name="overlay.prevCurrentTitle" xml:space="preserve">
+    <value>Anterior y actual</value>
+  </data>
+  <data name="overlay.button.tooltip" xml:space="preserve">
+    <value>Exporta la dupla anterior/actual como superpuestos apilados</value>
+  </data>
 
   <!-- dialogs -->
   <data name="dialogs.openImage.title" xml:space="preserve">

@@ -94,6 +94,12 @@ public partial class MainWindow : Window, IShell
         w.ShowDialog();
     }
 
+    public void ShowExportOverlay(PaletteExportModel palette)
+    {
+        var w = new ExportOverlayWindow(palette, _theme) { Owner = this };
+        w.ShowDialog();
+    }
+
     public void OpenFolder(string path)
     {
         Directory.CreateDirectory(path);

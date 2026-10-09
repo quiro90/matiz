@@ -565,6 +565,56 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   <data name="export.copyFailed" xml:space="preserve">
     <value>Could not copy: the clipboard is busy.</value>
   </data>
+  <data name="export.transparent" xml:space="preserve">
+    <value>Transparent</value>
+  </data>
+  <data name="palette.export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="palette.exportImageItem" xml:space="preserve">
+    <value>Palette</value>
+  </data>
+  <data name="palette.exportOverlayItem" xml:space="preserve">
+    <value>Overlays</value>
+  </data>
+  <data name="export.overlay" xml:space="preserve">
+    <value>Export overlays</value>
+  </data>
+
+  <!-- overlay export window -->
+  <data name="overlay.windowTitle" xml:space="preserve">
+    <value>Export palette as overlays</value>
+  </data>
+  <data name="overlay.shape" xml:space="preserve">
+    <value>SHAPE</value>
+  </data>
+  <data name="overlay.shape.square" xml:space="preserve">
+    <value>Square</value>
+  </data>
+  <data name="overlay.shape.circle" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="overlay.shape.triangle" xml:space="preserve">
+    <value>Triangle</value>
+  </data>
+  <data name="overlay.order" xml:space="preserve">
+    <value>ORDER</value>
+  </data>
+  <data name="overlay.order.forward" xml:space="preserve">
+    <value>First → last</value>
+  </data>
+  <data name="overlay.order.reverse" xml:space="preserve">
+    <value>Last → first</value>
+  </data>
+  <data name="overlay.saveDialog" xml:space="preserve">
+    <value>Save overlays as PNG</value>
+  </data>
+  <data name="overlay.prevCurrentTitle" xml:space="preserve">
+    <value>Previous and current</value>
+  </data>
+  <data name="overlay.button.tooltip" xml:space="preserve">
+    <value>Export the previous/current pair as stacked overlays</value>
+  </data>
 
   <!-- dialogs -->
   <data name="dialogs.openImage.title" xml:space="preserve">

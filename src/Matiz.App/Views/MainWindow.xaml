@@ -242,18 +242,28 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.ColumnSpan="2" CornerRadius="8" Background="{StaticResource CheckerBrush}" Visibility="{Binding HasAlpha, Converter={StaticResource BoolToVis}}"/>
-                                <Button Style="{StaticResource SwatchButton}" Background="{Binding PreviousBrush}" Command="{Binding RestorePreviousCommand}"
-                                        ToolTip="{loc:Loc color.previous.tooltip}" AutomationProperties.Name="{loc:Loc color.previous.automation}">
-                                    <StackPanel VerticalAlignment="Bottom" Margin="8,0,0,8">
-                                        <TextBlock Text="{loc:Loc color.previous}" FontSize="10.5" Foreground="{Binding PreviousForeground}" Opacity="0.8"/>
-                                        <TextBlock Text="{Binding PreviousHex}" FontSize="11" FontFamily="{StaticResource MonoFont}" Foreground="{Binding PreviousForeground}"/>
-                                    </StackPanel>
-                                </Button>
+                                <Grid>
+                                    <Button Style="{StaticResource SwatchButton}" Background="{Binding PreviousBrush}" Command="{Binding RestorePreviousCommand}"
+                                            ToolTip="{loc:Loc color.previous.tooltip}" AutomationProperties.Name="{loc:Loc color.previous.automation}">
+                                        <StackPanel VerticalAlignment="Bottom" Margin="8,0,0,8">
+                                            <TextBlock Text="{loc:Loc color.previous}" FontSize="10.5" Foreground="{Binding PreviousForeground}" Opacity="0.8"/>
+                                            <TextBlock Text="{Binding PreviousHex}" FontSize="11" FontFamily="{StaticResource MonoFont}" Foreground="{Binding PreviousForeground}"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding PreviousForeground}" Width="18" Height="18" FontSize="10"
+                                            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
+                                            Command="{Binding CopyPreviousHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                </Grid>
                                 <Border Grid.Column="1" Background="{Binding CurrentBrush}" CornerRadius="0,8,8,0" BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,1,1">
-                                    <StackPanel VerticalAlignment="Bottom" Margin="12,0,0,10">
-                                        <TextBlock Text="{loc:Loc color.current}" FontSize="10.5" Foreground="{Binding CurrentForeground}" Opacity="0.8"/>
-                                        <TextBlock Text="{Binding CurrentHex}" FontSize="20" FontWeight="SemiBold" FontFamily="{StaticResource MonoFont}" Foreground="{Binding CurrentForeground}"/>
-                                    </StackPanel>
+                                    <Grid>
+                                        <StackPanel VerticalAlignment="Bottom" Margin="12,0,0,10">
+                                            <TextBlock Text="{loc:Loc color.current}" FontSize="10.5" Foreground="{Binding CurrentForeground}" Opacity="0.8"/>
+                                            <TextBlock Text="{Binding CurrentHex}" FontSize="20" FontWeight="SemiBold" FontFamily="{StaticResource MonoFont}" Foreground="{Binding CurrentForeground}"/>
+                                        </StackPanel>
+                                        <Button Style="{StaticResource SmallIconButton}" Content="&#xE8C8;" Foreground="{Binding CurrentForeground}" Width="18" Height="18" FontSize="10"
+                                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0"
+                                                Command="{Binding CopyHexCommand}" ToolTip="{loc:Loc swatch.copyHex}" AutomationProperties.Name="{loc:Loc swatch.copyHex}"/>
+                                    </Grid>
                                 </Border>
                             </Grid>
 

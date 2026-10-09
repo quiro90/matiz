@@ -138,4 +138,11 @@ public sealed partial class MainViewModel
 
     [RelayCommand]
     private void CopyHex() => Copy(ColorFormats.Hex(Session.Current.Argb, FormatOptions), Session.Current.Argb);
+
+    [RelayCommand]
+    private void CopyPreviousHex()
+    {
+        var p = Session.Previous.Argb;
+        Copy(p.IsOpaque ? ColorFormats.Hex(p, FormatOptions) : ColorFormats.ArgbHex(p, FormatOptions), p);
+    }
 }

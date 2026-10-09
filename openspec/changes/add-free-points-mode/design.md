@@ -29,7 +29,7 @@ Ver proposal.md — Why. Implementación actual relevante (leída del código):
 
 3. **Máximo de secundarios: 16** (constant `MaxFreePoints = 16` en el VM; el generador no la conoce). Decisión del usuario (16 u opciones ~"no infinito"); con 16 sigue siendo una fila usable (la Escala ya muestra 11). "CanExecute" del "+" y guardia en click derecho bloquean el 17.º.
 
-4. **Punto nuevo con "+" en (Δhue 180°, Δsat 0)**: opuesto al principal. Alternativa descartada: mismo lugar que el principal — un punto nuevo queda tapado bajo el marcador principal y parece "no haber pasado nada".
+4. **Punto nuevo con "+": opuesto si no hay secundarios, si no al lado del último**: (Δhue 180°, Δsat 0) cuando el conjunto no tiene aún puntos; en caso contrario hue +30° por paso hasta quedar separado (≥10°) de todo punto existente y del principal, conservando el Δsat del último. Así varios "+" consecutivos producen puntos visibles y movibles en vez de apilarse en el mismo hue. Alternativas descartadas: mismo lugar que el principal — un punto nuevo queda tapado bajo el marcador principal y parece "no haber pasado nada"; siempre opuesto — en Libre se apilan todos en 180° y en Complementaria solapa con el punto canónico. (*Ajuste tras implementación, feedback del usuario*.)
 
 5. **Conversión Armonías → Libre reemplaza el conjunto.** Acciones que parten de una armonía ("+" o arrastre de punto, o click derecho estando en Armonías) definen el conjunto libre desde la figura actual: Δhue = ángulo canónico de cada punto (Δsat 0), y en el arrastre el punto movido toma el Δ derivado de la posición final absoluta; el punto nuevo del "+" va opuesto al principal. Se **reemplaza** el conjunto libre previo para que Libre siempre muestre la figura que el usuario estaba viendo en Armonías. *Alternativa descartada*: sumar los puntos previos — Libre mostraría una mezcla confusa (p. ej. una triádica + 7 puntos viejos) y crece sin control. En Monocromática la conversión lleva solo el principal (sus colores comparten posición en la rueda: llevarlos apilariaría 4 puntos en el mismo sitio).
 
@@ -61,4 +61,4 @@ Sin migración de datos: nada persiste (los desfases viejos tampoco persistían)
 
 ## Open Questions
 
-Ninguna material: el límite (16) y los defaults (punto nuevo opuesto, "−" por hover, "Equilibrar" en Libre, Extraídas tras Libre) los confirmó el usuario; la semántica de reemplazo al convertir desde Armonías queda documentada como decisión 5 — reversible en revisión si el usuario prefiere acumular.
+Ninguna material: el límite (16) y los defaults (punto nuevo opuesto —o junto al último si ya hay puntos—, "−" por hover, "Equilibrar" en Libre, Extraídas tras Libre) los confirmó el usuario; la semántica de reemplazo al convertir desde Armonías queda documentada como decisión 5 — reversible en revisión si el usuario prefiere acumular.

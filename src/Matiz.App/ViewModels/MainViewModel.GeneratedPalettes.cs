@@ -184,15 +184,46 @@ public sealed partial class MainViewModel
 
     private bool CanAddFreePoint() => GeneratedTab == GeneratedTab.Harmony || _freeOffsets.Count < MaxFreePoints;
 
-    /// <summary>Botón "+": añade un punto opuesto al principal; en Armonías además convierte la armonía a Libre.</summary>
+    /// <summary>Botón "+": añade un punto opuesto al principal si aún no hay secundarios y, si los hay, al lado del último; en Armonías además convierte la armonía a Libre.</summary>
     [RelayCommand(CanExecute = nameof(CanAddFreePoint))]
     private void AddFreePoint()
     {
         if (GeneratedTab == GeneratedTab.Harmony) ConvertHarmonyToFree(null);
         else if (GeneratedTab != GeneratedTab.Free) return;
-        if (_freeOffsets.Count < MaxFreePoints) _freeOffsets.Add((180.0, 0.0));
+        if (_freeOffsets.Count < MaxFreePoints) _freeOffsets.Add(NextAddPointPosition());
         RefreshGenerated();
         AddFreePointCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// Posición del punto que añade el botón "+": opuesto al principal si el conjunto no tiene aún
+    /// secundarios; en caso contrario, al lado del último añadido (hue +30° por paso, conservando su
+    /// saturación) hasta no solaparse con ningún punto existente ni con el principal.
+    /// </summary>
+    private (double HueDelta, double SatDelta) NextAddPointPosition()
+    {
+        if (_freeOffsets.Count == 0) return (180.0, 0.0);
+        var (hue, sat) = _freeOffsets[^1];
+        for (var i = 0; i < 12; i++)
+        {
+            hue = ColorMath.NormalizeHue(hue + 30.0);
+            if (IsFreePosition(hue)) return (hue, sat);
+        }
+        return (ColorMath.NormalizeHue(hue + 30.0), sat);
+    }
+
+    private bool IsFreePosition(double hueDelta)
+    {
+        if (AngularDistance(hueDelta, 0) < 10.0) return false;
+        foreach (var o in _freeOffsets)
+            if (AngularDistance(o.HueDelta, hueDelta) < 10.0) return false;
+        return true;
+    }
+
+    private static double AngularDistance(double a, double b)
+    {
+        var d = Math.Abs(ColorMath.NormalizeHue(a - b));
+        return d > 180 ? 360 - d : d;
     }
 
     /// <summary>Click derecho en la rueda: añade un punto libre en esa posición desde cualquier pestaña y pasa a Libre.</summary>

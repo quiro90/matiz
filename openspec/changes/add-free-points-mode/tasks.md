@@ -7,20 +7,22 @@
 
 ## 2. Conversión Armonías → Libre
 
-- [ ] 2.1 Al arrastrar un punto en Armonías (`SetWheelMarkerOffset` → conversión): construir los Δ de la armonía actual (ángulo canónico por punto, Δsat 0; el punto arrastrado con el Δ derivado de su posición final; Monocromática lleva solo el principal), reemplazar `_freeOffsets` y pasar `GeneratedTab = Free` en el primer evento de arrastre, conservando el orden de marcadores para que la captura del drag continúe en Libre. Verificación manual: en Armonías-triádica con `#5246BC`, arrastrar el punto +120° → la pestaña pasa a Libre, el punto sigue al cursor y al soltar queda el base + 120° canónico + posición arrastrada, sin cambio del color actual
-- [ ] 2.2 El botón "+" (comando `AddFreePoint`) cuando `GeneratedTab == Harmony` reemplaza el conjunto libre por la armonía canónica + punto opuesto; cuando `GeneratedTab == Free` solo suma el punto; en Escala/Tints/Neutros/Extraídas no se muestra el botón (solo rige el click derecho). Verificación manual: "+" desde triádica produce base + 2 canónicos + 1 opuesto en Libre; "+" desde Libre con 3 secundarios suma un 4.º sin tocar los anteriores
+- [x] 2.1 Al arrastrar un punto en Armonías (`SetWheelMarkerOffset` → conversión): construir los Δ de la armonía actual (ángulo canónico por punto, Δsat 0; el punto arrastrado con el Δ derivado de su posición final; Monocromática lleva solo el principal), reemplazar `_freeOffsets` y pasar `GeneratedTab = Free` en el primer evento de arrastre, conservando el orden de marcadores para que la captura del drag continúe en Libre. Verificación manual: en Armonías-triádica con `#5246BC`, arrastrar el punto +120° → la pestaña pasa a Libre, el punto sigue al cursor y al soltar queda el base + 120° canónico + posición arrastrada, sin cambio del color actual
+- [x] 2.2 El botón "+" (comando `AddFreePoint`) cuando `GeneratedTab == Harmony` reemplaza el conjunto libre por la armonía canónica + punto opuesto; cuando `GeneratedTab == Free` solo suma el punto; en Escala/Tints/Neutros/Extraídas no se muestra el botón (solo rige el click derecho). Verificación manual: "+" desde triádica produce base + 2 canónicos + 1 opuesto en Libre; "+" desde Libre con 3 secundarios suma un 4.º sin tocar los anteriores
+
+- [x] 2.3 Ajuste post-implementación (feedback): el "+" ya no apila los puntos — el nuevo punto se coloca opuesto al principal si no hay secundarios y, si los hay, al lado del último (avanza el hue 30° por paso hasta quedar separado de todo punto existente y del principal, conservando su saturación relativa). Spec, design y docs actualizados.
 
 ## 3. UI de la rueda
 
 - [x] 3.1 `ColorWheel`: quitar `MarkerResetCommand` y el manejo de doble click sobre marcadores; añadir comando `AddPointAtCommand` disparado en `MouseRightButtonDown` (proyección cursor → hue/sat con clamp al disco, misma matemática de `ExecuteMarkerDrag`; ignorar si hay captura de arrastre activa); el click derecho en otras posiciones no abre menús. Verificación manual: click derecho en cada pestaña (Escala, Tints/Shades, Neutros, Armonías, Libre, Extraídas) añade un punto y cambia a Libre; doble click sobre un punto no hace nada
-- [ ] 3.2 Toast de selección en Libre: click en un punto muestra "{n} · {hex}" (sin nombre de armonía) con acción Copiar; en Armonías sigue mostrando el nombre de la armonía. Verificación manual de ambos toast
+- [x] 3.2 Toast de selección en Libre: click en un punto muestra "{n} · {hex}" (sin nombre de armonía) con acción Copiar; en Armonías sigue mostrando el nombre de la armonía. Verificación manual de ambos toast
 
 ## 4. UI del panel de paletas
 
 - [x] 4.1 Reordenar las pestañas en `MainWindow.xaml` a Escala · Tints/Shades · Neutros · Armonías · Libre · Extraídas (condicional) y la nueva clave `gen.tab.free` en el RadioButton de Libre. Verificar: orden observable con y sin colores extraídos
 - [x] 4.2 Fila de opciones común para Armonías y Libre: `DockPanel` visible en ambas; `HarmonyList` solo en Armonías; switch "Equilibrar" en ambas (mismo binding `HarmonyBalanceLightness`); botón "+" (`ChipButton`, icono E710, tooltip `gen.addPoint`, deshabilitado con 16 puntos); sin botón "Restaurar". Verificar visualmente ambas pestañas y que Equilibrar altere los colores de Libre
 - [x] 4.3 Botón "−" en la plantilla de tarjetas (`SmallIconButton`, icono E738, esquina inferior derecha, tooltip `swatch.removePoint`): visible solo al pasar el mouse, solo en la pestaña Libre (`DataTrigger` sobre `GeneratedTab`) y solo cuando el conjunto tiene ≥ 2 colores; comando `RemoveFreePointCommand` con el `SwatchItem` como parámetro. Verificar los 3 escenarios de "Quitar puntos en Libre": secundario, promoción del siguiente con posiciones absolutas intactas, y sin "−" cuando hay un solo color
-- [ ] 4.4 Toast/copias de promoción no deben romper la fila de recientes ni el color anterior (verificar "Anterior" muestra el color previo tras promover). Verificación manual
+- [x] 4.4 Toast/copias de promoción no deben romper la fila de recientes ni el color anterior (verificar "Anterior" muestra el color previo tras promover). Verificación manual
 
 ## 5. Localización
 
@@ -29,5 +31,5 @@
 ## 6. Validación final
 
 - [x] 6.1 `dotnet test` en `Matiz.Core.Tests` verde con los tests de `FreePoints` agregados
-- [ ] 6.2 Recorrido manual de los escenarios de spec (checklist): orden de pestañas; click derecho desde cada pestaña; "+" en Armonías/Libre (y deshabilitado en 16); conversión desde triádica por drag y por "+" con reemplazo del conjunto; arrastre de punto libre con seguimiento rígido del principal (rueda, brillo, historial, undo); Equilibrar en Libre; borrar secundario; promover al siguiente; protección del último color; reinicio de app → Libre solo principal
+- [x] 6.2 Recorrido manual de los escenarios de spec (checklist): orden de pestañas; click derecho desde cada pestaña; "+" en Armonías/Libre (y deshabilitado en 16); conversión desde triádica por drag y por "+" con reemplazo del conjunto; arrastre de punto libre con seguimiento rígido del principal (rueda, brillo, historial, undo); Equilibrar en Libre; borrar secundario; promover al siguiente; protección del último color; reinicio de app → Libre solo principal
 - [x] 6.3 Verificar que el resto de la app sigue intacto: armonías canónicas (test de geometría existente), tarjetas de Escala/Tints/Neutros sin cambios, exportación y "Agregar todo" funcionan en Libre

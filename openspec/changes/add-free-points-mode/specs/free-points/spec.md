@@ -24,7 +24,7 @@ La pestaña "Libre" SHALL mostrar un conjunto de colores formado por el color pr
 - **THEN** el conjunto sigue intacto: los puntos están en las mismas posiciones relativas respecto del nuevo principal, trasladados con él
 
 ### Requirement: Añadir puntos secundarios
-El sistema SHALL permitir añadir puntos secundarios desde cualquier pestaña: el click derecho sobre la rueda cromática SHALL añadir un punto en la posición del cursor (hue/saturación) y pasar automáticamente a la pestaña Libre; y el botón "+" discreto —junto a "Equilibrar", abajo a la derecha de los colores—, visible en las pestañas Armonías y Libre, SHALL añadir un punto opuesto al principal (Δhue 180°, Δsat 0) y pasar automáticamente a Libre (si ya se está en Libre no cambia de pestaña). Al añadir desde Escala, Tints/Shades, Neutros o Libre el nuevo punto SHALL sumarse al conjunto libre existente. Al añadir desde Armonías —click derecho o "+"— el conjunto libre SHALL definirse a partir de la armonía actual: el base, un punto por cada color de la armonía en su posición canónica (Δhue = ángulo de la armonía, Δsat 0) y el punto nuevo; en Monocromática (posiciones coincidentes en la rueda) SHALL llevarse solo el principal. Al pasar desde Armonías SHALL reemplazarse el conjunto libre previo. La cantidad de secundarios SHALL limitarse a 16: al alcanzarlo el botón "+" SHALL verse deshabilitado y el click derecho SHALL no añadir más.
+El sistema SHALL permitir añadir puntos secundarios desde cualquier pestaña: el click derecho sobre la rueda cromática SHALL añadir un punto en la posición del cursor (hue/saturación) y pasar automáticamente a la pestaña Libre; y el botón "+" discreto —junto a "Equilibrar", abajo a la derecha de los colores—, visible en las pestañas Armonías y Libre, SHALL añadir un punto opuesto al principal (Δhue 180°, Δsat 0) cuando el conjunto no tenga aún secundarios y, en caso contrario, SHALL añadirlo al lado del último punto del conjunto (hue a 30° del último, avanzando por pasos hasta una posición no ocupada por otro punto ni por el principal y conservando su saturación relativa) para que pulsaciones consecutivas del "+" no se solapen, y pasar automáticamente a Libre (si ya se está en Libre no cambia de pestaña). Al añadir desde Escala, Tints/Shades, Neutros o Libre el nuevo punto SHALL sumarse al conjunto libre existente. Al añadir desde Armonías —click derecho o "+"— el conjunto libre SHALL definirse a partir de la armonía actual: el base, un punto por cada color de la armonía en su posición canónica (Δhue = ángulo de la armonía, Δsat 0) y el punto nuevo; en Monocromática (posiciones coincidentes en la rueda) SHALL llevarse solo el principal. Al pasar desde Armonías SHALL reemplazarse el conjunto libre previo. La cantidad de secundarios SHALL limitarse a 16: al alcanzarlo el botón "+" SHALL verse deshabilitado y el click derecho SHALL no añadir más.
 
 #### Scenario: Click derecho desde Escala
 - **WHEN** estando en Escala con color hue 246.1° el usuario hace click derecho sobre la rueda en hue 66.1°, saturación 63%
@@ -34,9 +34,13 @@ El sistema SHALL permitir añadir puntos secundarios desde cualquier pestaña: e
 - **WHEN** en Libre con principal hue 246.1°, S 63% el usuario pulsa "+"
 - **THEN** aparece un punto secundario opuesto (hue 66.1°, S 63%) y la pestaña sigue siendo Libre
 
+#### Scenario: Otros "+" se colocan al lado del último
+- **WHEN** en Libre ya hay un secundario en Δhue 180° y el usuario pulsa "+" dos veces más
+- **THEN** se añaden puntos a ~210° y ~240° (al lado del último, sin solaparse con los anteriores ni con el principal), todos con su tarjeta y arrastrables
+
 #### Scenario: "+" en Armonías convierte la armonía
 - **WHEN** en Armonías con "Triádica" y color `#5246BC` el usuario pulsa "+"
-- **THEN** Libre contiene el base `#5246BC`, dos puntos en +120° y +240° con la saturación del base y un punto nuevo opuesto al principal; la tarjeta base conserva su indicador
+- **THEN** Libre contiene el base `#5246BC`, dos puntos en +120° y +240° con la saturación del base y un punto nuevo al lado del último (+270°), sin solaparse con los anteriores; la tarjeta base conserva su indicador
 
 #### Scenario: Reemplazo del conjunto previo al convertir una armonía
 - **WHEN** Libre ya tiene 3 secundarios y en Armonías el usuario pulsa "+" o arrastra un punto

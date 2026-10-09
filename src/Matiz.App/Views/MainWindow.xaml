@@ -612,7 +612,8 @@
                 </Grid.RowDefinitions>
                 <Grid>
                     <TextBlock Text="{loc:Loc library.title}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                    <Button Style="{StaticResource IconButton}" Content="&#xE711;" HorizontalAlignment="Right" Command="{Binding EscapeCommand}" ToolTip="{loc:Loc common.close.esc}" AutomationProperties.Name="{loc:Loc common.close}"/>
+                    <Button Style="{StaticResource IconButton}" Content="&#xE711;" HorizontalAlignment="Right" Command="{Binding EscapeCommand}" ToolTip="{loc:Loc common.close.esc}" AutomationProperties.Name="{loc:Loc common.close}"
+                            WindowChrome.IsHitTestVisibleInChrome="True"/>
                 </Grid>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,10">
                     <Button Style="{StaticResource PrimaryButton}" Content="{loc:Loc library.new}" Command="{Binding NewPaletteCommand}" Margin="0,0,6,0" ToolTip="{loc:Loc library.new.tooltip}"/>
@@ -658,7 +659,8 @@
                 <StackPanel>
                     <Grid Margin="0,0,0,8">
                         <TextBlock Text="{loc:Loc settings.title}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" HorizontalAlignment="Right" Command="{Binding EscapeCommand}" ToolTip="{loc:Loc common.close.esc}" AutomationProperties.Name="{loc:Loc common.close}"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" HorizontalAlignment="Right" Command="{Binding EscapeCommand}" ToolTip="{loc:Loc common.close.esc}" AutomationProperties.Name="{loc:Loc common.close}"
+                                WindowChrome.IsHitTestVisibleInChrome="True"/>
                     </Grid>
 
                     <TextBlock Style="{StaticResource Muted}" FontSize="11.5" LineHeight="19" Margin="0,2,0,6" TextWrapping="Wrap">
@@ -667,7 +669,7 @@
 
                     <!-- Apoyar el proyecto: Cafecito (imagen oficial del botón) y PayPal (estilo del vínculo de pago) -->
                     <TextBlock Text="{loc:Loc settings.support.hint}" Style="{StaticResource Muted}" FontSize="11.5" Margin="0,8,0,3" HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                         <Button Style="{StaticResource GhostButton}" Padding="0"
                                 Click="ExternalLinkButton_Click" Tag="https://cafecito.app/juanquiroga"
                                 AutomationProperties.Name="{loc:Loc settings.support.cafecito}" ToolTip="{loc:Loc settings.support.cafecito}">

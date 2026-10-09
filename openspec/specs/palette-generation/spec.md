@@ -13,7 +13,7 @@ El sistema SHALL generar a partir del color actual: Complementaria (2), Análoga
 - **THEN** se muestran 3 colores: el base y dos con hue OKLCH rotado +120° y +240°
 
 ### Requirement: Armonías en espacio perceptual
-Las armonías por rotación de hue SHALL calcularse girando el hue **del selector (rueda HSV)** exactamente el ángulo de la armonía y conservando la saturación del color base, a partir de las coordenadas continuas del color actual (no del HEX redondeado), de modo que sus posiciones en la rueda formen la figura geométrica exacta para cualquier brillo. Con la opción "Luminosidad equilibrada" activa (por defecto), el brillo de cada color SHALL ajustarse para que su luminosidad perceptual (OKLab L) coincida con la del color base; si no es alcanzable, SHALL usarse el brillo más cercano posible (100% o 0%). Con la opción desactivada, todos los colores SHALL conservar el brillo del base. Todos los colores resultantes SHALL ser sRGB válidos.
+Las armonías por rotación de hue SHALL calcularse girando el hue **del selector (rueda HSV)** exactamente el ángulo de la armonía y conservando la saturación del color base, a partir de las coordenadas continuas del color actual (no del HEX redondeado), de modo que sus posiciones en la rueda formen la figura geométrica exacta para cualquier brillo. Con la opción "Equilibrar" activa (por defecto), el brillo de cada color SHALL ajustarse para que su luminosidad perceptual (OKLab L) coincida con la del color base; si no es alcanzable, SHALL usarse el brillo más cercano posible (100% o 0%). Con la opción desactivada, todos los colores SHALL conservar el brillo del base. Todos los colores resultantes SHALL ser sRGB válidos.
 
 #### Scenario: Geometría exacta
 - **WHEN** el color actual es hue 246.1°, S 63%, B 74% y se genera una triádica
@@ -23,12 +23,12 @@ Las armonías por rotación de hue SHALL calcularse girando el hue **del selecto
 - **WHEN** el usuario baja el brillo del color base de 74% a 15%
 - **THEN** los hue y la saturación de los colores de la armonía no cambian; solo cambia su brillo
 
-#### Scenario: Luminosidad equilibrada
-- **WHEN** "Luminosidad equilibrada" está activa y la luminosidad del base es alcanzable para un color de la armonía
+#### Scenario: Equilibrar activa
+- **WHEN** "Equilibrar" está activa y la luminosidad del base es alcanzable para un color de la armonía
 - **THEN** su OKLab L difiere de la del base en menos de 0.01
 
 #### Scenario: Sin equilibrar
-- **WHEN** "Luminosidad equilibrada" está desactivada
+- **WHEN** "Equilibrar" está desactivada
 - **THEN** todos los colores de la armonía tienen el mismo brillo (HSV V) que el base
 
 #### Scenario: Resultado en gama
@@ -115,7 +115,7 @@ Con la pestaña Armonías activa, la rueda SHALL mostrar, además del marcador p
 - **THEN** el arrastre mueve el color actual (rueda y brillo) como en el comportamiento sin puntos y ningún punto de la armonía se ajusta
 
 ### Requirement: Desfases personalizados de la armonía
-Cada punto de la armonía SHALL admitir un desfase personalizado, expresado como incremento de hue (grados) y de saturación (fracción) respecto de su posición canónica. El color del punto SHALL recalcularse a partir de las coordenadas personalizadas con la misma regla de brillo vigente (opción "Luminosidad equilibrada") y SHALL ser sRGB válido. Los desfases SHALL conservarse al mover el marcador principal y al activar un color generado como principal (click sobre su tarjeta): los puntos SHALL seguir trasladando la figura rígida de la armonía al nuevo base (armonía personalizada). Los desfases SHALL reiniciarse a la posición canónica cuando el color actual cambia por cualquier otra vía (historial, captura, imagen, entrada manual, deshacer/rehacer), cuando el usuario cambia el tipo de armonía y al iniciar la aplicación; los desfases no SHALL persistirse entre sesiones. La pestaña Armonías SHALL ofrecer un botón "Restaurar armonía" —junto a "Luminosidad equilibrada", visible solo mientras existan desfases personalizados— que SHALL restablecer todos los puntos a la armonía canónica; esta restauración no es deshacible (deshacer/rehacer cubren solo el color actual). La saturación personalizada SHALL limitarse al rango [0, 1] y el punto SHALL permanecer dentro del disco de la rueda.
+Cada punto de la armonía SHALL admitir un desfase personalizado, expresado como incremento de hue (grados) y de saturación (fracción) respecto de su posición canónica. El color del punto SHALL recalcularse a partir de las coordenadas personalizadas con la misma regla de brillo vigente (opción "Equilibrar") y SHALL ser sRGB válido. Los desfases SHALL conservarse al mover el marcador principal y al activar un color generado como principal (click sobre su tarjeta): los puntos SHALL seguir trasladando la figura rígida de la armonía al nuevo base (armonía personalizada). Los desfases SHALL reiniciarse a la posición canónica cuando el color actual cambia por cualquier otra vía (historial, captura, imagen, entrada manual, deshacer/rehacer), cuando el usuario cambia el tipo de armonía y al iniciar la aplicación; los desfases no SHALL persistirse entre sesiones. La pestaña Armonías SHALL ofrecer un botón "Restaurar" —junto a "Equilibrar", visible solo mientras existan desfases personalizados— que SHALL restablecer todos los puntos a la armonía canónica; esta restauración no es deshacible (deshacer/rehacer cubren solo el color actual). La saturación personalizada SHALL limitarse al rango [0, 1] y el punto SHALL permanecer dentro del disco de la rueda.
 
 #### Scenario: Seguimiento rígido al mover el principal
 - **WHEN** el punto de +120° tiene un desfase personalizado de +10° de hue y el usuario gira el marcador principal 5°
@@ -129,8 +129,8 @@ Cada punto de la armonía SHALL admitir un desfase personalizado, expresado como
 - **WHEN** el punto de +120° tiene desfase personalizado y el usuario hace click sobre la muestra de su tarjeta
 - **THEN** ese color pasa a ser el color actual como cambio confirmado, el desfase se conserva y los demás puntos quedan trasladados a la figura rígida respecto del nuevo base
 
-#### Scenario: Restaurar armonía con el botón
-- **WHEN** hay puntos con desfase personalizado y el usuario activa el botón "Restaurar armonía"
+#### Scenario: Restaurar con el botón
+- **WHEN** hay puntos con desfase personalizado y el usuario activa el botón "Restaurar"
 - **THEN** todos los puntos vuelven a la armonía canónica respecto del color actual y el botón deja de mostrarse
 
 #### Scenario: Saturación en gama

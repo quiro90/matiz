@@ -36,7 +36,7 @@ public sealed partial class MainViewModel
     /// <summary>Desfases personalizados de los puntos de armonía (Δhue°/Δsat del canónico), por índice generado; null = armonía canónica.</summary>
     private (double HueDelta, double SatDelta)[]? _harmonyOffsets;
 
-    /// <summary>Indica si hay desfases personalizados activos: solo entonces se muestra el botón "Restaurar armonía".</summary>
+    /// <summary>Indica si hay desfases personalizados activos: solo entonces se muestra el botón "Restaurar".</summary>
     [ObservableProperty] public partial bool HasHarmonyOffsets { get; private set; }
 
     private void ClearHarmonyOffsets()
@@ -174,7 +174,7 @@ public sealed partial class MainViewModel
         RefreshGenerated();
     }
 
-    /// <summary>Botón "Restaurar armonía": restablece todos los puntos a la armonía canónica (no es deshacible).</summary>
+    /// <summary>Botón "Restaurar": restablece todos los puntos a la armonía canónica (no es deshacible).</summary>
     [RelayCommand]
     private void ResetHarmonyOffsets()
     {

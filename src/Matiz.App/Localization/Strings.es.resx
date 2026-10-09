@@ -281,7 +281,7 @@
     <value>Copiar como CSS, JSON, Dart, C#, Tailwind…</value>
   </data>
   <data name="gen.balance" xml:space="preserve">
-    <value>Luminosidad equilibrada</value>
+    <value>Equilibrar</value>
   </data>
   <data name="gen.balance.tooltip" xml:space="preserve">
     <value>Activado: cada color de la armonía ajusta su brillo para tener la misma luminosidad percibida que el base (la posición en la rueda no cambia). Desactivado: todos con el mismo brillo HSV.</value>
@@ -677,7 +677,7 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
     <value>Color {0}</value>
   </data>
   <data name="harmony.reset" xml:space="preserve">
-    <value>Restaurar armonía</value>
+    <value>Restaurar</value>
   </data>
   <data name="harmony.reset.tooltip" xml:space="preserve">
     <value>Restaura los ángulos de la armonía elegida; lo mismo que hacer doble click sobre un punto desplazado. No se puede deshacer.</value>

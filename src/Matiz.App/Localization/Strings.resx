@@ -281,7 +281,7 @@
     <value>Copy as CSS, JSON, Dart, C#, Tailwind…</value>
   </data>
   <data name="gen.balance" xml:space="preserve">
-    <value>Balanced lightness</value>
+    <value>Balance</value>
   </data>
   <data name="gen.balance.tooltip" xml:space="preserve">
     <value>On: each harmony color adjusts its brightness to match the perceived lightness of the base color (its wheel position does not change). Off: all with the same HSV brightness.</value>
@@ -677,7 +677,7 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
     <value>Color {0}</value>
   </data>
   <data name="harmony.reset" xml:space="preserve">
-    <value>Reset harmony</value>
+    <value>Reset</value>
   </data>
   <data name="harmony.reset.tooltip" xml:space="preserve">
     <value>Restores the angles of the chosen harmony; the same as double-clicking a moved point. This cannot be undone.</value>

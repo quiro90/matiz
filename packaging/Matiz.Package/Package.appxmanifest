@@ -9,7 +9,7 @@
   <Identity
     Name="JuanQuiroga.Matiz"
     Publisher="CN=C7BB1DDD-DF8A-49EF-8538-8D09EF4F231B"
-    Version="1.0.7.0" />
+    Version="1.0.8.0" />
 
   <Properties>
     <DisplayName>Matiz</DisplayName>

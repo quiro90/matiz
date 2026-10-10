@@ -6,9 +6,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Company>Matiz</Company>
     <Product>Matiz</Product>
-    <Version>1.0.9</Version>
-    <!-- Versión visible: v1.0.9 -->
-    <InformationalVersion>1.0.9</InformationalVersion>
+    <Version>1.1.0</Version>
+    <!-- Versión visible: v1.1.0 -->
+    <InformationalVersion>1.1.0</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 </Project>

@@ -22,6 +22,6 @@ Dos variantes, sin cambios de código:
 WPF no es compatible con Native AOT (usa reflexión desde XAML, COM e interop dinámica). ReadyToRun compuesto + self-contained es lo más cercano sin reescribir la UI → [[ADR-010 Ejecutable autónomo]]. Si en el futuro se migra a Avalonia, Native AOT sí es posible ([[Multiplataforma]]).
 
 ## Versión e icono
-Versión actual: **v1.0.9** (`Directory.Build.props`: `Version` 1.0.9, `InformationalVersion` 1.0.9; `packaging/Matiz.Package/Package.appxmanifest` también la lleva). Icono: `src/Matiz.App/Assets/matiz.ico` (círculo degradado de la barra superior, 16–256 px).
+Versión actual: **v1.1.0** (`Directory.Build.props`: `Version` 1.1.0, `InformationalVersion` 1.1.0; `packaging/Matiz.Package/Package.appxmanifest` también la lleva). Icono: `src/Matiz.App/Assets/matiz.ico` (círculo degradado de la barra superior, 16–256 px).
 
 Instalador / MSIX / auto-actualización: fuera del alcance actual ([[Alcance y backlog]]).

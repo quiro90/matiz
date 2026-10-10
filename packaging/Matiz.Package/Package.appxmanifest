@@ -42,8 +42,9 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="matiz.palette" Logo="Assets\Square44x44Logo.png">
+          <uap:FileTypeAssociation Name="matiz.palette">
             <uap:DisplayName>Paleta Matiz</uap:DisplayName>
+            <uap:Logo>Assets\Square44x44Logo.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType>.mpalette</uap:FileType>
             </uap:SupportedFileTypes>

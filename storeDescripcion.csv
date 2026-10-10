@@ -3,30 +3,36 @@ Description,2,Texto,,"Matiz is a small, fast Windows color tool for developers a
 
 Alt+C → click any pixel → copied → scale and harmonies → copy as code → back to work.
 
-- Screen picker: magnifier with pixel grid, multi-monitor and per-monitor DPI aware, pixel-accurate.
+- Screen picker: configurable hotkey (Alt+C), magnifier with pixel grid, multi-monitor and per-monitor DPI aware, pixel-accurate. Hold Shift to grab several colors in a row, and right-click to send any color straight to your palette.
 - Visual picker: hue/saturation wheel (white center), brightness bar showing the color itself, Vivid ↔ Pastel focus, precise H/S/B inputs and a gray scale.
+- Custom points: up to 64 free colors added by right-clicking the wheel, while capturing or over the image (or the + button); customizing a harmony turns it into a Custom set instead of breaking it.
 - Every format: HEX, RGB, HSL, HSV, CMYK (approx.), OKLCH and code snippets (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Paste any format to set a color.
 - Design scale 50–950 generated in OKLCH, ready for design systems.
 - Harmonies: complementary, analogous, split, triadic, tetradic and monochromatic, drawn on the wheel with balanced lightness.
-- Tints/shades, neutrals and dominant colors from images (open, drop or paste a screenshot).
-- Saved palettes with autosave, reordering and undo; export as CSS variables, JSON, Dart, C#, Tailwind or a PNG image.
+- Tints/shades, neutrals and dominant colors from images (open, drop or paste a screenshot); Customize loads the extracted colors at once as your own points.
+- Saved palettes (up to 64 colors each) with autosave, reordering (drag the cards too) and undo; Reload puts a saved palette back on the wheel to edit it.
+- Sharing: export as CSS variables, JSON, Dart, C#, Tailwind or a PNG image, or as a self-contained .mpalette file — double-clicking it opens Matiz and adds it as a new palette.
+- Grayscale view: preview any palette in perceptual gray from 0 to 100 % without altering the saved colors; the percentage is remembered per palette.
 - Recent colors, undo/redo, light/dark theme, always-on-top and keyboard shortcuts.
 
 Made by Juan Quiroga, color artist (@juanquirogaart).","Matiz es una herramienta de color pequeña y rápida para Windows, pensada para desarrolladores y diseñadores: capturá cualquier píxel de la pantalla, entendelo en todos los formatos y armá paletas para copiar directo a tu código.
 
 Alt+C → click en cualquier píxel → copiado → escala y armonías → copiar como código → seguir trabajando.
 
-- Captura de pantalla: lupa con cuadrícula de píxeles, multi-monitor y DPI por monitor, precisión de píxel.
+- Captura de pantalla: atajo configurable (Alt+C), lupa con cuadrícula de píxeles, multi-monitor y DPI por monitor, precisión de píxel. Con Shift la lupa queda abierta para tomar varios colores seguidos, y el click derecho manda cualquier color directo a tu paleta.
 - Selector visual: rueda de tono/saturación (centro blanco), barra de brillo con el propio color, enfoque Vivo ↔ Pastel, campos H/S/B precisos y escala de grises.
+- Puntos personalizados: hasta 64 colores libres agregados con click derecho en la rueda, al capturar o sobre la imagen (o el botón +); personalizar una armonía la convierte en conjunto Personalizado en vez de romperla.
 - Todos los formatos: HEX, RGB, HSL, HSV, CMYK (aprox.), OKLCH y fragmentos de código (CSS, C#/WPF, XAML, Flutter/Dart, ARGB). Pegá cualquier formato para fijar un color.
 - Escala 50–950 generada en OKLCH, lista para design systems.
 - Armonías: complementaria, análoga, dividida, triádica, tetrádica y monocromática, dibujadas en la rueda con luminosidad equilibrada.
-- Tints/shades, neutros y colores dominantes de imágenes (abri, arrastrá o pegá una captura).
-- Paletas guardadas con autoguardado, reordenamiento y deshacer; exportación a variables CSS, JSON, Dart, C#, Tailwind o imagen PNG.
+- Tints/shades, neutros y colores dominantes de imágenes (abri, arrastrá o pegá una captura); Personalizar carga los extraídos de una vez como puntos propios.
+- Paletas guardadas (hasta 64 colores cada una) con autoguardado, reordenamiento (también arrastrando las tarjetas) y deshacer; Recargar vuelve a poner una paleta en la rueda para editarla.
+- Para compartir: exportá a variables CSS, JSON, Dart, C#, Tailwind o imagen PNG, o a un archivo .mpalette autocontenido — el doble click lo abre en Matiz y lo agrega como paleta nueva.
+- Vista en escala de grises: previsualizá cualquier paleta en gris perceptual de 0 a 100 % sin alterar los colores guardados; el porcentaje se recuerda por paleta.
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.
 
 Hecha por Juan Quiroga, artista colorista (@juanquirogaart)."
-ReleaseNotes,3,Texto,,"First release on Microsoft Store. Includes automatic dominant-color extraction when an image loads, plus harmony and palette view improvements.","Primera versión publicada en Microsoft Store. Incluye extracción automática de colores dominantes al cargar una imagen, mejoras en las armonías y en la vista de paletas."
+ReleaseNotes,3,Texto,,"Highlights of this version: grayscale view to preview any palette in perceptual gray (0–100 %, remembered per palette and preserved inside .mpalette files), palettes of up to 64 colors with Custom points, save and reload from the wheel, palette sharing via self-contained .mpalette files, and an improved vertical picker. This rebuild also fixes the package icon for associated .mpalette files.","Lo mejor de esta versión: vista en escala de grises para previsualizar cualquier paleta en gris perceptual (0–100 %, recordado por paleta y conservado dentro de los archivos .mpalette), paletas de hasta 64 colores con puntos Personalizado, guardar y recargar desde la rueda, compartir paletas con archivos .mpalette autocontenidos y un selector visual mejorado (vertical, con muestras con scroll). Esta recompilación además corrige el ícono del paquete para los archivos .mpalette."
 Title,4,Texto,,Matiz,Matiz
 ShortTitle,5,Texto,,Matiz,Matiz
 SortTitle,6,Texto,,,

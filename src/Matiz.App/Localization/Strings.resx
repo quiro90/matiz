@@ -404,8 +404,11 @@
   <data name="library.reload" xml:space="preserve">
     <value>Reload</value>
   </data>
-  <data name="library.reload.tooltip" xml:space="preserve">
-    <value>Load the marked palette into the color wheel</value>
+  <data name="palette.reload" xml:space="preserve">
+    <value>Reload colors</value>
+  </data>
+  <data name="palette.reload.tooltip" xml:space="preserve">
+    <value>Load the current colors into the color wheel (current selections are lost); with the grayscale scale active it loads the gray view</value>
   </data>
   <data name="library.name" xml:space="preserve">
     <value>NAME</value>

@@ -689,25 +689,37 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                        <Button x:Name="GrayScaleButton" Click="GrayScaleButton_Click" HorizontalAlignment="Right" Margin="0,5,0,0"
-                                ToolTip="{loc:Loc palette.gray.tooltip}" AutomationProperties.Name="{loc:Loc palette.gray.button}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
-                                    <Setter Property="Padding" Value="6,1"/>
-                                    <Setter Property="FontSize" Value="10"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding HasGrayScale}" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-                                            <Setter Property="FontWeight" Value="SemiBold"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{loc:Loc palette.gray.button}" VerticalAlignment="Center"/>
-                                <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="5,1,0,0" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                            <Button x:Name="GrayScaleButton" Click="GrayScaleButton_Click"
+                                    ToolTip="{loc:Loc palette.gray.tooltip}" AutomationProperties.Name="{loc:Loc palette.gray.button}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                        <Setter Property="Padding" Value="6,1"/>
+                                        <Setter Property="FontSize" Value="10"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasGrayScale}" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{loc:Loc palette.gray.button}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="5,1,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding ReloadPaletteToFreeCommand}" Margin="4,0,0,0"
+                                    ToolTip="{loc:Loc palette.reload.tooltip}" AutomationProperties.Name="{loc:Loc palette.reload}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                        <Setter Property="Padding" Value="6,1"/>
+                                        <Setter Property="FontSize" Value="10"/>
+                                    </Style>
+                                </Button.Style>
+                                <TextBlock Text="{loc:Loc palette.reload}" VerticalAlignment="Center"/>
+                            </Button>
+                        </StackPanel>
                         <Popup x:Name="GrayScalePopup" PlacementTarget="{Binding ElementName=GrayScaleButton}" Placement="Top" AllowsTransparency="True" PopupAnimation="None">
                             <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10" Width="200"
                                     KeyDown="GrayScalePopup_KeyDown">
@@ -765,7 +777,6 @@
                 </Grid>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,10">
                     <Button Style="{StaticResource PrimaryButton}" Content="{loc:Loc library.new}" Command="{Binding NewPaletteCommand}" Margin="0,0,6,0" ToolTip="{loc:Loc library.new.tooltip}"/>
-                    <Button Content="{loc:Loc library.reload}" Command="{Binding ReloadPaletteToFreeCommand}" Margin="0,0,6,0" ToolTip="{loc:Loc library.reload.tooltip}"/>
                     <Button Content="{loc:Loc library.duplicate}" Command="{Binding DuplicatePaletteCommand}" Margin="0,0,6,0"/>
                     <Button Content="{loc:Loc common.delete}" Command="{Binding DeletePaletteCommand}" Foreground="{DynamicResource DangerBrush}"/>
                 </StackPanel>

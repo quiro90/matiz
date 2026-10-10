@@ -52,6 +52,39 @@ public sealed class PaletteFileTests : IDisposable
         Assert.Contains("\"name\": \"PuchiApp\"", json);
         Assert.Contains("\"hex\": \"#5246BC\"", json);
         Assert.Contains("\"alpha\": 128", json);
+        Assert.DoesNotContain("grayPercent", json); // null = 0 %: el campo se omite (compatibilidad hacia atrás)
+    }
+
+    [Fact]
+    public void Round_trip_preserves_gray_percent()
+    {
+        var svc = new PaletteService(new PaletteLibrary());
+        var p = svc.Import(new PaletteFile
+        {
+            Name = "Gris",
+            GrayPercent = 60,
+            Colors = [new PaletteColor { Hex = "#5246BC", Name = "Primary" }],
+        });
+        Directory.CreateDirectory(_dir);
+        var path = PathOf("Gris.mpalette");
+        PaletteFile.From(p).Write(path);
+
+        var json = File.ReadAllText(path);
+        Assert.Contains("\"grayPercent\": 60", json);
+
+        var file = PaletteFile.Read(path);
+        Assert.Equal(60, file.GrayPercent);
+        var reimported = svc.Import(file);
+        Assert.Equal(60, reimported.GrayPercent);
+    }
+
+    [Fact]
+    public void Old_file_without_gray_percent_reads_as_zero()
+    {
+        Directory.CreateDirectory(_dir);
+        File.WriteAllText(PathOf("vieja.mpalette"), """{"schemaVersion": 1, "name": "Vieja", "colors": [{"hex": "#5246BC"}]}""");
+        var file = PaletteFile.Read(PathOf("vieja.mpalette"));
+        Assert.Null(file.GrayPercent);
     }
 
     [Fact]

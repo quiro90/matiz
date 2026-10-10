@@ -404,8 +404,11 @@
   <data name="library.reload" xml:space="preserve">
     <value>Recargar</value>
   </data>
-  <data name="library.reload.tooltip" xml:space="preserve">
-    <value>Cargar la paleta marcada en la rueda cromática</value>
+  <data name="palette.reload" xml:space="preserve">
+    <value>Recargar colores</value>
+  </data>
+  <data name="palette.reload.tooltip" xml:space="preserve">
+    <value>Carga los colores actuales en la rueda cromática (se pierden las selecciones actuales); con la escala de grises activa carga la vista en grises</value>
   </data>
   <data name="library.name" xml:space="preserve">
     <value>NOMBRE</value>

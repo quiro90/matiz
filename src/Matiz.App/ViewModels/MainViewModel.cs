@@ -34,6 +34,7 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly DispatcherTimer _toastTimer = new() { Interval = TimeSpan.FromSeconds(2.4) };
     private bool _syncing;
     private bool _frameQueued;
+    private bool _applyingGray; // persistiendo el % de grises: los ítems ya están refrescados, no reconstruir
     private Action? _toastAction;
 
     public MainViewModel(
@@ -58,6 +59,7 @@ public sealed partial class MainViewModel : ObservableObject
         _palettes.Changed += (_, _) =>
         {
             _paletteStore.ScheduleSave(_palettes.Library);
+            if (_applyingGray) return;
             SyncPalettes();
         };
         _history.Changed += (_, _) =>

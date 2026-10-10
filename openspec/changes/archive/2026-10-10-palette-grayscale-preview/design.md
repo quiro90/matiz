@@ -18,8 +18,8 @@ Ver proposal.md (Why). Estado actual relevante:
 - La barra inferior conserva su altura exacta de hoy (requisito del usuario).
 
 **Non-Goals:**
-- No persistir el valor del modo (solo sesión, decisión del usuario).
-- No alterar colores guardados, `palettes.json`, Recientes ni las paletas generadas.
+- No persistir el porcentaje en ajustes globales ni como estado separado por vista: el único lugar del valor es la paleta (`grayPercent`); paletas no activas conservan su propio valor hasta que se marquen.
+- No alterar colores guardados, Recientes ni las paletas generadas (las fechas de la paleta tampoco: el porcentaje no las mueve).
 - No aplicar la mezcla a las acciones individuales por color (menú contextual de una muestra opera sobre el color original).
 - No agregar atajos de teclado nuevos ni aplicar el modo a otras vistas (futuras).
 
@@ -37,6 +37,8 @@ Ver proposal.md (Why). Estado actual relevante:
 
 6. **Localización.** Textos nuevos ("Escala gris", "Escala de grises", "Restablecer", tooltip del modo) en `Strings.resx`/`Strings.es.resx`, siguiendo el patrón `loc:Loc` existente.
 
+7. **Persistencia del porcentaje por paleta.** `Palette.GrayPercent` (`int?`, null = 0 %) es el único lugar del valor: `PaletteService.SetGrayPercent(id, v)` acota 0–100, normaliza 0→null, no toca `ModifiedAt` (estado de vista, no de datos), no-op si el valor no cambia, y emite `Changed` → autoguardado (`JsonStore.ScheduleSave` ya hace debounce de 300 ms, así que el arrastre escribe al asentarse). Durante el arrastre la vista ya se refresca vía `ApplyGrayMix`; para que el `Changed` del servicio no reconstruya ítems en cada tick, la VM marca `_applyingGray` y el handler en `MainViewModel` se salta el `SyncPalettes` (solo guarda). La restauración va unificada por `SyncPalettes` (única ruta de carga/cambio/importación): lee `Active.GrayPercent` en `GrayScalePercent` con guarda de igualdad para evitar bucles. `PaletteFile` incorpora `GrayPercent` opcional mapeado en `From`/`ToPalette`, sin cambio de `schemaVersion` (System.Text.Json omite el campo desconocido de un archivo nuevo al leerlo una app vieja, y lo trata como null al revés). Recargar hacia la rueda carga los colores como se ven (misma mezcla) y no altera la paleta: conserva su porcentaje y sus datos intactos (el acceso es el botón compacto "Recargar colores" en la barra Paleta activa, junto a "Escala gris"; se retiró de la Biblioteca); crear y duplicar tampoco arrastra porcentaje; deshacer recarga/eliminar restaura el valor que la paleta tenía. Alternativas descartadas: persistir solo en ajustes (no viaja con la paleta ni a `.mpalette`) o grabar por tick con rebuild completo (churn de ítems innecesario).
+
 ## Risks / Trade-offs
 
 - [Arrastrar el slider recalcula ≤64 muestras por tick] → costo mínimo; sin virtualización necesaria. Medido conceptualmente: creación de ≤64 brushes y strings; el `BrushCache` evita duplicar brushes para el mismo color.
@@ -44,6 +46,8 @@ Ver proposal.md (Why). Estado actual relevante:
 - [Usuario espera "accesibilidad" en mezclas intermedias] → las mezclas intermedias son un preview estético; solo 0 % y 100 % tienen garantía de coincidencia con el gris perceptual exacto. Se aclara en el tooltip.
 - [Popup puede quedar tapado por bordes de pantalla] → `Placement="Top"` con `StaysOpen=False`; altura del popup acotada (~80px), sin overflow horizontal (ancho ~180px).
 - [Estado del botón/exports desincronizado entre pestañas] → el porcentaje es global de la sesión y aplica a la paleta activa que se esté viendo; al cambiar de paleta marcada el refresco de ítems reusa el porcentaje vigente (coberturado por "Coherencia en caliente").
+- [Escrituras de `palettes.json` durante el arrastre del slider] → `ScheduleSave` debouncea (300 ms): se escribe el valor asentado, no cada tick; archivos atómicos (tmp+replace) como siempre.
+- [Porcentaje "pegado" a una paleta confunde al importar paletas viejas] → archivos sin `grayPercent` importan/restauran como 0 %; el campo es opcional y visible en el slider, nunca silencioso sobre los colores.
 
 ## Migration Plan
 
@@ -51,4 +55,4 @@ Sin migración: `palettes.json` y ajustes no cambian de esquema. Rollback revert
 
 ## Open Questions
 
-Ninguna: control, layout, alcance de export y persistencia quedaron resueltos con el usuario (slider 0–100 procedural, popup sin agrandar barra, export WYSIWYG total, solo sesión).
+Ninguna: control, layout, alcance de export y persistencia (por paleta en `palettes.json`/`.mpalette`, restauración automática, reset al crear/duplicar y acceso de recarga en la barra Paleta activa) quedaron resueltos con el usuario.

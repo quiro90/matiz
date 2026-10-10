@@ -113,6 +113,50 @@ public class PaletteServiceTests
     }
 
     [Fact]
+    public void SetGrayPercent_stores_clamps_and_keeps_modified_date()
+    {
+        var s = NewService();
+        var p = s.Create("PuchiApp");
+        var before = p.ModifiedAt;
+        _now = before.AddMinutes(5);
+        var events = 0;
+        s.Changed += (_, _) => events++;
+
+        s.SetGrayPercent(p.Id, 40);
+        Assert.Equal(40, p.GrayPercent);
+
+        s.SetGrayPercent(p.Id, 150);
+        Assert.Equal(100, p.GrayPercent);
+
+        s.SetGrayPercent(p.Id, -3);
+        Assert.Null(p.GrayPercent); // 0 se normaliza a null (= 0 %)
+
+        Assert.Equal(before, p.ModifiedAt); // estado de vista, no de datos
+        Assert.Equal(3, events);
+    }
+
+    [Fact]
+    public void SetGrayPercent_unchanged_value_or_unknown_id_does_not_emit_changed()
+    {
+        var s = NewService();
+        var p = s.Create("PuchiApp");
+        var events = 0;
+        s.Changed += (_, _) => events++;
+
+        s.SetGrayPercent(p.Id, 60);
+        Assert.Equal(1, events);
+
+        s.SetGrayPercent(p.Id, 60); // mismo valor: no-op
+        s.SetGrayPercent(Guid.NewGuid(), 30); // id desconocido: no-op
+        Assert.Equal(1, events);
+
+        s.SetGrayPercent(p.Id, 0);
+        s.SetGrayPercent(p.Id, 0);
+        Assert.Null(p.GrayPercent);
+        Assert.Equal(2, events);
+    }
+
+    [Fact]
     public void Move_duplicate_delete_restore()
     {
         var s = NewService();

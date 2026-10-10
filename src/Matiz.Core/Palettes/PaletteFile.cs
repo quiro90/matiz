@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Matiz.Core.Persistence;
 
 namespace Matiz.Core.Palettes;
@@ -19,6 +20,12 @@ public sealed class PaletteFile
     public string? Description { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset ModifiedAt { get; set; }
+
+    /// <summary>Porcentaje de escala de grises recordado (null = 0 %). Opcional: los archivos antiguos
+    /// lo leen como null y las apps anteriores ignoran el campo sin error.</summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? GrayPercent { get; set; }
+
     public List<PaletteColor> Colors { get; set; } = [];
 
     public static PaletteFile From(Palette palette) => new()
@@ -28,6 +35,7 @@ public sealed class PaletteFile
         Description = palette.Description,
         CreatedAt = palette.CreatedAt,
         ModifiedAt = palette.ModifiedAt,
+        GrayPercent = palette.GrayPercent,
         Colors = [.. palette.Colors],
     };
 
@@ -38,6 +46,7 @@ public sealed class PaletteFile
         Description = Description,
         CreatedAt = CreatedAt,
         ModifiedAt = ModifiedAt,
+        GrayPercent = GrayPercent,
         Colors = [.. Colors.Select(c => new PaletteColor { Name = c.Name, Hex = c.Hex, Alpha = c.Alpha })],
     };
 

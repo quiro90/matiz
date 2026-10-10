@@ -9,6 +9,7 @@ tags: [referencia, persistencia]
   "palettes": [{
     "id": "guid", "name": "PuchiApp", "description": "opcional",
     "createdAt": "2026-10-08T12:00:00+00:00", "modifiedAt": "…",
+    "grayPercent": 60,
     "colors": [
       { "id": "guid", "name": "Primary", "hex": "#5246BC" },
       { "id": "guid", "name": "Overlay", "hex": "#000000", "alpha": 128 }
@@ -16,6 +17,6 @@ tags: [referencia, persistencia]
   }]
 }
 ```
-`hex` siempre `#RRGGBB`; `alpha` solo si ≠ 255. Ver [[Persistencia JSON]].
+`hex` siempre `#RRGGBB`; `alpha` solo si ≠ 255; `grayPercent` solo si ≠ 0 (el % de "Escala de grises" recordado, ver [[Paletas guardadas]]). Ver [[Persistencia JSON]].
 
-Los archivos de exportación **`.mpalette`** ([[Paletas guardadas]]) siguen la misma estructura de paleta: JSON standalone con `schemaVersion`, nombre, descripción, fechas y colores (`hex` + `alpha` opcional). El doble click del SO o "Importar" los agrega siempre como paleta nueva.
+Los archivos de exportación **`.mpalette`** ([[Paletas guardadas]]) siguen la misma estructura de paleta: JSON standalone con `schemaVersion`, nombre, descripción, fechas, porcentaje opcional y colores (`hex` + `alpha` opcional). El doble click del SO o "Importar" los agrega siempre como paleta nueva.

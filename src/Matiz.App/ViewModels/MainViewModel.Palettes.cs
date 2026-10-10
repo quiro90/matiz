@@ -27,6 +27,13 @@ public sealed partial class MainViewModel
         HasGrayScale = value > 0;
         var amount = value / 100.0;
         foreach (var item in ActivePaletteColors) item.ApplyGrayMix(amount);
+
+        // Persiste el % recordado de la paleta activa; el Changed resultante solo autoguarda
+        // (_applyingGray evita reconstruir los ítems en cada tick: ya están refrescados arriba).
+        if (_palettes.Active is not { } p || (p.GrayPercent ?? 0) == value) return;
+        _applyingGray = true;
+        try { _palettes.SetGrayPercent(p.Id, value); }
+        finally { _applyingGray = false; }
     }
 
     public ObservableCollection<PaletteColorItem> ActivePaletteColors { get; } = [];
@@ -67,7 +74,11 @@ public sealed partial class MainViewModel
             if (active is not null)
                 foreach (var c in active.Colors) ActivePaletteColors.Add(new PaletteColorItem(c, OnPaletteColorRenamed));
             HasActiveColors = ActivePaletteColors.Count > 0;
-            if (GrayScalePercent > 0)
+            // Restauración del % recordado por la paleta (única ruta: arranque, cambio de marcada, import, undo).
+            var grayPercent = active?.GrayPercent ?? 0;
+            if (GrayScalePercent != grayPercent)
+                GrayScalePercent = grayPercent; // OnGrayScalePercentChanged aplica la mezcla y sincroniza la persistencia
+            else if (GrayScalePercent > 0)
                 foreach (var item in ActivePaletteColors) item.ApplyGrayMix(GrayScalePercent / 100.0);
             ExportActivePaletteImageCommand.NotifyCanExecuteChanged();
             ExportActivePaletteOverlayCommand.NotifyCanExecuteChanged();
@@ -135,17 +146,19 @@ public sealed partial class MainViewModel
     /// <summary>Confirmación del "Recargar": evalúa la paleta marcada al confirmar (si se marcó otra entre
     /// aviso y confirmación, carga esa); primer color = principal/color actual, resto = secundarios con su
     /// brillo propio (cada tarjeta reproduce el color exacto). Reemplaza el conjunto libre previo, cierra
-    /// la Biblioteca y no modifica la paleta.</summary>
+    /// la Biblioteca y no modifica la paleta (ni su % de grises).</summary>
     private void LoadPaletteToFree()
     {
         if (_palettes.Active is not { Colors.Count: > 0 } p) return;
-        var first = p.Colors[0].Color;
-        Session.Commit(first, ColorChangeSource.Palette);
+        // La rueda carga la vista vigente: mismos colores mezclados (MixToGray) que muestran las muestras,
+        // no los crudos. La paleta conserva su % de grises tal cual. A 0 % la mezcla es identidad.
+        var amount = GrayScalePercent / 100.0;
+        Session.Commit(ColorMath.MixToGray(p.Colors[0].Color, amount), ColorChangeSource.Palette);
         var st = Session.Current;
         _freeOffsets.Clear();
         foreach (var c in p.Colors.Skip(1))
         {
-            var hsv = ColorMath.ToHsv(c.Color);
+            var hsv = ColorMath.ToHsv(ColorMath.MixToGray(c.Color, amount));
             _freeOffsets.Add((
                 ColorMath.NormalizeHue(hsv.H - st.Hue),
                 Math.Clamp(hsv.S, 0, 1) - st.Saturation,

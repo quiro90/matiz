@@ -70,6 +70,19 @@ public sealed class PaletteService
         Touch(p);
     }
 
+    /// <summary>Guarda el porcentaje de escala de grises recordado por la paleta: es estado de vista,
+    /// no de datos — no toca <c>ModifiedAt</c>. Acota 0–100, normaliza 0 → null y no-op (sin
+    /// <see cref="Changed"/>) si el valor no cambia.</summary>
+    public void SetGrayPercent(Guid id, int value)
+    {
+        if (Find(id) is not { } p) return;
+        var v = Math.Clamp(value, 0, 100);
+        int? normalized = v == 0 ? null : v;
+        if (p.GrayPercent == normalized) return;
+        p.GrayPercent = normalized;
+        Changed?.Invoke(this, EventArgs.Empty);
+    }
+
     public Palette? Duplicate(Guid id)
     {
         if (Find(id) is not { } src) return null;

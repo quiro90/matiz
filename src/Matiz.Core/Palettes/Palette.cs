@@ -39,6 +39,11 @@ public sealed class Palette
     public string? Description { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset ModifiedAt { get; set; }
+
+    /// <summary>Porcentaje de vista en escala de grises recordado por la paleta (estado de vista, no de datos; null = 0 %).</summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? GrayPercent { get; set; }
+
     public List<PaletteColor> Colors { get; set; } = [];
 }
 

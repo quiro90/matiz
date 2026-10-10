@@ -6,11 +6,15 @@ Formato de archivo de paleta (`.mpalette`): permitir guardar una paleta completa
 ## Requirements
 
 ### Requirement: Formato de archivo de paleta
-El sistema SHALL definir un formato de archivo único con extensión `.mpalette`: un documento JSON legible con campo `schemaVersion` y el contenido completo de la paleta: nombre, descripción (opcional), fecha de creación, fecha de última modificación y la lista ordenada de colores; cada color SHALL incluir su nombre individual (opcional), su valor hex y su alfa cuando no es opaco. La escritura al disco SHALL ser atómica (archivo temporal + reemplazo). Archivos con `schemaVersion` desconocida (mayor a la vigente) SHALL rechazarse con error y sin modificar la biblioteca.
+El sistema SHALL definir un formato de archivo único con extensión `.mpalette`: un documento JSON legible con campo `schemaVersion` y el contenido completo de la paleta: nombre, descripción (opcional), fecha de creación, fecha de última modificación, la lista ordenada de colores y el porcentaje de la vista en escala de grises (`grayPercent`, opcional, 0–100; su omisión equivale a 0 %); cada color SHALL incluir su nombre individual (opcional), su valor hex y su alfa cuando no es opaco. La escritura al disco SHALL ser atómica (archivo temporal + reemplazo). Archivos con `schemaVersion` desconocida (mayor a la vigente) SHALL rechazarse con error y sin modificar la biblioteca. Archivos antiguos sin `grayPercent` SHALL leerse como 0 % y una app anterior SHALL ignorar el campo nuevo sin error, sin cambio de `schemaVersion`.
 
 #### Scenario: Contenido del archivo exportado
 - **WHEN** se exporta la paleta "PuchiApp" con los colores `#5246BC`, `#E24347` y `#F7F9FB`
 - **THEN** el archivo `.mpalette` es JSON válido con `schemaVersion`, `"name": "PuchiApp"`, descripción, fechas de creación/modificación y 3 colores en orden con sus valores hex (y el alfa de algún color no opaco, si lo hubiera, conservado)
+
+#### Scenario: Porcentaje de grises conservado
+- **WHEN** la paleta "PuchiApp" tiene escala de grises en 60 % y el usuario la exporta a un `.mpalette` que después se importa (en esta u otra instancia de la app)
+- **THEN** el archivo contiene `"grayPercent": 60` y la paleta importada conserva el 60 % (una paleta guardada en 0 % omite el campo y se importa como 0 %)
 
 #### Scenario: Archivo con versión futura
 - **WHEN** se abre un `.mpalette` con `schemaVersion` mayor a la vigente

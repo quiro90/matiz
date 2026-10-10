@@ -32,7 +32,25 @@ Alt+C → click en cualquier píxel → copiado → escala y armonías → copia
 - Colores recientes, deshacer/rehacer, tema claro/oscuro, siempre visible y atajos de teclado.
 
 Hecha por Juan Quiroga, artista colorista (@juanquirogaart)."
-ReleaseNotes,3,Texto,,"Highlights of this version: grayscale view to preview any palette in perceptual gray (0–100 %, remembered per palette and preserved inside .mpalette files), palettes of up to 64 colors with Custom points, save and reload from the wheel, palette sharing via self-contained .mpalette files, and an improved vertical picker. This rebuild also fixes the package icon for associated .mpalette files.","Lo mejor de esta versión: vista en escala de grises para previsualizar cualquier paleta en gris perceptual (0–100 %, recordado por paleta y conservado dentro de los archivos .mpalette), paletas de hasta 64 colores con puntos Personalizado, guardar y recargar desde la rueda, compartir paletas con archivos .mpalette autocontenidos y un selector visual mejorado (vertical, con muestras con scroll). Esta recompilación además corrige el ícono del paquete para los archivos .mpalette."
+ReleaseNotes,3,Texto,,"What's new since the first release:
+
+- Grayscale view: preview any palette in perceptual gray from 0 to 100 % without altering the saved colors — the percentage is remembered per palette and travels inside .mpalette files.
+- Renewed visual picker: now vertical, with scrollable swatches.
+- Custom points and palettes of up to 64 colors: right-click on the wheel, while capturing or over the image (or the + button); double-click a point to remove it, and customizing a harmony keeps it as a Custom set.
+- Reload: put a saved palette back on the wheel to keep editing it; reorder palette cards by dragging them.
+- Customize in From image: load the extracted colors at once as your own points (warns before replacing a built palette).
+- Export palettes from a dropdown (palette or overlays) with optional transparent-background PNG, plus self-contained .mpalette files for sharing — double-clicking one opens Matiz and adds it as a new palette.
+- Copy the HEX of Current/Previous with a discreet icon.
+Also fixes several details and the package icon for .mpalette files.","Novedades desde la primera versión:
+
+- Vista en escala de grises: previsualizá cualquier paleta en gris perceptual de 0 a 100 % sin alterar los colores guardados — el porcentaje se recuerda por paleta y viaja dentro de los archivos .mpalette.
+- Selector visual renovado: ahora vertical, con muestras con scroll.
+- Puntos personalizados y paletas de hasta 64 colores: click derecho en la rueda, al capturar o sobre la imagen (o el botón +); doble click sobre un punto lo elimina, y personalizar una armonía la deja como conjunto Personalizado.
+- Recargar: vuelve a poner una paleta guardada en la rueda para seguir editándola; reordená las tarjetas arrastrándolas.
+- Personalizar en De la imagen: carga los colores extraídos de una vez como puntos propios (avisa antes de reemplazar una paleta armada).
+- Exportá la paleta por desplegable (paleta o superpuestos) con PNG de fondo transparente opcional, y archivos .mpalette autocontenidos para compartir — el doble click los abre en Matiz y los agrega como paleta nueva.
+- Copiar el HEX de Actual/Anterior con un ícono discreto.
+Además corrige varios detalles y el ícono del paquete para los archivos .mpalette."
 Title,4,Texto,,Matiz,Matiz
 ShortTitle,5,Texto,,Matiz,Matiz
 SortTitle,6,Texto,,,

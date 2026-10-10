@@ -19,6 +19,15 @@ public sealed partial class MainViewModel
     [ObservableProperty] public partial string ActivePaletteName { get; private set; } = "";
     [ObservableProperty] public partial bool HasActiveColors { get; private set; }
     [ObservableProperty] public partial PaletteItem? SelectedPalette { get; set; }
+    [ObservableProperty] public partial int GrayScalePercent { get; set; }
+    [ObservableProperty] public partial bool HasGrayScale { get; private set; }
+
+    partial void OnGrayScalePercentChanged(int value)
+    {
+        HasGrayScale = value > 0;
+        var amount = value / 100.0;
+        foreach (var item in ActivePaletteColors) item.ApplyGrayMix(amount);
+    }
 
     public ObservableCollection<PaletteColorItem> ActivePaletteColors { get; } = [];
     public ObservableCollection<PaletteItem> Palettes { get; } = [];
@@ -58,6 +67,8 @@ public sealed partial class MainViewModel
             if (active is not null)
                 foreach (var c in active.Colors) ActivePaletteColors.Add(new PaletteColorItem(c, OnPaletteColorRenamed));
             HasActiveColors = ActivePaletteColors.Count > 0;
+            if (GrayScalePercent > 0)
+                foreach (var item in ActivePaletteColors) item.ApplyGrayMix(GrayScalePercent / 100.0);
             ExportActivePaletteImageCommand.NotifyCanExecuteChanged();
             ExportActivePaletteOverlayCommand.NotifyCanExecuteChanged();
             ExportPaletteCommand.NotifyCanExecuteChanged();
@@ -269,6 +280,10 @@ public sealed partial class MainViewModel
         _palettes.MoveColor(p.Id, item.Id, relative ? current + index : index);
     }
 
+    /// <summary>Modelo de export de la paleta activa conforme al modo de vista en grises vigente (0 % = intacto).</summary>
+    private PaletteExportModel ActiveExport(Palette p) =>
+        PaletteExportModel.From(p).WithGrayMix(GrayScalePercent / 100.0);
+
     [RelayCommand]
     private void CopyActivePaletteAs(string? formatId)
     {
@@ -278,20 +293,23 @@ public sealed partial class MainViewModel
             return;
         }
         var f = PaletteFormatters.Get(formatId ?? "css");
-        Copy(f.Format(PaletteExportModel.From(p), FormatOptions), what: Loc.F("toasts.paletteAsFormat", p.Name, f.DisplayName));
+        Copy(f.Format(ActiveExport(p), FormatOptions), what: Loc.F("toasts.paletteAsFormat", p.Name, f.DisplayName));
     }
 
     [RelayCommand(CanExecute = nameof(HasActiveColors))]
     private void ExportActivePaletteImage()
     {
-        if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportImage(PaletteExportModel.From(p));
+        if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportImage(ActiveExport(p));
     }
 
     [RelayCommand(CanExecute = nameof(HasActiveColors))]
     private void ExportActivePaletteOverlay()
     {
-        if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportOverlay(PaletteExportModel.From(p));
+        if (_palettes.Active is { Colors.Count: > 0 } p) Shell?.ShowExportOverlay(ActiveExport(p));
     }
+
+    [RelayCommand]
+    private void ResetGrayScale() => GrayScalePercent = 0;
 
     [RelayCommand]
     private void ClearHistory() => _history.Clear();

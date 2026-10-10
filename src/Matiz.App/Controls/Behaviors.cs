@@ -120,6 +120,13 @@ public sealed class NotEmptyToVisibilityConverter : IValueConverter
         throw new NotSupportedException();
 }
 
+/// <summary>double → −double y viceversa (invierte la barra vertical de Enfoque: −1 vivo queda arriba).</summary>
+public sealed class NegateConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => -(value is double d ? d : 0.0);
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => -(value is double d ? d : 0.0);
+}
+
 public sealed class InverseBoolConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;

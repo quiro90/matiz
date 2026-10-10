@@ -103,7 +103,7 @@
     <value>Enfoque de la rueda: vivo a pastel</value>
   </data>
   <data name="picker.focus.tooltip" xml:space="preserve">
-    <value>Distribución de la saturación en la rueda: más espacio para colores vivos (izquierda) o pastel (derecha). No cambia el color.</value>
+    <value>Distribución de la saturación en la rueda: más espacio para colores vivos (arriba) o pastel (abajo). No cambia el color.</value>
   </data>
   <data name="picker.focus.reset.tooltip" xml:space="preserve">
     <value>Distribución lineal</value>
@@ -905,5 +905,17 @@ Limitaciones: en monitores HDR, juegos a pantalla completa exclusiva o contenido
   </data>
   <data name="library.descriptionPlaceholder" xml:space="preserve">
     <value>Opcional</value>
+  </data>
+  <data name="palette.gray.button" xml:space="preserve">
+    <value>Escala gris</value>
+  </data>
+  <data name="palette.gray.popupTitle" xml:space="preserve">
+    <value>Escala de grises</value>
+  </data>
+  <data name="palette.gray.reset" xml:space="preserve">
+    <value>Restablecer</value>
+  </data>
+  <data name="palette.gray.tooltip" xml:space="preserve">
+    <value>Vista temporal en escala de grises: cada color se muestra como una mezcla hacia su gris equivalente perceptual (0 % = colores originales, 100 % = gris completo). Las exportaciones reflejan el valor actual; los colores guardados no se modifican.</value>
   </data>
 </root>

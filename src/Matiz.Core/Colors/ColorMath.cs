@@ -181,6 +181,29 @@ public static class ColorMath
         return new Argb(c.A, v, v, v);
     }
 
+    /// <summary>Mezcla por canal del color hacia su gris equivalente perceptual (0 = original, 1 = gris).
+    /// Solo presentación: conserva el alfa del original y nunca muta colores almacenados.</summary>
+    public static Argb MixToGray(Argb c, double amount)
+    {
+        if (double.IsNaN(amount)) return c;
+        amount = Math.Clamp(amount, 0, 1);
+        if (amount <= 0) return c;
+        var g = GrayEquivalent(c);
+        if (amount >= 1) return g;
+        return c with
+        {
+            R = LerpByte(c.R, g.R, amount),
+            G = LerpByte(c.G, g.G, amount),
+            B = LerpByte(c.B, g.B, amount),
+        };
+    }
+
+    private static byte LerpByte(byte a, byte b, double t)
+    {
+        var v = Math.Round(a + (b - a) * t, MidpointRounding.AwayFromZero);
+        return (byte)Math.Clamp(v, 0, 255);
+    }
+
     // ---------- utilidades ----------
 
     public static double NormalizeHue(double h)

@@ -11,6 +11,7 @@
     <c:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True"/>
     <c:NotEmptyToVisibilityConverter x:Key="NotEmptyToVis"/>
     <c:InverseBoolConverter x:Key="InvBool"/>
+    <c:NegateConverter x:Key="Negate"/>
 
     <!-- Patrón de tablero para colores con transparencia -->
     <DrawingBrush x:Key="CheckerBrush" TileMode="Tile" Viewport="0,0,12,12" ViewportUnits="Absolute">
@@ -344,6 +345,27 @@
                         <Border Height="4" CornerRadius="2" Background="{DynamicResource PressedBrush}" VerticalAlignment="Center"/>
                         <Rectangle Width="2" Height="10" Fill="{DynamicResource TextFaintBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Track x:Name="PART_Track">
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource SliderThumb}"/>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Slider vertical (barra de Enfoque del selector) -->
+    <Style x:Key="SliderVertical" TargetType="Slider">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid Width="20" Background="Transparent">
+                        <Border Width="4" CornerRadius="2" Background="{DynamicResource PressedBrush}" HorizontalAlignment="Center"/>
+                        <Rectangle Width="10" Height="2" Fill="{DynamicResource TextFaintBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Track x:Name="PART_Track" Orientation="Vertical">
                             <Track.Thumb>
                                 <Thumb Style="{StaticResource SliderThumb}"/>
                             </Track.Thumb>

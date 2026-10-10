@@ -180,6 +180,32 @@ public partial class MainWindow : Window, IShell
         menu.IsOpen = true;
     }
 
+    private void GrayScaleButton_Click(object sender, RoutedEventArgs e)
+    {
+        GrayScalePopup.IsOpen = !GrayScalePopup.IsOpen;
+        if (GrayScalePopup.IsOpen) GrayScaleSlider.Focus();
+    }
+
+    // El popup es StaysOpen=True para que el arrastre del slider sobreviva a salir de sus límites
+    // (con StaysOpen=False el thumb pierde la captura del mouse y el popup se cierra al arrastrar).
+    private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!GrayScalePopup.IsOpen) return;
+        // El input del popup cruza el árbol lógico hasta la ventana, así que los clicks dentro
+        // del popup y del botón que lo abre también llegan aquí: son legítimos, no cerrar.
+        if (e.OriginalSource is DependencyObject source &&
+            (source == GrayScaleButton || GrayScaleButton.IsAncestorOf(source) ||
+             GrayScalePopup.Child is { } child && (source == child || child.IsAncestorOf(source)))) return;
+        GrayScalePopup.IsOpen = false;
+    }
+
+    private void Window_Deactivated(object sender, EventArgs e) => GrayScalePopup.IsOpen = false;
+
+    private void GrayScalePopup_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape) GrayScalePopup.IsOpen = false;
+    }
+
     private void Scrim_MouseDown(object sender, MouseButtonEventArgs e)
     {
         _vm.IsLibraryOpen = false;

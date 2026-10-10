@@ -90,6 +90,9 @@ public sealed partial class PaletteColorItem : ObservableObject
         _name = model.Name ?? "";
         Brush = BrushCache.Of(Color);
         Foreground = BrushCache.ContrastOf(Color);
+        DisplayBrush = Brush;
+        DisplayForeground = Foreground;
+        DisplayHex = Hex;
     }
 
     private string _name;
@@ -99,6 +102,19 @@ public sealed partial class PaletteColorItem : ObservableObject
     public SolidColorBrush Brush { get; }
     public SolidColorBrush Foreground { get; }
     public string Hex => Color.ToString();
+
+    [ObservableProperty] public partial SolidColorBrush DisplayBrush { get; private set; } = Brushes.Transparent;
+    [ObservableProperty] public partial SolidColorBrush DisplayForeground { get; private set; } = Brushes.Black;
+    [ObservableProperty] public partial string DisplayHex { get; private set; } = "";
+
+    /// <summary>Recalcula lo mostrado con el modo de vista en grises (0 = color original). No altera el color almacenado.</summary>
+    public void ApplyGrayMix(double amount)
+    {
+        var c = ColorMath.MixToGray(Color, amount);
+        DisplayBrush = BrushCache.Of(c);
+        DisplayForeground = BrushCache.ContrastOf(c);
+        DisplayHex = c.ToString();
+    }
 
     public string Name
     {

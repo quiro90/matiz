@@ -1,0 +1,22 @@
+## 1. Core — matemática de la mezcla
+
+- [x] 1.1 Agregar `ColorMath.MixToGray(Argb c, double amount)` (amount ∈ [0,1]; lerp por canal RGB hacia `GrayEquivalent(c)`; alfa del original; amount 0 = identidad exacta, 1 = gris equivalente exacto). Verificación: pruebas xUnit — identidad a 0, `GrayEquivalent` exacto a 1, valor intermedio (p. ej. 0.5 sobre un color conocido), alfa conservado.
+- [x] 1.2 Agregar en Core la transformación de export `PaletteExportModel → PaletteExportModel` que mapea cada `PaletteExportColor.Color` con la mezcla al valor dado (records con `with`; nombres intactos). Verificación: prueba xUnit de nombres conservados y colores mezclados sobre un modelo de ejemplo.
+
+## 2. ViewModel y presentación en caliente
+
+- [x] 2.1 En `PaletteColorItem` (Items.cs) agregar `DisplayBrush`, `DisplayForeground`, `DisplayHex` (ObservableProperty) y método de mezcla por porcentaje que los recalcula; la vista (MainWindow.xaml, plantilla de la paleta activa) enlaza a los campos `Display*`. `Brush`/`Foreground`/`Hex` originales quedan como valores del color almacenado para acciones y menús. Verificación: build sin advertencias y, en ejecución manual, la muestra y su HEX cambian al mover el valor.
+- [x] 2.2 En `MainViewModel.Palettes.cs` agregar `GrayScalePercent` (int 0–100, inicio 0, no persistido) que refresca en caliente `Display*` de todos los ítems de `ActivePaletteColors`; `RefreshActivePalette` y las rutas de carga/cambio de paleta calculan los ítems ya conforme al porcentaje vigente (coherencia en caliente). Verificación: prueba o verificación manual de que agregar un color con el modo al 100 aparece gris y que volver a 0 restaura todo sin cambios en `palettes.json` (fecha de modificación intacta).
+- [x] 2.3 Condicionar los tres caminos de exportación (`CopyActivePaletteAs`, `ExportActivePaletteImage`, `ExportActivePaletteOverlay`) a que, con porcentaje > 0, transformen `PaletteExportModel.From(p)` con la función de 1.2 (a 0 % pasan el modelo intacto, byte a byte igual a hoy). Verificación: revisión de call sites + prueba del formatter con transformación aplicada.
+
+## 3. UI — botón compacto, popup y slider
+
+- [x] 3.1 Ajustar columna derecha de la barra Paleta activa: Copiar/Exportar con `VerticalAlignment="Top"` (sin otros cambios visuales) y debajo el botón compacto "Escala gris" (misma familia visual que los botones pequeños existentes, altura ≈20px) comprobando que la altura de la barra/card no varíe. Verificación: build y comparación visual de la altura de la tarjeta antes/después.
+- [x] 3.2 Crear el `Popup` (Placement=Top, StaysOpen=False, ancho ~180px, fondo tipo menú existente) con: título "Escala de grises", Slider 0–100 (plantilla propia, `UpdateSourceTrigger=PropertyChanged`, enlazado a `GrayScalePercent`), porcentaje mostrado y botón mini "Restablecer" (0 %). El botón "Escala gris" abre/cierra el popup y marca estado activo cuando el valor > 0. Cierre por click fuera conserva el valor. Verificación: ejecución manual de los escenarios del spec (abrir, arrastrar en vivo, cerrar fuera, restablecer).
+- [x] 3.3 Localización: claves nuevas (`palette.gray.button`, `palette.gray.popupTitle`, `palette.gray.reset`, `palette.gray.tooltip`) en Strings.resx y Strings.es.resx (tooltip aclara que el modo es de vista temporal y que a 0/100 coinciden color original/gris perceptual). Verificación: build sin recursos faltantes; la UI muestra el texto correcto en ambos idiomas.
+
+## 4. Validación integral y documentación
+
+- [x] 4.1 Suite completa: `dotnet test` (Matiz.Core.Tests, ≥23 pruebas con las nuevas) y build limpio del solution. Si la app del usuario tiene `bin` bloqueado, validar con `dotnet build -o "$env:TEMP\matiz-verify"` y limpiar la carpeta temporal. Verificación: 0 errores / 0 advertencias.
+- [ ] 4.2 Recorrido manual de los 8 escenarios de los specs (vista 100 %, intermedio, vuelta a 0, no persistente, acciones por color, abrir/cerrar popup + arrastre, agregar color en caliente, exports WYSIWYG con paleta de ejemplo type `#5246BC`/`#FF8A00`). Verificación: comportamiento observado coincide con cada THEN del spec.
+- [x] 4.3 Actualizar `docs/vault/02 Funcionalidades/Paletas.md` (o el doc de la paleta activa) describiendo el modo "Escala de gris", su acceso por botón compacto y el efecto WYSIWYG en exportaciones; versión sin bump (nada se versiona hasta publicación). Verificación: doc coherente con la UI final.

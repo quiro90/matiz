@@ -14,6 +14,16 @@ public sealed record PaletteExportModel(string Name, IReadOnlyList<PaletteExport
 {
     public static PaletteExportModel From(Palette p) =>
         new(p.Name, p.Colors.Select(c => new PaletteExportColor(c.Name, c.Color)).ToList());
+
+    /// <summary>Mezcla cada color hacia su gris equivalente perceptual. amount 0 = modelo intacto; los nombres no cambian.</summary>
+    public PaletteExportModel WithGrayMix(double amount)
+    {
+        if (amount <= 0) return this;
+        return this with
+        {
+            Colors = Colors.Select(c => c with { Color = ColorMath.MixToGray(c.Color, amount) }).ToList()
+        };
+    }
 }
 
 public sealed record PaletteExportColor(string? Name, Argb Color);

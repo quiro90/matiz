@@ -12,6 +12,7 @@
         Background="{DynamicResource BgBrush}" Foreground="{DynamicResource TextBrush}"
         FontFamily="{StaticResource UiFont}" FontSize="13"
         Topmost="{Binding AlwaysOnTop}" AllowDrop="True" WindowStartupLocation="CenterScreen"
+        PreviewMouseDown="Window_PreviewMouseDown" Deactivated="Window_Deactivated"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
     <!-- Sin barra de título del sistema: la barra superior hace de zona de arrastre (snap y redimensionado se conservan). -->
@@ -163,57 +164,56 @@
                 <!-- Selector -->
                 <Border Style="{StaticResource Card}" Visibility="{Binding IsImageMode, Converter={StaticResource InvBoolToVis}}">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" MinHeight="160"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="30"/>
-                            </Grid.ColumnDefinitions>
-                            <c:ColorWheel x:Name="Wheel" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Gamma="{Binding WheelGamma}"
-                                          CommitCommand="{Binding CommitPickerCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                          Markers="{Binding WheelMarkers}" MarkerClickCommand="{Binding SelectWheelMarkerCommand}"
-                                          MarkerDoubleClickCommand="{Binding RemoveWheelMarkerCommand}"
-                                          MarkerDragCommand="{Binding SetWheelMarkerOffsetCommand}" AddPointAtCommand="{Binding AddFreePointAtCommand}"
-                                          ToolTip="{loc:Loc picker.wheel.tooltip}"/>
-                            <c:BrightnessSlider Grid.Column="1" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Value="{Binding Brightness}"
-                                                CommitCommand="{Binding CommitPickerCommand}" Margin="6,6,0,6" ToolTip="{loc:Loc picker.brightness.tooltip}"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <c:ColorWheel x:Name="Wheel" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Gamma="{Binding WheelGamma}"
+                                      CommitCommand="{Binding CommitPickerCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Markers="{Binding WheelMarkers}" MarkerClickCommand="{Binding SelectWheelMarkerCommand}"
+                                      MarkerDoubleClickCommand="{Binding RemoveWheelMarkerCommand}"
+                                      MarkerDragCommand="{Binding SetWheelMarkerOffsetCommand}" AddPointAtCommand="{Binding AddFreePointAtCommand}"
+                                      ToolTip="{loc:Loc picker.wheel.tooltip}"/>
+                        <c:BrightnessSlider Grid.Column="1" Hue="{Binding Hue}" Saturation="{Binding Saturation}" Value="{Binding Brightness}"
+                                            CommitCommand="{Binding CommitPickerCommand}" Margin="6,6,0,6" ToolTip="{loc:Loc picker.brightness.tooltip}"/>
+                        <!-- Barra de Enfoque vertical: vivo (arriba) / pastel (abajo) + restablecer -->
+                        <Grid Grid.Column="2" Margin="6,6,0,6" ToolTip="{loc:Loc picker.focus.tooltip}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{loc:Loc picker.vivid}" Style="{StaticResource Muted}" FontSize="9" HorizontalAlignment="Center" Margin="0,1,0,3"/>
+                            <Slider Grid.Row="1" Orientation="Vertical" Style="{StaticResource SliderVertical}" Minimum="-1" Maximum="1" HorizontalAlignment="Center"
+                                    Value="{Binding WheelFocus, Converter={StaticResource Negate}}" SmallChange="0.05" LargeChange="0.25"
+                                    AutomationProperties.Name="{loc:Loc picker.focus.automation}"/>
+                            <TextBlock Grid.Row="2" Text="{loc:Loc picker.pastel}" Style="{StaticResource Muted}" FontSize="9" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                            <Button Grid.Row="3" Style="{StaticResource SmallIconButton}" Content="&#xE72C;" Command="{Binding ResetFocusCommand}"
+                                    ToolTip="{loc:Loc picker.focus.reset.tooltip}" AutomationProperties.Name="{loc:Loc picker.focus.reset.automation}"
+                                    Margin="0,4,0,0" HorizontalAlignment="Center"/>
                         </Grid>
-
-                        <StackPanel Grid.Row="1" Margin="0,12,0,0">
-                            <Grid Margin="0,0,0,8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="64"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{loc:Loc picker.focus}" Style="{StaticResource SectionTitle}"/>
-                                <TextBlock Grid.Column="1" Text="{loc:Loc picker.vivid}" Style="{StaticResource Muted}" Margin="0,0,8,0"/>
-                                <Slider Grid.Column="2" Minimum="-1" Maximum="1" Value="{Binding WheelFocus}" SmallChange="0.05" LargeChange="0.25"
-                                        AutomationProperties.Name="{loc:Loc picker.focus.automation}"
-                                        ToolTip="{loc:Loc picker.focus.tooltip}"/>
-                                <TextBlock Grid.Column="3" Text="{loc:Loc picker.pastel}" Style="{StaticResource Muted}" Margin="8,0,4,0"/>
-                                <Button Grid.Column="4" Style="{StaticResource SmallIconButton}" Content="&#xE72C;" Command="{Binding ResetFocusCommand}" ToolTip="{loc:Loc picker.focus.reset.tooltip}" AutomationProperties.Name="{loc:Loc picker.focus.reset.automation}"/>
-                            </Grid>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <!-- Tono / saturación / brillo y gris equivalente, en columna -->
+                        <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="10,6,6,6">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                 <TextBlock Text="H" Style="{StaticResource SectionTitle}" Margin="0,0,6,0"/>
                                 <c:NumericBox Value="{Binding HueDeg}" Minimum="0" Maximum="360" Decimals="1" Wrap="True" Width="74" AutomationProperties.Name="{loc:Loc picker.hue.automation}"/>
-                                <TextBlock Text="°" Style="{StaticResource Muted}" Margin="4,0,16,0"/>
+                                <TextBlock Text="°" Style="{StaticResource Muted}" Margin="4,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                 <TextBlock Text="S" Style="{StaticResource SectionTitle}" Margin="0,0,6,0"/>
                                 <c:NumericBox Value="{Binding SatPct}" Minimum="0" Maximum="100" Width="54" AutomationProperties.Name="{loc:Loc picker.sat.automation}"/>
-                                <TextBlock Text="%" Style="{StaticResource Muted}" Margin="4,0,16,0"/>
+                                <TextBlock Text="%" Style="{StaticResource Muted}" Margin="4,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                 <TextBlock Text="B" Style="{StaticResource SectionTitle}" Margin="0,0,6,0"/>
                                 <c:NumericBox Value="{Binding BriPct}" Minimum="0" Maximum="100" Width="54" AutomationProperties.Name="{loc:Loc picker.bri.automation}"/>
-                                <TextBlock Text="%" Style="{StaticResource Muted}" Margin="4,0,16,0"/>
-                                <Button Content="{loc:Loc picker.grayEquivalent}" Command="{Binding GrayEquivalentCommand}" Padding="9,4"
-                                        ToolTip="{loc:Loc picker.grayEquivalent.tooltip}"/>
+                                <TextBlock Text="%" Style="{StaticResource Muted}" Margin="4,0,0,0"/>
                             </StackPanel>
-
+                            <Button Content="{loc:Loc picker.grayEquivalent}" Command="{Binding GrayEquivalentCommand}" Padding="9,4"
+                                    ToolTip="{loc:Loc picker.grayEquivalent.tooltip}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -526,12 +526,13 @@
                     </ListBox>
                     </DockPanel>
 
-                    <ItemsControl ItemsSource="{Binding GeneratedColors}" Focusable="False" x:Name="GeneratedList">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Rows="1"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                    <ScrollViewer Focusable="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding GeneratedColors}" Focusable="False" x:Name="GeneratedList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <c:MinCellUniformGrid Rows="1" MinCellWidth="60"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="vm:SwatchItem">
                                 <Grid Margin="3,0" Background="Transparent" x:Name="GenCard">
@@ -594,7 +595,8 @@
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </StackPanel>
             </Border>
 
@@ -645,18 +647,18 @@
                                             </ContextMenu>
                                         </StackPanel.ContextMenu>
                                         <Grid x:Name="SwatchRoot">
-                                            <Border Height="38" CornerRadius="6" Background="{Binding Brush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Cursor="Hand"
+                                            <Border Height="38" CornerRadius="6" Background="{Binding DisplayBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" Cursor="Hand"
                                                     PreviewMouseLeftButtonDown="PaletteSwatch_MouseDown" PreviewMouseMove="PaletteSwatch_MouseMove" MouseLeftButtonUp="PaletteSwatch_MouseUp"
                                                     ToolTip="{loc:Loc palette.color.tooltip}">
-                                                <TextBlock Text="{Binding Hex}" Foreground="{Binding Foreground}" FontFamily="{StaticResource MonoFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding DisplayHex}" Foreground="{Binding DisplayForeground}" FontFamily="{StaticResource MonoFont}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
                                             <!-- Hint de arrastre: aparece al pasar el mouse sobre la tarjeta -->
-                                            <TextBlock Text="&#xE7C9;" FontFamily="{StaticResource IconFont}" FontSize="9" Width="16" Height="16" Foreground="{Binding Foreground}"
+                                            <TextBlock Text="&#xE7C9;" FontFamily="{StaticResource IconFont}" FontSize="9" Width="16" Height="16" Foreground="{Binding DisplayForeground}"
                                                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,3,0,0" Panel.ZIndex="1" IsHitTestVisible="False"
                                                        Visibility="{Binding IsMouseOver, ElementName=SwatchRoot, Converter={StaticResource BoolToVis}}"
                                                        ToolTip="{loc:Loc palette.drag.tooltip}"/>
                                             <Button Style="{StaticResource SmallIconButton}" Content="&#xE711;" Width="16" Height="16" FontSize="9"
-                                                    Foreground="{Binding Foreground}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
+                                                    Foreground="{Binding DisplayForeground}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,3,3,0" Panel.ZIndex="1"
                                                     Command="{Binding DataContext.RemovePaletteColorCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}"
                                                     ToolTip="{loc:Loc common.delete}" AutomationProperties.Name="{loc:Loc common.delete}"
                                                     Visibility="{Binding IsMouseOver, ElementName=SwatchRoot, Converter={StaticResource BoolToVis}}"/>
@@ -671,20 +673,58 @@
                     <TextBlock Grid.Column="1" Text="{loc:Loc palette.empty}" Style="{StaticResource Muted}" Margin="12,0" TextWrapping="Wrap" MaxWidth="430"
                                Visibility="{Binding HasActiveColors, Converter={StaticResource InvBoolToVis}}"/>
 
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Click="OpenMenu_Click" ContextMenu="{StaticResource CopyPaletteMenu}" Margin="4,0" ToolTip="{loc:Loc palette.copy.tooltip}">
+                    <StackPanel Grid.Column="2" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Click="OpenMenu_Click" ContextMenu="{StaticResource CopyPaletteMenu}" Margin="4,0" ToolTip="{loc:Loc palette.copy.tooltip}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{loc:Loc common.copy}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="OpenMenu_Click" ContextMenu="{StaticResource ExportPaletteMenu}" ToolTip="{loc:Loc palette.export.tooltip}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xEB9F;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{loc:Loc palette.export}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <Button x:Name="GrayScaleButton" Click="GrayScaleButton_Click" HorizontalAlignment="Right" Margin="0,5,0,0"
+                                ToolTip="{loc:Loc palette.gray.tooltip}" AutomationProperties.Name="{loc:Loc palette.gray.button}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                    <Setter Property="Padding" Value="6,1"/>
+                                    <Setter Property="FontSize" Value="10"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasGrayScale}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{loc:Loc common.copy}" VerticalAlignment="Center"/>
-                                <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc palette.gray.button}" VerticalAlignment="Center"/>
+                                <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="5,1,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Click="OpenMenu_Click" ContextMenu="{StaticResource ExportPaletteMenu}" ToolTip="{loc:Loc palette.export.tooltip}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xEB9F;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                <TextBlock Text="{loc:Loc palette.export}" VerticalAlignment="Center"/>
-                                <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,1,0,0" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                        <Popup x:Name="GrayScalePopup" PlacementTarget="{Binding ElementName=GrayScaleButton}" Placement="Top" AllowsTransparency="True" PopupAnimation="None">
+                            <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10" Width="200"
+                                    KeyDown="GrayScalePopup_KeyDown">
+                                <StackPanel>
+                                    <TextBlock Text="{loc:Loc palette.gray.popupTitle}" Style="{StaticResource SectionTitle}" FontSize="10"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                                        <Slider x:Name="GrayScaleSlider" Width="108" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True"
+                                                Value="{Binding GrayScalePercent, UpdateSourceTrigger=PropertyChanged}"
+                                                AutomationProperties.Name="{loc:Loc palette.gray.popupTitle}"/>
+                                        <TextBlock Text="{Binding GrayScalePercent, StringFormat={}{0} %}" FontFamily="{StaticResource MonoFont}" FontSize="11"
+                                                   MinWidth="46" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Button Command="{Binding GrayScaleResetCommand}" Content="{loc:Loc palette.gray.reset}" Style="{StaticResource GhostButton}"
+                                            FontSize="10" Padding="6,1" HorizontalAlignment="Right" Margin="0,7,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
                     </StackPanel>
                 </Grid>
             </Border>

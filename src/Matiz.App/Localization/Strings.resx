@@ -103,7 +103,7 @@
     <value>Wheel focus: vivid to pastel</value>
   </data>
   <data name="picker.focus.tooltip" xml:space="preserve">
-    <value>Saturation distribution on the wheel: more room for vivid colors (left) or pastel (right). It does not change the color.</value>
+    <value>Saturation distribution on the wheel: more room for vivid colors (top) or pastel (bottom). It does not change the color.</value>
   </data>
   <data name="picker.focus.reset.tooltip" xml:space="preserve">
     <value>Linear distribution</value>
@@ -905,5 +905,17 @@ Limitations: on HDR monitors, exclusive full-screen games or protected content (
   </data>
   <data name="library.descriptionPlaceholder" xml:space="preserve">
     <value>Optional</value>
+  </data>
+  <data name="palette.gray.button" xml:space="preserve">
+    <value>Gray scale</value>
+  </data>
+  <data name="palette.gray.popupTitle" xml:space="preserve">
+    <value>Grayscale</value>
+  </data>
+  <data name="palette.gray.reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="palette.gray.tooltip" xml:space="preserve">
+    <value>Temporary grayscale view: each color shows as a mix toward its perceptual gray equivalent (0% = original colors, 100% = full gray). Exports reflect the current value; stored colors are not modified.</value>
   </data>
 </root>

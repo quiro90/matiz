@@ -9,6 +9,12 @@ Una herramienta de color pequeña y rápida para Windows, pensada para desarroll
 ![Matiz](docs/capture.png)
 ![Matiz](docs/capture2.png)
 
+## Descargar
+
+<a href="https://apps.microsoft.com/detail/9PFNQ25LTT4J?hl=es-es&gl=AR&ocid=pdpshare"><img src="https://developer.microsoft.com/store/badges/images/Spanish_get-it-from-MS.png" alt="Consíguelo en Microsoft" width="219"></a>
+
+También disponible como `.exe` autónomo en los [releases de GitHub](https://github.com/quiro90/matiz/releases).
+
 ## Funcionalidades
 
 - **Captura de pantalla**: atajo global (`Alt+C`, configurable), lupa con cuadrícula de píxeles, multi-monitor y DPI por monitor, precisión de píxel. Click izquierdo toma el color principal, click derecho lo añade como punto secundario del conjunto Personalizado (hasta 64 colores), y con **Shift** presionado la lupa sigue abierta para capturar varios colores seguidos (Esc cancela).

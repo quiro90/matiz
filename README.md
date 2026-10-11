@@ -9,6 +9,12 @@ A small, fast Windows color tool for developers and designers: pick any pixel on
 ![Matiz](docs/capture.png)
 ![Matiz](docs/capture2.png)
 
+## Download
+
+<a href="https://apps.microsoft.com/detail/9PFNQ25LTT4J?hl=es-es&gl=AR&ocid=pdpshare"><img src="https://developer.microsoft.com/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width="219"></a>
+
+Also available as a standalone `.exe` in the [GitHub releases](https://github.com/quiro90/matiz/releases).
+
 ## Features
 
 - **Screen picker**: global hotkey (`Alt+C`, configurable), magnifier with pixel grid, multi-monitor and per-monitor DPI aware, pixel-accurate. Left-click picks the primary color, right-click adds it as a secondary point of the **Custom** set (up to 64 colors), and holding **Shift** keeps the magnifier open to grab several colors in a row (Esc cancels).
